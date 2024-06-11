@@ -13,7 +13,10 @@ invariant = { fail_on_revert = true }
 
 # -------------------------------- Remappings -------------------------------- #
 
-remappings = ["@openzeppelin/=node_modules/@openzeppelin/"]
+remappings = [
+    "@openzeppelin/=node_modules/@openzeppelin/",
+    "@uniswap/universal-router/=node_modules/@uniswap/universal-router/",
+]
 
 # ---------------------------------- Format ---------------------------------- #
 
