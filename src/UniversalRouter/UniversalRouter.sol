@@ -8,15 +8,15 @@ import {
 import {
     PaymentsImmutables, PaymentsParameters
 } from "@uniswap/universal-router/contracts/modules/PaymentsImmutables.sol";
-
-import { Dispatcher } from "src/UniversalRouter/base/Dispatcher.sol";
-import { IUniversalRouter } from "src/interfaces/UniversalRouter/IUniversalRouter.sol";
-import { RouterParameters } from "src/UniversalRouter/base/RouterImmutables.sol";
-import { Commands } from "src/UniversalRouter/libraries/Commands.sol";
+import { Dispatcher } from "@usdn-contracts/UniversalRouter/base/Dispatcher.sol";
+import { IUniversalRouter } from "@usdn-contracts/interfaces/UniversalRouter/IUniversalRouter.sol";
+import { RouterParameters } from "@usdn-contracts/UniversalRouter/base/RouterImmutables.sol";
+import { Commands } from "@usdn-contracts/UniversalRouter/libraries/Commands.sol";
 import {
-    UsdnProtocolImmutables, UsdnProtocolParameters
-} from "src/UniversalRouter/modules/usdn/UsdnProtocolImmutables.sol";
-import { LidoImmutables } from "src/UniversalRouter/modules/lido/LidoImmutables.sol";
+    UsdnProtocolImmutables,
+    UsdnProtocolParameters
+} from "@usdn-contracts/UniversalRouter/modules/usdn/UsdnProtocolImmutables.sol";
+import { LidoImmutables } from "@usdn-contracts/UniversalRouter/modules/lido/LidoImmutables.sol";
 
 contract UniversalRouter is IUniversalRouter, Dispatcher {
     /**

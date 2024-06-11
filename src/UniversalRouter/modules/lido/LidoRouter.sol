@@ -4,9 +4,9 @@ pragma solidity ^0.8.17;
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Permit2Payments.sol";
+import { IWstETH } from "@usdn-contracts/interfaces/IWstETH.sol";
 
 import { LidoImmutables } from "src/UniversalRouter/modules/lido/LidoImmutables.sol";
-import { IWstETH } from "src/interfaces/IWstETH.sol";
 
 /// @title Router for StEth
 abstract contract LidoRouter is LidoImmutables, Permit2Payments {

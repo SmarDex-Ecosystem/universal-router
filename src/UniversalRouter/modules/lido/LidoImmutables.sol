@@ -3,7 +3,7 @@ pragma solidity ^0.8.17;
 
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-import { IWstETH } from "src/interfaces/IWstETH.sol";
+import { IWstETH } from "@usdn-contracts/interfaces/IWstETH.sol";
 import { ILidoImmutables } from "src/interfaces/UniversalRouter/ILidoImmutables.sol";
 
 contract LidoImmutables is ILidoImmutables {
