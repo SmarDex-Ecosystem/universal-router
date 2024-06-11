@@ -1,0 +1,41 @@
+# Builds
+out/
+dist/
+
+# Deployment artifacts
+
+# Ignore anvil deployments
+broadcast/*.sol/31337/**/*.json
+
+# To include only a specific chain, excluding dry-run files, uncomment the following lines
+# broadcast/*.sol/**/*.json
+#!broadcast/*.sol/1/run-*.json
+
+# To exclude only dry-run files, uncomment the following line
+#broadcast/*.sol/*/dry-run/*.json
+
+# Private files
+.env
+
+# Cache
+cache/
+
+# Dependencies
+node_modules/
+
+# devenv
+.devenv
+.direnv
+
+# coverage
+.coverage/
+lcov.info
+
+# docs
+docs/
+
+# IDE
+.idea/
+
+# Natspec smells report
+natspec-smells.txt

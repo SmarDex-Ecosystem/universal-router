@@ -1,0 +1,121 @@
+# ---------------------------------------------------------------------------- #
+#                                Default profile                               #
+# ---------------------------------------------------------------------------- #
+
+# --------------------------------- Compiler --------------------------------- #
+
+[profile.default]
+solc_version = "0.8.20"
+optimizer = true
+optimizer_runs = 20_000
+libs = ["node_modules", "lib"]
+invariant = { fail_on_revert = true }
+
+# -------------------------------- Remappings -------------------------------- #
+
+remappings = ["@openzeppelin/=node_modules/@openzeppelin/"]
+
+# ---------------------------------- Format ---------------------------------- #
+
+[profile.default.fmt]
+line_length = 120
+bracket_spacing = true
+wrap_comments = true
+number_underscore = "thousands"
+
+# ---------------------------------------------------------------------------- #
+#                                 Local profile                                #
+# ---------------------------------------------------------------------------- #
+
+[profile.local]
+ffi = true
+
+# ---------------------------------- Fuzzing --------------------------------- #
+
+[profile.local.fuzz]
+runs = 10_000
+
+[profile.local.invariant]
+runs = 10_000
+depth = 15
+# call_override = true # makes invariant tests hang
+dictionary_weight = 80
+
+# ---------------------------------------------------------------------------- #
+#                             Heavy fuzzing profile                            #
+# ---------------------------------------------------------------------------- #
+
+[profile.heavy_fuzzing]
+ffi = true
+
+# ---------------------------------- Fuzzing --------------------------------- #
+
+[profile.heavy_fuzzing.fuzz]
+runs = 1_000_000
+
+[profile.heavy_fuzzing.invariant]
+runs = 1_000_000
+depth = 30
+# call_override = true
+dictionary_weight = 80
+
+# ---------------------------------------------------------------------------- #
+#                                  CI profile                                  #
+# ---------------------------------------------------------------------------- #
+
+[profile.ci]
+verbosity = 3
+
+# ---------------------------------- Fuzzing --------------------------------- #
+
+[profile.ci.fuzz]
+runs = 256
+
+[profile.ci.invariant]
+runs = 256
+depth = 5
+# call_override = false
+dictionary_weight = 40
+
+# ---------------------------------------------------------------------------- #
+#                              Complete CI profile                             #
+# ---------------------------------------------------------------------------- #
+
+[profile.heavy_ci]
+verbosity = 3
+ffi = true
+
+# ---------------------------------- Fuzzing --------------------------------- #
+
+[profile.heavy_ci.fuzz]
+runs = 1024
+
+[profile.heavy_ci.invariant]
+runs = 1024
+depth = 10
+dictionary_weight = 60
+
+# ---------------------------------------------------------------------------- #
+#                                  Deployments                                 #
+# ---------------------------------------------------------------------------- #
+
+[rpc_endpoints]
+mainnet = "${URL_ETH_MAINNET}"
+goerli = "${URL_GOERLI}"
+sepolia = "${URL_SEPOLIA}"
+arbitrum = "${URL_ARBITRUM}"
+arbitrumtest = "${URL_GOERLI_ARBITRUM}"
+polygon = "${URL_POLYGON}"
+mumbai = "${URL_MUMBAI}"
+bsc = "${URL_BSC}"
+bsctest = "${URL_BSC_TESTNET}"
+base = "${URL_BASE}"
+basetest = "${URL_GOERLI_BASE}"
+anvil = "${URL_ANVIL}"
+
+[etherscan]
+mainnet = { key = "${ETHERSCAN_API_KEY}" }
+polygon = { key = "${POLYGONSCAN_API_KEY}" }
+bsc = { key = "${BSCSCAN_API_KEY}" }
+arbitrum = { key = "${ARBISCAN_API_KEY}" }
+base = { key = "${BASESCAN_API_KEY}" }
