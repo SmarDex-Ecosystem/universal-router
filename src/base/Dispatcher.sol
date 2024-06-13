@@ -6,8 +6,8 @@ import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.s
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
-import { PreviousActionsData } from "usdn-contracts/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { Permit2TokenBitfield } from "usdn-contracts/libraries/Permit2TokenBitfield.sol";
+import { PreviousActionsData } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 
 import { Commands } from "../libraries/Commands.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";

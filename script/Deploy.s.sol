@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { IUsdnProtocol } from "usdn-contracts/interfaces/UsdnProtocol/IUsdnProtocol.sol";
+import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
 
 import { Script } from "forge-std/Script.sol";
 import { UniversalRouter } from "src/UniversalRouter.sol";
