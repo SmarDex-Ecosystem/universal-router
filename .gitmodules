@@ -1,3 +1,6 @@
 [submodule "lib/forge-std"]
 	path = lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "lib/usdn-contracts"]
+	path = lib/usdn-contracts
+	url = https://github.com/Blockchain-RA2-Tech/usdn-contracts

@@ -31,10 +31,11 @@
             ({ pkgs, ... }: {
               packages = with pkgs; [
                 foundry-bin
-                solc_0_8_20
-                (solc.mkDefault pkgs solc_0_8_20)
+                solc_0_8_26
+                (solc.mkDefault pkgs solc_0_8_26)
                 slither-analyzer
                 lcov
+                gnum4
               ];
               languages.javascript.enable = true;
               languages.javascript.package = pkgs.nodejs_20;
@@ -43,6 +44,9 @@
                 npm i
                 forge install
               '';
+              env= { 
+              LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.gnum4 ];
+              };
             })
           ];
         };

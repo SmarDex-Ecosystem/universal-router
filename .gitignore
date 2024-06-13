@@ -39,3 +39,6 @@ docs/
 
 # Natspec smells report
 natspec-smells.txt
+
+# test_utils
+target/

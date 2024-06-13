@@ -1,0 +1,3 @@
+[workspace]
+members = ["lib/usdn-contracts/test_utils"]
+resolver = "2"
