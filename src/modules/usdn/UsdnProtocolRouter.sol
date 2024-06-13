@@ -6,8 +6,8 @@ import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/I
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { PreviousActionsData } from "usdn-contracts/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { Permit2TokenBitfield } from "usdn-contracts/libraries/Permit2TokenBitfield.sol";
 import { PositionId } from "usdn-contracts/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { Permit2TokenBitfield } from "usdn-contracts/libraries/Permit2TokenBitfield.sol";
 
 import { UsdnProtocolImmutables } from "./UsdnProtocolImmutables.sol";
 
