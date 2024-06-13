@@ -12,6 +12,14 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "universal-router,usdn-contracts"
+
       - uses: actions/checkout@v4
         with:
           submodules: recursive
