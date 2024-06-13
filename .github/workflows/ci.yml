@@ -8,6 +8,9 @@ on:
 env:
   FOUNDRY_PROFILE: ci
 
+permissions:
+  contents: read
+
 jobs:
   run-ci:
     runs-on: ubuntu-latest
