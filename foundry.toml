@@ -14,7 +14,7 @@ invariant = { fail_on_revert = true }
 # -------------------------------- Remappings -------------------------------- #
 
 remappings = [
-    "@usdn-contracts/=lib/usdn-contracts/src/",
+    "usdn-contracts/=lib/usdn-contracts/src/",
     "@openzeppelin/=node_modules/@openzeppelin/",
     "permit2/=node_modules/@uniswap/permit2/",
     "@uniswap/v2-core/=node_modules/@uniswap/v2-core/",
