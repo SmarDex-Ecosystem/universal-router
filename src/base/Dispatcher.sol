@@ -308,8 +308,6 @@ abstract contract Dispatcher is
                             previousActionsData,
                             ethAmount
                         );
-                    } else if (command == Commands.INITIATE_CLOSE) {
-                        // TODO INITIATE_CLOSE
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (
                             address validator,
@@ -335,7 +333,13 @@ abstract contract Dispatcher is
                         ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
                         _usdnValidateOpenPosition(map(validator), depositPriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.VALIDATE_CLOSE) {
-                        // TODO VALIDATE_CLOSE
+                        (
+                            address validator,
+                            bytes memory closePriceData,
+                            PreviousActionsData memory previousActionsData,
+                            uint256 ethAmount
+                        ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
+                        _usdnValidateClosePosition(map(validator), closePriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.LIQUIDATE) {
                         // TODO LIQUIDATE
                     } else if (command == Commands.VALIDATE_PENDING) {
