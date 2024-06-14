@@ -1,8 +1,8 @@
 {
   "name": "@smardex/universal-router",
   "version": "0.1.0",
-  "description": "Template repository for creating a new Foundry project quickly and in accordance with the Real Estate Executive standards",
-  "repository": "github:Blockchain-RA2-Tech/foundry-template",
+  "description": "Universal router to perform controlled multicall actions on the protocols of the SmarDex ecosystem",
+  "repository": "github:Blockchain-RA2-Tech/universal-router",
   "author": {
     "name": "RA2 Tech SA",
     "url": "https://ra2.tech"
@@ -29,11 +29,7 @@
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && forge clean && npm i && forge install",
     "deploy:fork": "forge script -i 1 -f anvil script/Deploy.s.sol"
   },
-  "files": [
-    "dist",
-    "broadcast",
-    "docs"
-  ],
+  "files": ["dist", "broadcast", "docs"],
   "devDependencies": {
     "@biomejs/biome": "^1.8.1",
     "@chainlink/contracts": "^1.1.1",
