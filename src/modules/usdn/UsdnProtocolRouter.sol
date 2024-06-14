@@ -223,6 +223,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
         uint256 maxValidations,
         uint256 ethAmount
     ) internal returns (uint256 validatedActions_) {
+        // slither-disable-next-line arbitrary-send-eth
         validatedActions_ =
             USDN_PROTOCOL.validateActionablePendingActions{ value: ethAmount }(previousActionsData, maxValidations);
     }
