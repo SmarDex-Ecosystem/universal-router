@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
+import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { DEPLOYER, WETH, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
 import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integration/UsdnProtocol/utils/Fixtures.sol";
@@ -15,10 +16,13 @@ import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
 contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
     UniversalRouterHandler public router;
     IAllowanceTransfer permit2;
+    AggregatorV3Interface public priceFeed;
 
     function _setUp() internal {
         params = DEFAULT_PARAMS;
         params.fork = true;
+        params.initialDeposit = 1000 ether;
+        params.initialLong = 1000 ether;
         _setUp(params);
 
         RouterParameters memory params = RouterParameters({
@@ -36,5 +40,46 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
         router = new UniversalRouterHandler(params);
 
         permit2 = IAllowanceTransfer(params.permit2);
+        priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
+    }
+
+    /**
+     * @notice get the first next chainlink price after the pending action timestamp
+     * @dev binary search to find the first roundId after the pending action timestamp,
+     * revert if roundId is not the first one after the low latency limit. This function
+     * make a rollFork to the block where the roundId is found and return the roundId, price and timestamp
+     */
+    function getNextChainlinkPriceAfterTimestamp(uint256 pendingActionTimestamp, uint256 startBlock, uint256 endBlock)
+        public
+        returns (uint80 roundId_, int256 price_, uint256 timestamp_)
+    {
+        uint256 lowLatencyLimit = pendingActionTimestamp + oracleMiddleware.getLowLatencyDelay();
+        // set the search range
+        uint256 left = startBlock;
+        uint256 right = endBlock;
+
+        // perform binary search
+        while (left < right) {
+            uint256 mid = (left + right) / 2;
+            vm.rollFork(mid);
+            (roundId_,,, timestamp_,) = priceFeed.latestRoundData();
+
+            if (timestamp_ < lowLatencyLimit) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        // final fork roll to the first round after the low latency limit
+        vm.rollFork(left);
+        (roundId_, price_,, timestamp_,) = priceFeed.latestRoundData();
+
+        // ensure roundId is first one after the low latency limit
+        (,, uint256 startedAtOne,,) = priceFeed.getRoundData(roundId_ - 1);
+        (,, uint256 startedAtTwo,,) = priceFeed.getRoundData(roundId_);
+        assertTrue(startedAtOne < lowLatencyLimit, "startedAtOne < lowLatencyLimit");
+        assertTrue(startedAtTwo >= lowLatencyLimit, "startedAtTwo >= lowLatencyLimit");
+        return (roundId_, price_, timestamp_);
     }
 }

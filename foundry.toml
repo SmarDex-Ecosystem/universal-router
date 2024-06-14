@@ -23,6 +23,7 @@ remappings = [
     "solmate/=node_modules/solmate/",
     "solady/src/=node_modules/solady/src/",
     "@pythnetwork=node_modules/@pythnetwork/",
+    "@chainlink/=node_modules/@chainlink/",
 ]
 
 # ---------------------------------- Format ---------------------------------- #
