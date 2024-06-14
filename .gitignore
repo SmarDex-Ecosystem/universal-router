@@ -41,4 +41,4 @@ docs/
 natspec-smells.txt
 
 # test_utils
-target/
+test_utils/

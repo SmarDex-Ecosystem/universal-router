@@ -59,6 +59,11 @@ The environment provides the following tools:
 
 ## Usage
 
+### Tests
+
+To run tests you need to to build `test-utils`. To do so, we need to run the test utils script : `npm run testutils`.
+You also need an archive rpc in the`.env` file (infura, alchemy, ...).
+
 ### Snapshots
 
 The CI checks that there was no unintended regression in gas usage. To do so, it relies on the `.gas-snapshot` file
