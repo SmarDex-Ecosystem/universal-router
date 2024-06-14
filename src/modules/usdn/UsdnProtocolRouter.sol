@@ -204,6 +204,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
         PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
+        // slither-disable-next-line arbitrary-send-eth
         success_ = USDN_PROTOCOL.validateClosePosition{ value: ethAmount }(
             payable(validator), closePriceData, previousActionsData
         );
