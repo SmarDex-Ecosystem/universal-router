@@ -3,7 +3,8 @@ pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { USER_1 } from "usdn-contracts/test/utils/Constants.sol";
-import { Commands } from "usdn-contracts/src/UniversalRouter/libraries/Commands.sol";
+
+import { Commands } from "../../src/libraries/Commands.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
