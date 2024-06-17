@@ -216,15 +216,13 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
      * @param previousActionsData The data needed to validate actionable pending actions
      * @param maxValidations The maximum number of pending actions to validate
      * @param ethAmount The amount of Ether to send with the transaction
-     * @return validatedActions_ The number of validated actions
      */
     function _usdnValidateActionablePendingActions(
         PreviousActionsData memory previousActionsData,
         uint256 maxValidations,
         uint256 ethAmount
-    ) internal returns (uint256 validatedActions_) {
+    ) internal {
         // slither-disable-next-line arbitrary-send-eth
-        validatedActions_ =
-            USDN_PROTOCOL.validateActionablePendingActions{ value: ethAmount }(previousActionsData, maxValidations);
+        USDN_PROTOCOL.validateActionablePendingActions{ value: ethAmount }(previousActionsData, maxValidations);
     }
 }
