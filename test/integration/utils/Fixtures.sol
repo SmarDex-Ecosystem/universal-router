@@ -76,10 +76,10 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
         (roundId_, price_,, timestamp_,) = priceFeed.latestRoundData();
 
         // ensure roundId is first one after the low latency limit
-        (,, uint256 startedAtOne,,) = priceFeed.getRoundData(roundId_ - 1);
-        (,, uint256 startedAtTwo,,) = priceFeed.getRoundData(roundId_);
-        assertTrue(startedAtOne < lowLatencyLimit, "startedAtOne < lowLatencyLimit");
-        assertTrue(startedAtTwo >= lowLatencyLimit, "startedAtTwo >= lowLatencyLimit");
+        (,, uint256 updateAtOne,,) = priceFeed.getRoundData(roundId_ - 1);
+        (,, uint256 updateAtTwo,,) = priceFeed.getRoundData(roundId_);
+        assertTrue(updateAtOne < lowLatencyLimit, "updateAtOne < lowLatencyLimit");
+        assertTrue(updateAtTwo >= lowLatencyLimit, "updateAtTwo >= lowLatencyLimit");
         return (roundId_, price_, timestamp_);
     }
 }

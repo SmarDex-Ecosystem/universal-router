@@ -60,7 +60,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
             uint128(openPositionAmount),
             uint128(desiredLiquidation),
             address(this),
-            payable(address(this)),
+            payable(this),
             NO_PERMIT2,
             "",
             EMPTY_PREVIOUS_DATA
@@ -100,12 +100,13 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
 
         // prepare data for the validation
         bytes memory data = abi.encode(roundId);
-        bytes[] memory priceData = new bytes[](4);
-        for (uint256 i = 0; i < 4; i++) {
+        uint8 actionsCount = 4;
+        bytes[] memory priceData = new bytes[](actionsCount);
+        for (uint256 i = 0; i < actionsCount; i++) {
             priceData[i] = data;
         }
         (, uint128[] memory newRawIndices) = protocol.getActionablePendingActions(address(0));
-        assertEq(newRawIndices.length, 4, "newRawIndices.length");
+        assertEq(newRawIndices.length, actionsCount, "newRawIndices.length");
         PreviousActionsData memory previousActionsData =
             PreviousActionsData({ priceData: priceData, rawIndices: newRawIndices });
         uint256 ethBalanceBefore = address(router).balance;
