@@ -114,10 +114,10 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         // validating actionable pending actions through the router
         bytes memory commands = abi.encodePacked(uint8(Commands.VALIDATE_PENDING));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(previousActionsData, 4, 0);
+        inputs[0] = abi.encode(previousActionsData, actionsCount, 0);
         router.execute{ value: 0 }(commands, inputs);
 
-        assertEq(address(router).balance, ethBalanceBefore + _securityDeposit * 4, "ether balance");
+        assertEq(address(router).balance, ethBalanceBefore + _securityDeposit * actionsCount, "ether balance");
     }
 
     receive() external payable { }
