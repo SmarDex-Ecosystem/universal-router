@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.25;
 
 import {
     UniswapImmutables,
@@ -15,6 +15,7 @@ import { RouterParameters } from "./base/RouterImmutables.sol";
 import { Commands } from "./libraries/Commands.sol";
 import { UsdnProtocolImmutables, UsdnProtocolParameters } from "./modules/usdn/UsdnProtocolImmutables.sol";
 import { LidoImmutables } from "./modules/lido/LidoImmutables.sol";
+import { SmardexImmutables, SmardexParameters } from "./modules/smardex/SmardexImmutables.sol";
 
 contract UniversalRouter is IUniversalRouter, Dispatcher {
     /**
@@ -36,6 +37,7 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
         PaymentsImmutables(PaymentsParameters(params.permit2, params.weth9, address(0), address(0)))
         UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol))
         LidoImmutables(params.wstEth)
+        SmardexImmutables(SmardexParameters(params.smardexFactory, params.weth9))
     { }
 
     /// @inheritdoc IUniversalRouter
