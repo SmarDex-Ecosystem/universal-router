@@ -17,7 +17,7 @@ library Commands {
     uint256 constant SWEEP = 0x04;
     uint256 constant TRANSFER = 0x05;
     uint256 constant PAY_PORTION = 0x06;
-    uint256 constant PERMIT = 0x07;
+    uint256 constant PERMIT_TRANSFER = 0x07;
 
     // the commands are executed in nested if blocks to minimise gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands

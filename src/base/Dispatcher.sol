@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
@@ -106,12 +105,12 @@ abstract contract Dispatcher is
                                 abi.decode(inputs, (IAllowanceTransfer.PermitBatch, bytes));
                             bytes calldata data = inputs.toBytes(1);
                             PERMIT2.permit(lockedBy, permitBatch, data);
-                        } else if (command == Commands.PERMIT) {
+                        } else if (command == Commands.PERMIT_TRANSFER) {
                             // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
                             // bytes32))
                             address token;
                             address recipient; // spender
-                            uint160 amount;
+                            uint256 amount;
                             uint256 deadline;
                             uint8 v;
                             bytes32 r;
@@ -127,6 +126,7 @@ abstract contract Dispatcher is
                             }
                             try // protect against griefing
                             ERC20Permit(token).permit(lockedBy, map(recipient), amount, deadline, v, r, s) { } catch { }
+                            ERC20Permit(token).transferFrom(msg.sender, map(recipient), amount);
                         } else if (command == Commands.SWEEP) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { Commands } from "usdn-contracts/src/UniversalRouter/libraries/Commands.sol";
+import { Commands } from "../../src/libraries/Commands.sol";
 import { ProtocolAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { PYTH_ETH_USD } from "usdn-contracts/test/utils/Constants.sol";
 import { USER_1, USER_2 } from "usdn-contracts/test/utils/Constants.sol";
