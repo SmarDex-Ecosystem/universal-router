@@ -99,12 +99,12 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
 
         SigUtils sigUtilsWstETH = new SigUtils(wstETH.DOMAIN_SEPARATOR());
-        (uint8 v0, bytes32 r0, bytes32 s0) =
+        (uint8 v, bytes32 r, bytes32 s) =
             sigUtilsWstETH.signPermit(PKEY_1, address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max);
 
         bytes memory commands = _getPermitCommand();
         bytes[] memory inputs = new bytes[](2);
-        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v0, r0, s0);
+        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
         inputs[1] = abi.encode(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
@@ -137,13 +137,13 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
 
         SigUtils sigUtilsWstETH = new SigUtils(wstETH.DOMAIN_SEPARATOR());
-        (uint8 v0, bytes32 r0, bytes32 s0) =
+        (uint8 v, bytes32 r, bytes32 s) =
             sigUtilsWstETH.signPermit(PKEY_1, address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max);
 
         bytes memory commands = _getPermitCommand();
 
         bytes[] memory inputs = new bytes[](2);
-        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v0, r0, s0);
+        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
         inputs[1] = abi.encode(
             Constants.CONTRACT_BALANCE,
             DESIRED_LIQUIDATION,
