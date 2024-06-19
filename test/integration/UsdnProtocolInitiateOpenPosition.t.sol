@@ -17,12 +17,14 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
     uint256 constant OPEN_POSITION_AMOUNT = 2 ether;
     uint256 constant DESIRED_LIQUIDATION = 2500 ether;
     uint256 internal _securityDeposit;
+    SigUtils internal _sigUtils;
 
     function setUp() public {
         _setUp();
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         deal(address(wstETH), vm.addr(PKEY_1), OPEN_POSITION_AMOUNT * 2);
         deal(vm.addr(PKEY_1), 1e6 ether);
+        _sigUtils = new SigUtils();
         _securityDeposit = protocol.getSecurityDepositValue();
     }
 
@@ -98,9 +100,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
         uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
 
-        SigUtils sigUtilsWstETH = new SigUtils(wstETH.DOMAIN_SEPARATOR());
-        (uint8 v, bytes32 r, bytes32 s) =
-            sigUtilsWstETH.signPermit(PKEY_1, address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            _sigUtils.getDigest(
+                vm.addr(PKEY_1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
+            )
+        );
 
         bytes memory commands = _getPermitCommand();
         bytes[] memory inputs = new bytes[](2);
@@ -136,9 +140,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
         uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
 
-        SigUtils sigUtilsWstETH = new SigUtils(wstETH.DOMAIN_SEPARATOR());
-        (uint8 v, bytes32 r, bytes32 s) =
-            sigUtilsWstETH.signPermit(PKEY_1, address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            _sigUtils.getDigest(
+                vm.addr(PKEY_1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
+            )
+        );
 
         bytes memory commands = _getPermitCommand();
 

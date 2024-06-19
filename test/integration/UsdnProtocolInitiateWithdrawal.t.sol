@@ -16,6 +16,7 @@ import { SigUtils } from "./utils/SigUtils.sol";
 contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture {
     uint256 internal WITHDRAW_AMOUNT;
     uint256 internal _securityDeposit;
+    SigUtils internal _sigUtils;
 
     function setUp() public {
         _setUp();
@@ -24,6 +25,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         usdn.transferShares(address(this), WITHDRAW_AMOUNT);
         usdn.transferShares(vm.addr(PKEY_1), WITHDRAW_AMOUNT);
         vm.stopPrank();
+        _sigUtils = new SigUtils();
         deal(vm.addr(PKEY_1), 1e6 ether);
         _securityDeposit = protocol.getSecurityDepositValue();
     }
@@ -85,9 +87,11 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         uint256 usdnTokensToTransfer = usdn.convertToTokens(WITHDRAW_AMOUNT);
 
-        SigUtils sigUtilsUsdn = new SigUtils(usdn.DOMAIN_SEPARATOR());
-        (uint8 v, bytes32 r, bytes32 s) =
-            sigUtilsUsdn.signPermit(PKEY_1, address(router), usdnTokensToTransfer, 0, type(uint256).max);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            _sigUtils.getDigest(
+                vm.addr(PKEY_1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
+            )
+        );
 
         bytes memory commands = _getPermitCommand();
         bytes[] memory inputs = new bytes[](2);
@@ -116,9 +120,11 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         uint256 usdnTokensToTransfer = usdn.convertToTokens(WITHDRAW_AMOUNT);
 
-        SigUtils sigUtilsUsdn = new SigUtils(usdn.DOMAIN_SEPARATOR());
-        (uint8 v, bytes32 r, bytes32 s) =
-            sigUtilsUsdn.signPermit(PKEY_1, address(router), usdnTokensToTransfer, 0, type(uint256).max);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            _sigUtils.getDigest(
+                vm.addr(PKEY_1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
+            )
+        );
 
         bytes memory commands = _getPermitCommand();
         bytes[] memory inputs = new bytes[](2);
