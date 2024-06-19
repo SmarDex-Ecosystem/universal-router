@@ -5,10 +5,10 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 import { Commands } from "../../src/libraries/Commands.sol";
 import { DepositPendingAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { USER_1 } from "usdn-contracts/test/utils/Constants.sol";
-import { SigUtils } from "./utils/SigUtils.sol";
 import { PKEY_1 } from "./utils/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+import { SigUtils } from "./utils/SigUtils.sol";
 
 /**
  * @custom:feature Initiating a deposit through the router
@@ -22,8 +22,8 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         _setUp();
         deal(address(wstETH), address(this), DEPOSIT_AMOUNT * 2);
         deal(address(sdex), address(this), 1e6 ether);
-        deal(address(wstETH), vm.addr(PKEY_1), DEPOSIT_AMOUNT * 20);
-        deal(address(sdex), vm.addr(PKEY_1), 1e18 ether);
+        deal(address(wstETH), vm.addr(PKEY_1), DEPOSIT_AMOUNT * 2);
+        deal(address(sdex), vm.addr(PKEY_1), 1e6 ether);
         deal(vm.addr(PKEY_1), 1e6 ether);
         _securityDeposit = protocol.getSecurityDepositValue();
     }

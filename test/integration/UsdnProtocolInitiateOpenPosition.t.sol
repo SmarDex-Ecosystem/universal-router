@@ -3,9 +3,11 @@ pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { USER_1 } from "usdn-contracts/test/utils/Constants.sol";
+import { PKEY_1 } from "./utils/Constants.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+import { SigUtils } from "./utils/SigUtils.sol";
 
 /**
  * @custom:feature Initiating an open position through the router
@@ -19,6 +21,8 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
     function setUp() public {
         _setUp();
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
+        deal(address(wstETH), vm.addr(PKEY_1), OPEN_POSITION_AMOUNT * 2);
+        deal(vm.addr(PKEY_1), 1e6 ether);
         _securityDeposit = protocol.getSecurityDepositValue();
     }
 
@@ -81,5 +85,85 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(wstETH.balanceOf(address(this)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
+    }
+
+    /**
+     * @custom:scenario Initiating an open position through the router with a permit transfer
+     * @custom:given The user sent the exact amount of wstETH to the router by doing a permit transfer
+     * @custom:when The user initiates a permit transfer to the router
+     * @custom:and The user initiates an open position through the router
+     * @custom:then Open position is initiated successfully
+     */
+    function test_ForkInitiateOpenPositionWithPermit() public {
+        uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
+        uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
+
+        SigUtils sigUtilsWstETH = new SigUtils(wstETH.DOMAIN_SEPARATOR());
+        (uint8 v0, bytes32 r0, bytes32 s0) =
+            sigUtilsWstETH.signPermit(PKEY_1, address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max);
+
+        bytes memory commands = _getPermitCommand();
+        bytes[] memory inputs = new bytes[](2);
+        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v0, r0, s0);
+        inputs[1] = abi.encode(
+            OPEN_POSITION_AMOUNT,
+            DESIRED_LIQUIDATION,
+            USER_1,
+            address(this),
+            NO_PERMIT2,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
+        );
+
+        vm.prank(vm.addr(PKEY_1));
+        router.execute{ value: _securityDeposit }(commands, inputs);
+
+        assertEq(vm.addr(PKEY_1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
+        assertEq(wstETH.balanceOf(vm.addr(PKEY_1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
+    }
+
+    /**
+     * @custom:scenario Initiating an open position through the router with a "full balance" amount with a permit
+     * transfer
+     * @custom:given The user sent the `OPEN_POSITION_AMOUNT` of wstETH to the router by doing a permit transfer
+     * @custom:when The user initiates a permit transfer to the router
+     * @custom:and The user initiates an open position through the router with the amount `CONTRACT_BALANCE`
+     * @custom:then The open position is initiated successfully with the full balance of the router
+     * @custom:and The user's asset balance is reduced by `OPEN_POSITION_AMOUNT`
+     */
+    function test_ForkInitiateOpenPositionFullBalanceWithPermit() public {
+        uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
+        uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
+
+        SigUtils sigUtilsWstETH = new SigUtils(wstETH.DOMAIN_SEPARATOR());
+        (uint8 v0, bytes32 r0, bytes32 s0) =
+            sigUtilsWstETH.signPermit(PKEY_1, address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max);
+
+        bytes memory commands = _getPermitCommand();
+
+        bytes[] memory inputs = new bytes[](2);
+        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v0, r0, s0);
+        inputs[1] = abi.encode(
+            Constants.CONTRACT_BALANCE,
+            DESIRED_LIQUIDATION,
+            USER_1,
+            address(this),
+            NO_PERMIT2,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
+        );
+        vm.prank(vm.addr(PKEY_1));
+        router.execute{ value: _securityDeposit }(commands, inputs);
+
+        assertEq(vm.addr(PKEY_1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
+        assertEq(wstETH.balanceOf(vm.addr(PKEY_1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
+    }
+
+    function _getPermitCommand() internal pure returns (bytes memory) {
+        bytes memory commandPermitWsteth = abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)));
+        bytes memory commandInitiateDeposit = abi.encodePacked(bytes1(uint8(Commands.INITIATE_OPEN)));
+        return abi.encodePacked(commandPermitWsteth, commandInitiateDeposit);
     }
 }
