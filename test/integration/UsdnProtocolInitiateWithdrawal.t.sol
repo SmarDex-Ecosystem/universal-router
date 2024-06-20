@@ -5,16 +5,10 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 import { DEPLOYER, USER_1 } from "usdn-contracts/test/utils/Constants.sol";
 import { PKEY_1 } from "./utils/Constants.sol";
 
+import { Commands } from "../../src/libraries/Commands.sol";
+
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
-
-import { Commands } from "../../src/libraries/Commands.sol";
-
-import { Commands } from "../../src/libraries/Commands.sol";
-
-import { Commands } from "../../src/libraries/Commands.sol";
-
-import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
  * @custom:feature Initiating a withdrawal through the router
