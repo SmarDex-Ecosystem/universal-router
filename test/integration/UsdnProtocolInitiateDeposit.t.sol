@@ -103,11 +103,13 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR()
             )
@@ -150,11 +152,13 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR()
             )

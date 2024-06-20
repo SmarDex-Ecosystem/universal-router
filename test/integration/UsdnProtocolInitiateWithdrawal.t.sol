@@ -89,6 +89,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         uint256 usdnTokensToTransfer = usdn.convertToTokens(WITHDRAW_AMOUNT);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
             )
@@ -119,9 +120,10 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
         uint256 usdnSharesBefore = usdn.sharesOf(vm.addr(PKEY_1));
 
-        uint256 usdnTokensToTransfer = usdn.convertToTokens(WITHDRAW_AMOUNT);
+        uint256 usdnTokensToTransfer = usdn.convertToTokensRoundUp(WITHDRAW_AMOUNT);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
             )

@@ -102,6 +102,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
@@ -142,6 +143,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            PKEY_1,
             _sigUtils.getDigest(
                 vm.addr(PKEY_1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
             )
