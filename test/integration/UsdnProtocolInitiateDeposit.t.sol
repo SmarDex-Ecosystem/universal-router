@@ -78,14 +78,6 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         assertEq(wstETH.balanceOf(address(this)), wstEthBalanceBefore - DEPOSIT_AMOUNT, "asset balance");
     }
 
-    function _calculateBurnAmount(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
-        uint256 usdnSharesToMintEstimated = protocol.i_calcMintUsdnShares(
-            depositAmount, protocol.getBalanceVault(), usdn.totalShares(), params.initialPrice
-        );
-        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
-        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
-    }
-
     /**
      * @custom:scenario Initiating a deposit through the router through a permit transfer
      * @custom:given The user sent the exact amount of assets and exact amount of SDEX to the router by doing a permit
@@ -177,12 +169,20 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         assertEq(wstETH.balanceOf(vm.addr(PKEY_1)), wstEthBalanceBefore - DEPOSIT_AMOUNT, "asset balance");
     }
 
+    receive() external payable { }
+
+    function _calculateBurnAmount(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
+        uint256 usdnSharesToMintEstimated = protocol.i_calcMintUsdnShares(
+            depositAmount, protocol.getBalanceVault(), usdn.totalShares(), params.initialPrice
+        );
+        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
+        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
+    }
+
     function _getPermitCommand() internal pure returns (bytes memory) {
         bytes memory commandPermitWsteth = abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)));
         bytes memory commandPermitSdex = abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)));
         bytes memory commandInitiateDeposit = abi.encodePacked(bytes1(uint8(Commands.INITIATE_DEPOSIT)));
         return abi.encodePacked(commandPermitWsteth, commandPermitSdex, commandInitiateDeposit);
     }
-
-    receive() external payable { }
 }
