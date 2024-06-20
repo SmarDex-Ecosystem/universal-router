@@ -8,8 +8,7 @@ import {
     PositionId
 } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
-import { PYTH_ETH_USD } from "./utils/Constants.sol";
-import { DEPLOYER, USER_1, USER_2, USER_3, USER_4 } from "./utils/Constants.sol";
+import { PYTH_ETH_USD, DEPLOYER, USER_1, USER_2, USER_3, USER_4 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";

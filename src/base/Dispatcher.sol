@@ -105,6 +105,27 @@ abstract contract Dispatcher is
                                 abi.decode(inputs, (IAllowanceTransfer.PermitBatch, bytes));
                             bytes calldata data = inputs.toBytes(1);
                             PERMIT2.permit(lockedBy, permitBatch, data);
+                        } else if (command == Commands.PERMIT) {
+                            // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
+                            // bytes32))
+                            address token;
+                            address recipient; // spender
+                            uint256 amount;
+                            uint256 deadline;
+                            uint8 v;
+                            bytes32 r;
+                            bytes32 s;
+                            assembly {
+                                token := calldataload(inputs.offset)
+                                recipient := calldataload(add(inputs.offset, 0x20))
+                                amount := calldataload(add(inputs.offset, 0x40))
+                                deadline := calldataload(add(inputs.offset, 0x60))
+                                v := calldataload(add(inputs.offset, 0x80))
+                                r := calldataload(add(inputs.offset, 0xa0))
+                                s := calldataload(add(inputs.offset, 0xc0))
+                            }
+                            try // protect against griefing
+                            ERC20Permit(token).permit(lockedBy, map(recipient), amount, deadline, v, r, s) { } catch { }
                         } else if (command == Commands.PERMIT_TRANSFER) {
                             // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
                             // bytes32))

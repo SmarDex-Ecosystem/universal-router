@@ -2,11 +2,12 @@
 pragma solidity ^0.8.25;
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { PYTH_ETH_USD } from "usdn-contracts/test/utils/Constants.sol";
-import { USER_1, USER_2 } from "usdn-contracts/test/utils/Constants.sol";
 import { ProtocolAction, Position, PositionId } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
+import { PYTH_ETH_USD, USER_1, USER_2, PKEY_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+import { SigUtils } from "./utils/SigUtils.sol";
+
 import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
@@ -18,12 +19,16 @@ contract TestForkUniversalRouterValidateOpenPosition is UniversalRouterBaseFixtu
 
     uint256 constant OPEN_POSITION_AMOUNT = 2 ether;
     uint256 constant DESIRED_LIQUIDATION = 2500 ether;
+    uint256 internal _securityDeposit;
     PositionId internal _posId;
-    uint256 _securityDeposit;
+    SigUtils internal _sigUtils;
 
     function setUp() public {
         _setUp();
+        _sigUtils = new SigUtils();
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
+        deal(address(wstETH), vm.addr(PKEY_1), OPEN_POSITION_AMOUNT * 2);
+        deal(vm.addr(PKEY_1), 1e6 ether);
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
         (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
