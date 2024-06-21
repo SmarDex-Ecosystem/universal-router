@@ -42,7 +42,7 @@ contract TestForkUniversalRouterValidateDeposit is UniversalRouterBaseFixture {
         uint256 ethBalanceBeforeUser = USER_1.balance;
         uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.ValidateDeposit);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.VALIDATE_DEPOSIT)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.VALIDATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(USER_1, data, EMPTY_PREVIOUS_DATA, validationCost);
         router.execute{ value: validationCost }(commands, inputs);

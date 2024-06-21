@@ -40,7 +40,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         wstETH.transfer(address(router), DEPOSIT_AMOUNT);
         sdex.transfer(address(router), _calculateBurnAmount(DEPOSIT_AMOUNT));
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.INITIATE_DEPOSIT)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] =
             abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
@@ -67,7 +67,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         wstETH.transfer(address(router), DEPOSIT_AMOUNT);
         sdex.transfer(address(router), _calculateBurnAmount(DEPOSIT_AMOUNT));
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.INITIATE_DEPOSIT)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             Constants.CONTRACT_BALANCE, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
@@ -176,10 +176,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
 
     function _getPermitCommand() internal pure returns (bytes memory) {
         bytes memory commandPermitWsteth =
-            abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)) | Commands.FLAG_ALLOW_REVERT);
+            abi.encodePacked(uint8(Commands.PERMIT_TRANSFER) | uint8(Commands.FLAG_ALLOW_REVERT));
         bytes memory commandPermitSdex =
-            abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)) | Commands.FLAG_ALLOW_REVERT);
-        bytes memory commandInitiateDeposit = abi.encodePacked(bytes1(uint8(Commands.INITIATE_DEPOSIT)));
+            abi.encodePacked(uint8(Commands.PERMIT_TRANSFER) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandInitiateDeposit = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         return abi.encodePacked(commandPermitWsteth, commandPermitSdex, commandInitiateDeposit);
     }
 }

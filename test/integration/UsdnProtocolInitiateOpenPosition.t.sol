@@ -40,7 +40,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         wstETH.transfer(address(router), OPEN_POSITION_AMOUNT);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.INITIATE_OPEN)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             OPEN_POSITION_AMOUNT,
@@ -71,7 +71,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         wstETH.transfer(address(router), OPEN_POSITION_AMOUNT);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.INITIATE_OPEN)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             Constants.CONTRACT_BALANCE,
@@ -171,8 +171,8 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
     function _getPermitCommand() internal pure returns (bytes memory) {
         bytes memory commandPermitWsteth =
-            abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)) | Commands.FLAG_ALLOW_REVERT);
-        bytes memory commandInitiateDeposit = abi.encodePacked(bytes1(uint8(Commands.INITIATE_OPEN)));
+            abi.encodePacked(uint8(Commands.PERMIT_TRANSFER) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandInitiateDeposit = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
         return abi.encodePacked(commandPermitWsteth, commandInitiateDeposit);
     }
 }

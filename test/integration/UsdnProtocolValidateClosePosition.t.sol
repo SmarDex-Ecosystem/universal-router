@@ -57,7 +57,7 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         uint256 ethBalanceBefore = address(this).balance;
         uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.ValidateClosePosition);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.VALIDATE_CLOSE)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.VALIDATE_CLOSE));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.MSG_SENDER, data, EMPTY_PREVIOUS_DATA, validationCost);
         router.execute{ value: validationCost }(commands, inputs);
