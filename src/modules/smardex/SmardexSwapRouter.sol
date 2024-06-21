@@ -15,35 +15,10 @@ import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
 abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Permit2Payments {
-    /// @notice Indicates that the amountOut is lower than the minAmountOut
-    error TooLittleReceived();
-
-    /// @notice Indicates that the amountIn is higher than the maxAmountIn
-    error ExcessiveInputAmount();
-
-    /// @notice Indicates that the recipient is invalid
-    error InvalidRecipient();
-
-    /// @notice Indicates that msg.sender is not the pair
-    error InvalidPair();
-
-    /// @notice Indicates that the callback amount is invalid
-    error CallbackInvalidAmount();
-
     using Path for bytes;
     using SafeCast for uint256;
     using SafeCast for int256;
     using SafeERC20 for IERC20;
-
-    /**
-     * @notice callback data for swap from SmardexRouter
-     * @param path path of the swap, array of token addresses tightly packed
-     * @param payer address of the payer for the swap
-     */
-    struct SwapCallbackData {
-        bytes path;
-        address payer;
-    }
 
     /**
      * @dev Used as the placeholder value for maxAmountIn, because the computed amount
@@ -68,10 +43,19 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
             revert InvalidPair();
         }
 
-        (, uint256 amountToPay) =
+        (bool isExactInput, uint256 amountToPay) =
             amount0Delta > 0 ? (tokenIn < tokenOut, uint256(amount0Delta)) : (tokenOut < tokenIn, uint256(amount1Delta));
 
-        _payOrPermit2Transfer(tokenIn, decodedData.payer, msg.sender, amountToPay);
+        if (isExactInput) {
+            _payOrPermit2Transfer(tokenIn, decodedData.payer, msg.sender, amountToPay);
+        } else if (decodedData.path.hasMultiplePools()) {
+            decodedData.path = decodedData.path.skipTokenMemory();
+            _swapExactOut(amountToPay, msg.sender, decodedData);
+        } else {
+            amountInCached = amountToPay;
+            tokenIn = tokenOut; // swap in/out because exact output swaps are reversed
+            _payOrPermit2Transfer(tokenIn, decodedData.payer, msg.sender, amountToPay);
+        }
     }
 
     /**
@@ -119,6 +103,65 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
 
         if (amountOut < amountOutMinimum) {
             revert TooLittleReceived();
+        }
+    }
+
+    /**
+     * @notice Performs a Smardex exact output swap
+     * @dev Use router balance if payer is the router or use permit2 from msg.sender
+     * @param recipient The recipient of the output tokens
+     * @param amountOut The amount of output tokens to receive for the trade
+     * @param amountInMaximum The maximum desired amount of input tokens
+     * @param path The path of the trade as a bytes string
+     * @param payer The address that will be paying the input
+     */
+    function _smardexSwapExactOutput(
+        address recipient,
+        uint256 amountOut,
+        uint256 amountInMaximum,
+        bytes calldata path,
+        address payer
+    ) internal {
+        amountInCached = amountInMaximum;
+        // Path needs to be reversed as to get the amountIn that we will ask from next pair hop
+        bytes memory _reversedPath = path.encodeTightlyPackedReversed();
+        uint256 amountIn = _swapExactOut(amountOut, recipient, SwapCallbackData({ path: _reversedPath, payer: payer }));
+        // amount In is only the right one for one Hop, otherwise we need cached amountIn from callback
+        if (path.length > 2) {
+            amountIn = amountInCached;
+        }
+
+        if (amountIn > amountInMaximum) {
+            revert ExcessiveInputAmount();
+        }
+        amountInCached = DEFAULT_MAX_AMOUNT_IN;
+    }
+
+    /**
+     * @notice internal function to swap quantity of token to receive a determined quantity
+     * @param amountOut quantity to receive
+     * @param to address that will receive the token
+     * @param data SwapCallbackData data of the swap to transmit
+     * @return amountIn_ amount of token to pay
+     */
+    function _swapExactOut(uint256 amountOut, address to, SwapCallbackData memory data)
+        private
+        returns (uint256 amountIn_)
+    {
+        if (to == address(0)) {
+            revert InvalidRecipient();
+        }
+
+        (address tokenOut, address tokenIn) = data.path.decodeFirstPool();
+        bool zeroForOne = tokenIn < tokenOut;
+
+        (int256 amount0, int256 amount1) = ISmardexPair(ISmardexFactory(SMARDEX_FACTORY).getPair(tokenIn, tokenOut))
+            .swap(to, zeroForOne, -amountOut.toInt256(), abi.encode(data));
+
+        if (zeroForOne) {
+            amountIn_ = uint256(amount0);
+        } else {
+            amountIn_ = uint256(amount1);
         }
     }
 

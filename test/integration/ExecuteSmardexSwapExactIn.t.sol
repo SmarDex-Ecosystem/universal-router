@@ -6,7 +6,7 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 import { WETH, SDEX } from "usdn-contracts/test/utils/Constants.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
-import { SmardexSwapRouter } from "../../src/modules/smardex/SmardexSwapRouter.sol";
+import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
@@ -14,7 +14,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
  * @custom:feature Test smardex swap exact in commands
  * @custom:background A initiated universal router
  */
-contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture {
+contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
     uint256 constant BASE_AMOUNT = 1 ether;
     address constant WBTC = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
 
@@ -159,7 +159,7 @@ contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture {
 
         sdex.transfer(address(router), BASE_AMOUNT);
 
-        vm.expectRevert(SmardexSwapRouter.TooLittleReceived.selector);
+        vm.expectRevert(TooLittleReceived.selector);
         router.execute(commands, inputs);
     }
 }
