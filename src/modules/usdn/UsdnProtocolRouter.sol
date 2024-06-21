@@ -231,22 +231,26 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     }
 
     /**
-     * @notice Wrap the usdn value into wusdn
+     * @notice Wrap the usdn shares value into wusdn
      * @param value The usdn value
      * @param receiver The wusdn receiver
      */
-    function _wrapUSDN(uint256 value, address receiver) internal {
-        uint256 balance = USDN.balanceOf(address(this));
+    function _wrapUSDNShares(uint256 value, address receiver) internal {
+        uint256 sharesBalance = USDN.sharesOf(address(this));
 
         if (value == Constants.CONTRACT_BALANCE) {
-            value = balance;
-        } else if (value > balance) {
+            value = sharesBalance;
+        } else if (value > sharesBalance) {
             revert InsufficientToken();
         }
 
         if (value > 0) {
-            USDN.forceApprove(address(WUSDN), value);
-            WUSDN.wrap(value, receiver);
+            // To avoid missing approval dust
+            // due of the usdn balanceOf rounding,
+            // we approve max uint256 then reset to 0
+            USDN.forceApprove(address(WUSDN), type(uint256).max);
+            WUSDN.wrapShares(value, receiver);
+            USDN.approve(address(WUSDN), 0);
         }
     }
 
@@ -256,7 +260,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      * @param receiver The usdn receiver
      */
     function _unwrapUSDN(uint256 value, address receiver) internal {
-        uint256 balance = IERC20(address(WUSDN)).balanceOf(address(this));
+        uint256 balance = WUSDN.balanceOf(address(this));
 
         if (value == Constants.CONTRACT_BALANCE) {
             value = balance;

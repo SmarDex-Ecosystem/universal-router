@@ -330,13 +330,13 @@ abstract contract Dispatcher is
             } else {
                 if (command == Commands.WRAP_USDN) {
                     // equivalent: abi.decode(inputs, (uint256, address))
-                    uint256 usdnAmount;
+                    uint256 usdnSharesAmount;
                     address recipient;
                     assembly {
-                        usdnAmount := calldataload(inputs.offset)
+                        usdnSharesAmount := calldataload(inputs.offset)
                         recipient := calldataload(add(inputs.offset, 0x20))
                     }
-                    _wrapUSDN(usdnAmount, map(recipient));
+                    _wrapUSDNShares(usdnSharesAmount, map(recipient));
                 } else if (command == Commands.UNWRAP_WUSDN) {
                     // equivalent: abi.decode(inputs, (uint256, address))
                     uint256 wusdnAmount;

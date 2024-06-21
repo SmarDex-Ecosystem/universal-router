@@ -72,12 +72,12 @@ contract TestForkExecuteWusdn is UniversalRouterBaseFixture {
         // commands
         bytes memory commands = abi.encodePacked(uint8(Commands.WRAP_USDN));
 
-        // inputs
-        bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(BASE_AMOUNT + 1, Constants.MSG_SENDER);
-
         // transfer
         usdn.transfer(address(router), BASE_AMOUNT);
+
+        // inputs
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(usdn.sharesOf(address(router)) + 1, Constants.MSG_SENDER);
 
         // execution
         vm.expectRevert(Payments.InsufficientToken.selector);
