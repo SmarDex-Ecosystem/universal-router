@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
+
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -42,7 +43,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
                 vm.addr(1),
                 address(this),
                 1 ether,
-                ERC20Permit(wstETH).nonces(vm.addr(1)),
+                IERC20Permit(wstETH).nonces(vm.addr(1)),
                 type(uint256).max,
                 wstETH.DOMAIN_SEPARATOR()
             )
@@ -82,7 +83,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
                 vm.addr(1),
                 address(this),
                 1 ether,
-                ERC20Permit(wstETH).nonces(vm.addr(1)),
+                IERC20Permit(wstETH).nonces(vm.addr(1)),
                 type(uint256).max,
                 wstETH.DOMAIN_SEPARATOR()
             )
@@ -128,7 +129,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
                 vm.addr(1), // victim
                 address(this),
                 1 ether,
-                ERC20Permit(wstETH).nonces(vm.addr(1)),
+                IERC20Permit(wstETH).nonces(vm.addr(1)),
                 type(uint256).max,
                 wstETH.DOMAIN_SEPARATOR()
             )
