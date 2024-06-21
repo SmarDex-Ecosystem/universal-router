@@ -225,4 +225,15 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
         // slither-disable-next-line arbitrary-send-eth
         USDN_PROTOCOL.validateActionablePendingActions{ value: ethAmount }(previousActionsData, maxValidations);
     }
+
+    /**
+     * @notice Performs tick liquidations of the USDN protocol
+     * @param currentPriceData The current price data
+     * @param iterations The liquidation iterations
+     * @param ethAmount The amount of Ether to send with the transaction
+     */
+    function _usdnLiquidate(bytes memory currentPriceData, uint16 iterations, uint256 ethAmount) internal {
+        // slither-disable-next-line arbitrary-send-eth
+        USDN_PROTOCOL.liquidate{ value: ethAmount }(currentPriceData, iterations);
+    }
 }
