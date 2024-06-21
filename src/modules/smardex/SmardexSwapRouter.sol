@@ -15,21 +15,6 @@ import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
 abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Permit2Payments {
-    /// @notice Indicates that the amountOut is lower than the minAmountOut
-    error TooLittleReceived();
-
-    /// @notice Indicates that the amountIn is higher than the maxAmountIn
-    error ExcessiveInputAmount();
-
-    /// @notice Indicates that the recipient is invalid
-    error InvalidRecipient();
-
-    /// @notice Indicates that msg.sender is not the pair
-    error InvalidPair();
-
-    /// @notice Indicates that the callback amount is invalid
-    error CallbackInvalidAmount();
-
     using Path for bytes;
     using SafeCast for uint256;
     using SafeCast for int256;
