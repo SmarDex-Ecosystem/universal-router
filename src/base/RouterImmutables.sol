@@ -4,6 +4,8 @@ pragma solidity ^0.8.25;
 import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
 import { IWusdn } from "usdn-contracts/src/interfaces/Usdn/IWusdn.sol";
 
+import { ISmardexFactory } from "../interfaces/smardex/ISmardexFactory.sol";
+
 /**
  * @dev Structure to hold the immutable parameters for the router
  * @param permit2 The permit2 address
@@ -15,6 +17,7 @@ import { IWusdn } from "usdn-contracts/src/interfaces/Usdn/IWusdn.sol";
  * @param usdnProtocol The USDN protocol address
  * @param wstEth The WstETH address
  * @param wusdn The wrapped usdn address
+ * @param smardexFactory The smardex factory
  */
 struct RouterParameters {
     address permit2;
@@ -26,4 +29,5 @@ struct RouterParameters {
     IUsdnProtocol usdnProtocol;
     address wstEth;
     IWusdn wusdn;
+    ISmardexFactory smardexFactory;
 }

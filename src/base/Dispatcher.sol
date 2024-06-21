@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.25;
 
 import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
@@ -13,6 +13,7 @@ import { Commands } from "../libraries/Commands.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
+import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
 
 /**
  * @title Decodes and Executes Commands
@@ -24,6 +25,7 @@ abstract contract Dispatcher is
     V3SwapRouter,
     UsdnProtocolRouter,
     LidoRouter,
+    SmardexSwapRouter,
     LockAndMsgSender
 {
     using BytesLib for bytes;
@@ -318,7 +320,16 @@ abstract contract Dispatcher is
                         ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
                         _usdnValidateClosePosition(map(validator), closePriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.LIQUIDATE) {
-                        // TODO LIQUIDATE
+                        // equivalent: abi.decode(inputs, (bytes, uint16, uint256))
+                        uint16 iterations;
+                        uint256 ethAmount;
+                        assembly {
+                            // 0x00 offset is the currentPriceData, decoded below
+                            iterations := calldataload(add(inputs.offset, 0x20))
+                            ethAmount := calldataload(add(inputs.offset, 0x40))
+                        }
+                        bytes memory currentPriceData = inputs.toBytes(0);
+                        _usdnLiquidate(currentPriceData, iterations, ethAmount);
                     } else if (command == Commands.VALIDATE_PENDING) {
                         (PreviousActionsData memory previousActionsData, uint256 maxValidations, uint256 ethAmount) =
                             abi.decode(inputs, (PreviousActionsData, uint256, uint256));
@@ -366,9 +377,37 @@ abstract contract Dispatcher is
             }
         } else {
             if (command == Commands.SMARDEX_SWAP_EXACT_IN) {
-                // TODO SMARDEX_SWAP_EXACT_IN
+                // equivalent: abi.decode(inputs, (address, uint256, uint256, bytes, bool))
+                address recipient;
+                uint256 amountIn;
+                uint256 amountOutMin;
+                bool payerIsUser;
+                assembly {
+                    recipient := calldataload(inputs.offset)
+                    amountIn := calldataload(add(inputs.offset, 0x20))
+                    amountOutMin := calldataload(add(inputs.offset, 0x40))
+                    // 0x60 offset is the path, decoded below
+                    payerIsUser := calldataload(add(inputs.offset, 0x80))
+                }
+                bytes calldata path = inputs.toBytes(3);
+                address payer = payerIsUser ? lockedBy : address(this);
+                _smardexSwapExactInput(map(recipient), amountIn, amountOutMin, path, payer);
             } else if (command == Commands.SMARDEX_SWAP_EXACT_OUT) {
-                // TODO SMARDEX_SWAP_EXACT_OUT
+                // equivalent: abi.decode(inputs, (address, uint256, uint256, bytes, bool))
+                address recipient;
+                uint256 amountOut;
+                uint256 amountInMax;
+                bool payerIsUser;
+                assembly {
+                    recipient := calldataload(inputs.offset)
+                    amountOut := calldataload(add(inputs.offset, 0x20))
+                    amountInMax := calldataload(add(inputs.offset, 0x40))
+                    // 0x60 offset is the path, decoded below
+                    payerIsUser := calldataload(add(inputs.offset, 0x80))
+                }
+                bytes calldata path = inputs.toBytes(3);
+                address payer = payerIsUser ? lockedBy : address(this);
+                _smardexSwapExactOutput(map(recipient), amountOut, amountInMax, path, payer);
             } else {
                 revert InvalidCommandType(command);
             }

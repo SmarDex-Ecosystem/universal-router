@@ -9,11 +9,12 @@ import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integrat
 
 import { UniversalRouterHandler } from "./Handler.sol";
 import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
+import { ISmardexFactory } from "../../../src/interfaces/smardex/ISmardexFactory.sol";
+
 /**
  * @title UniversalRouterBaseFixture
  * @dev Utils for testing the Universal Router
  */
-
 contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
     UniversalRouterHandler public router;
     IAllowanceTransfer permit2;
@@ -38,7 +39,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
             poolInitCodeHash: 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54, // v3 pool hash
             usdnProtocol: protocol,
             wstEth: WSTETH,
-            wusdn: wusdn
+            wusdn: wusdn,
+            smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F)
         });
 
         vm.prank(DEPLOYER);

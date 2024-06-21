@@ -2,8 +2,9 @@
 pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
+import { IERC20Errors } from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
 import { DEPLOYER, WETH, SDEX, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
+import { IUsdnErrors } from "usdn-contracts/src/interfaces/Usdn/IUsdnErrors.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
@@ -61,17 +62,23 @@ contract TestForkExecuteWusdn is UniversalRouterBaseFixture {
      * @custom:given The initiated universal router
      * @custom:and The router should be funded with some `usdn`
      * @custom:when The `execute` function is called for `WRAP_USDN` command
-     * @custom:then The transaction should revert with `InsufficientToken`
+     * @custom:then The transaction should revert with `UsdnInsufficientSharesBalance`
      */
-    function test_RevertWhen_ForkExecuteWrapUsdnInsufficientToken() external {
+    function test_RevertWhen_ForkExecuteWrapUsdnInsufficientSharesBalance() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.WRAP_USDN));
 
         usdn.transfer(address(router), BASE_AMOUNT);
 
-        bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(usdn.sharesOf(address(router)) + 1, Constants.MSG_SENDER);
+        uint256 currentShares = usdn.sharesOf(address(router));
 
-        vm.expectRevert(Payments.InsufficientToken.selector);
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(currentShares * 2, Constants.MSG_SENDER);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IUsdnErrors.UsdnInsufficientSharesBalance.selector, address(router), currentShares, currentShares * 2
+            )
+        );
         router.execute(commands, inputs);
     }
 
@@ -104,9 +111,9 @@ contract TestForkExecuteWusdn is UniversalRouterBaseFixture {
      * @custom:given The initiated universal router
      * @custom:and The router should be funded with some `usdn`
      * @custom:when The `execute` function is called for `UNWRAP_WUSDN` command with an amount too high
-     * @custom:then The transaction should revert with `InsufficientToken`
+     * @custom:then The transaction should revert with `ERC20InsufficientBalance`
      */
-    function test_RevertWhen_ForkExecuteUnwrapUsdnInsufficientToken() external {
+    function test_RevertWhen_ForkExecuteUnwrapUsdnERC20InsufficientBalance() external {
         wusdn.wrap(BASE_AMOUNT, address(this));
         uint256 wusdnBalance = wusdn.balanceOf(address(this));
         bytes memory commands = abi.encodePacked(uint8(Commands.UNWRAP_WUSDN));
@@ -114,7 +121,9 @@ contract TestForkExecuteWusdn is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(wusdnBalance + 1, Constants.MSG_SENDER, Constants.ADDRESS_THIS);
 
-        vm.expectRevert(Payments.InsufficientToken.selector);
+        vm.expectRevert(
+            abi.encodeWithSelector(IERC20Errors.ERC20InsufficientBalance.selector, address(router), 0, BASE_AMOUNT + 1)
+        );
         router.execute(commands, inputs);
     }
 }
