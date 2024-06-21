@@ -23,8 +23,7 @@ cache/
 # Dependencies
 node_modules/
 
-# devenv
-.devenv
+# direnv
 .direnv
 
 # coverage
@@ -40,5 +39,5 @@ docs/
 # Natspec smells report
 natspec-smells.txt
 
-# test_utils
-test_utils/
+# Rust
+target/
