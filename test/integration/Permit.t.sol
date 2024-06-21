@@ -57,6 +57,15 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
     }
 
+    /**
+     * @custom:scenario An attackant steals the signature of a permit approval to transfer assets
+     * @custom:given The user has 1 `wstETH`
+     * @custom:when The user initiates a permit through the router with a `FLAG_ALLOW_REVERT`
+     * @custom:and An attackant steals the signature of the user and front-runs the permit approval through the router
+     * @custom:and A transfer from is initiated, consuming the approval
+     * @custom:then The user permit tx is not reverting
+     * @custom:and The transfer is successful
+     */
     function test_griefing() public {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
@@ -93,6 +102,15 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
     }
 
+    /**
+     * @custom:scenario An attackant steals the signature of a permit approval to transfer assets
+     * @custom:given The user has 1 `wstETH`
+     * @custom:when The user initiates a permit through the router without any flag
+     * @custom:and An attackant steals the signature of the user and front-runs the permit approval through the router
+     * @custom:and A transfer from is initiated, consuming the approval
+     * @custom:then The user permit tx is reverting
+     * @custom:and The transfer is successful
+     */
     function test_RevertWhen_griefing() public {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
