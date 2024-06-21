@@ -21,16 +21,6 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
     using SafeERC20 for IERC20;
 
     /**
-     * @notice callback data for swap from SmardexRouter
-     * @param path path of the swap, array of token addresses tightly packed
-     * @param payer address of the payer for the swap
-     */
-    struct SwapCallbackData {
-        bytes path;
-        address payer;
-    }
-
-    /**
      * @dev Used as the placeholder value for maxAmountIn, because the computed amount
      * in for an exact output swap can never actually be this value
      */
