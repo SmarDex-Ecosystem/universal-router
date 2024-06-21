@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
+import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
-//import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
 
 /**
  * @custom:feature Doing a permit approval through the router
@@ -35,11 +35,19 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
         // inputs building
         bytes[] memory inputs = new bytes[](1);
-        // permits
+        // permits signature
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            1, _sigUtils.getDigest(vm.addr(1), address(this), 1 ether, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
+            1,
+            _sigUtils.getDigest(
+                vm.addr(1),
+                address(this),
+                1 ether,
+                ERC20Permit(wstETH).nonces(vm.addr(1)),
+                type(uint256).max,
+                wstETH.DOMAIN_SEPARATOR()
+            )
         );
-        inputs[0] = abi.encode(address(wstETH), address(this), 1 ether, type(uint256).max, v, r, s);
+        inputs[0] = abi.encode(address(wstETH), address(vm.addr(1)), address(this), 1 ether, type(uint256).max, v, r, s);
         // execute
         vm.prank(vm.addr(1));
         router.execute(commands, inputs);
@@ -60,9 +68,17 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
         // permits
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            1, _sigUtils.getDigest(vm.addr(1), address(this), 1 ether, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
+            1,
+            _sigUtils.getDigest(
+                vm.addr(1),
+                address(this),
+                1 ether,
+                ERC20Permit(wstETH).nonces(vm.addr(1)),
+                type(uint256).max,
+                wstETH.DOMAIN_SEPARATOR()
+            )
         );
-        inputs[0] = abi.encode(address(wstETH), address(this), 1 ether, type(uint256).max, v, r, s);
+        inputs[0] = abi.encode(address(wstETH), vm.addr(1), address(this), 1 ether, type(uint256).max, v, r, s);
 
         // executing by an attackant
         vm.prank(vm.addr(2)); // griefing
@@ -89,9 +105,17 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
         // permits
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            1, _sigUtils.getDigest(vm.addr(1), address(this), 1 ether, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
+            1,
+            _sigUtils.getDigest(
+                vm.addr(1), // victim
+                address(this),
+                1 ether,
+                ERC20Permit(wstETH).nonces(vm.addr(1)),
+                type(uint256).max,
+                wstETH.DOMAIN_SEPARATOR()
+            )
         );
-        inputs[0] = abi.encode(address(wstETH), address(this), 1 ether, type(uint256).max, v, r, s);
+        inputs[0] = abi.encode(address(wstETH), vm.addr(1), address(this), 1 ether, type(uint256).max, v, r, s);
 
         // executing by an attackant
         vm.prank(vm.addr(2)); // griefing
@@ -99,10 +123,8 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
         // executing by the victim (the real user)
         vm.prank(vm.addr(1)); // griefed user
-        // expecting revert due to invalid signature after attack
-        vm.expectRevert(); // tried to use selector but it didn't work as
-            // expected, same with ERC20Permit: invalid signature
-        //router.execute(commands, inputs);
+        vm.expectRevert();
+        router.execute(commands, inputs);
 
         wstETH.transferFrom(vm.addr(1), address(this), 1 ether); // still griefed
 

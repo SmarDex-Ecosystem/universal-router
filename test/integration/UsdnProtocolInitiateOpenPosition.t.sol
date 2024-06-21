@@ -109,7 +109,8 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         bytes memory commands = _getPermitCommand();
         bytes[] memory inputs = new bytes[](2);
-        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
+        inputs[0] =
+            abi.encode(address(wstETH), vm.addr(1), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
         inputs[1] = abi.encode(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
@@ -151,7 +152,8 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         bytes memory commands = _getPermitCommand();
 
         bytes[] memory inputs = new bytes[](2);
-        inputs[0] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
+        inputs[0] =
+            abi.encode(address(wstETH), vm.addr(1), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
         inputs[1] = abi.encode(
             Constants.CONTRACT_BALANCE,
             DESIRED_LIQUIDATION,

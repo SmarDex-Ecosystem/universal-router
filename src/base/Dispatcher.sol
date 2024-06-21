@@ -109,7 +109,8 @@ abstract contract Dispatcher is
                             // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
                             // bytes32))
                             address token;
-                            address recipient; // spender
+                            address owner;
+                            address spender;
                             uint256 amount;
                             uint256 deadline;
                             uint8 v;
@@ -117,19 +118,20 @@ abstract contract Dispatcher is
                             bytes32 s;
                             assembly {
                                 token := calldataload(inputs.offset)
-                                recipient := calldataload(add(inputs.offset, 0x20))
-                                amount := calldataload(add(inputs.offset, 0x40))
-                                deadline := calldataload(add(inputs.offset, 0x60))
-                                v := calldataload(add(inputs.offset, 0x80))
-                                r := calldataload(add(inputs.offset, 0xa0))
-                                s := calldataload(add(inputs.offset, 0xc0))
+                                owner := calldataload(add(inputs.offset, 0x20))
+                                spender := calldataload(add(inputs.offset, 0x40))
+                                amount := calldataload(add(inputs.offset, 0x60))
+                                deadline := calldataload(add(inputs.offset, 0x80))
+                                v := calldataload(add(inputs.offset, 0xa0))
+                                r := calldataload(add(inputs.offset, 0xc0))
+                                s := calldataload(add(inputs.offset, 0xe0))
                             }
                             // protect against griefing
                             (success_,) = token.call(
                                 abi.encodeWithSignature(
                                     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
-                                    lockedBy,
-                                    map(recipient),
+                                    owner,
+                                    spender,
                                     amount,
                                     deadline,
                                     v,
@@ -141,7 +143,8 @@ abstract contract Dispatcher is
                             // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
                             // bytes32))
                             address token;
-                            address recipient; // spender
+                            address owner;
+                            address spender;
                             uint256 amount;
                             uint256 deadline;
                             uint8 v;
@@ -149,18 +152,19 @@ abstract contract Dispatcher is
                             bytes32 s;
                             assembly {
                                 token := calldataload(inputs.offset)
-                                recipient := calldataload(add(inputs.offset, 0x20))
-                                amount := calldataload(add(inputs.offset, 0x40))
-                                deadline := calldataload(add(inputs.offset, 0x60))
-                                v := calldataload(add(inputs.offset, 0x80))
-                                r := calldataload(add(inputs.offset, 0xa0))
-                                s := calldataload(add(inputs.offset, 0xc0))
+                                owner := calldataload(add(inputs.offset, 0x20))
+                                spender := calldataload(add(inputs.offset, 0x40))
+                                amount := calldataload(add(inputs.offset, 0x60))
+                                deadline := calldataload(add(inputs.offset, 0x80))
+                                v := calldataload(add(inputs.offset, 0xa0))
+                                r := calldataload(add(inputs.offset, 0xc0))
+                                s := calldataload(add(inputs.offset, 0xe0))
                             }
                             (success_,) = token.call(
                                 abi.encodeWithSignature(
                                     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
-                                    lockedBy,
-                                    map(recipient),
+                                    owner,
+                                    spender,
                                     amount,
                                     deadline,
                                     v,
@@ -168,7 +172,7 @@ abstract contract Dispatcher is
                                     s
                                 )
                             );
-                            IERC20(token).transferFrom(msg.sender, map(recipient), amount);
+                            IERC20(token).transferFrom(owner, spender, amount);
                         } else if (command == Commands.SWEEP) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;

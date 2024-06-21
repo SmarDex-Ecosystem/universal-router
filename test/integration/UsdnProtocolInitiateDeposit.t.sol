@@ -103,8 +103,9 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
             1,
             _sigUtils.getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
-        inputs[0] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
-        inputs[1] = abi.encode(address(sdex), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
+        inputs[0] =
+            abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
+        inputs[1] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
         // deposit
         inputs[2] =
             abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
@@ -150,8 +151,9 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
             1,
             _sigUtils.getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
-        inputs[0] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
-        inputs[1] = abi.encode(address(sdex), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
+        inputs[0] =
+            abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
+        inputs[1] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
         // deposit
         inputs[2] = abi.encode(
             Constants.CONTRACT_BALANCE, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
