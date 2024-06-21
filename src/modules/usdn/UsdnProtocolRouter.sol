@@ -233,6 +233,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
      * @param ethAmount The amount of Ether to send with the transaction
      */
     function _usdnLiquidate(bytes memory currentPriceData, uint16 iterations, uint256 ethAmount) internal {
+        // slither-disable-next-line arbitrary-send-eth
         USDN_PROTOCOL.liquidate{ value: ethAmount }(currentPriceData, iterations);
     }
 }
