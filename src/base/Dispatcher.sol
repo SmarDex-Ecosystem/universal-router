@@ -329,7 +329,9 @@ abstract contract Dispatcher is
                         bytes memory currentPriceData = inputs.toBytes(0);
                         _usdnLiquidate(currentPriceData, iterations, ethAmount);
                     } else if (command == Commands.VALIDATE_PENDING) {
-                        // TODO VALIDATE_PENDING
+                        (PreviousActionsData memory previousActionsData, uint256 maxValidations, uint256 ethAmount) =
+                            abi.decode(inputs, (PreviousActionsData, uint256, uint256));
+                        _usdnValidateActionablePendingActions(previousActionsData, maxValidations, ethAmount);
                     } else {
                         revert InvalidCommandType(command);
                     }
