@@ -16,16 +16,13 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: "universal-router,usdn-contracts"
+          repositories: 'universal-router,usdn-contracts'
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
       - name: Rust cache
         uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            test_utils -> target
 
       - uses: actions/checkout@v4
         with:
@@ -47,7 +44,6 @@ jobs:
 
       - name: Build test_utils
         run: cargo build --release
-        working-directory: test_utils
 
       - name: Check gas snapshots
         run: npm run snapshot:check
