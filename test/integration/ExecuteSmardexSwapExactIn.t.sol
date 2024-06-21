@@ -147,7 +147,7 @@ contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture {
      * @custom:given The initiated universal router
      * @custom:and The router should be funded with some sdex
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_IN` command
-     * @custom:then The `SMARDEX_SWAP_EXACT_IN` command should revert with `tooLittleReceived`
+     * @custom:then The `SMARDEX_SWAP_EXACT_IN` command should revert with `TooLittleReceived`
      */
     function test_RevertWhen_ForkExecuteSmardexSwapExactInTooLittleReceived() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_IN));
