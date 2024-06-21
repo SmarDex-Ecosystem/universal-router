@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { PKEY_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -16,8 +15,8 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
     function setUp() public {
         _setUp();
-        deal(address(wstETH), vm.addr(PKEY_1), 1 ether);
-        deal(vm.addr(PKEY_1), 1e6 ether);
+        deal(address(wstETH), vm.addr(1), 1 ether);
+        deal(vm.addr(1), 1e6 ether);
         _sigUtils = new SigUtils();
     }
 
@@ -37,17 +36,14 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         // permits
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            PKEY_1,
-            _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(this), 1 ether, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
-            )
+            1, _sigUtils.getDigest(vm.addr(1), address(this), 1 ether, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         inputs[0] = abi.encode(address(wstETH), address(this), 1 ether, type(uint256).max, v, r, s);
         // execute
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute(commands, inputs);
 
-        wstETH.transferFrom(vm.addr(PKEY_1), address(this), 1 ether);
+        wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
 
         assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
     }

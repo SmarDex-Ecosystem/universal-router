@@ -18,10 +18,6 @@ address payable constant USER_2 = payable(address(0x2222222222222222222222222222
 address payable constant USER_3 = payable(address(0x3333333333333333333333333333333333333333));
 address payable constant USER_4 = payable(address(0x4444444444444444444444444444444444444444));
 
-// generic users pkey for testing purposes
-/// @dev be aware that (vm.addr(PKEY_1) != USER_1) is true
-uint256 constant PKEY_1 = 0x1111111111111111111111111111111111111111111111111111111111111111;
-
 /* -------------------------------------------------------------------------- */
 /*                              Ethereum mainnet                              */
 /* -------------------------------------------------------------------------- */

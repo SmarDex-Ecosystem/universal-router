@@ -4,7 +4,7 @@ pragma solidity ^0.8.25;
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { ProtocolAction, Position, PositionId } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
-import { PYTH_ETH_USD, USER_1, USER_2, PKEY_1 } from "./utils/Constants.sol";
+import { PYTH_ETH_USD, USER_1, USER_2 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -27,8 +27,8 @@ contract TestForkUniversalRouterValidateOpenPosition is UniversalRouterBaseFixtu
         _setUp();
         _sigUtils = new SigUtils();
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
-        deal(address(wstETH), vm.addr(PKEY_1), OPEN_POSITION_AMOUNT * 2);
-        deal(vm.addr(PKEY_1), 1e6 ether);
+        deal(address(wstETH), vm.addr(1), OPEN_POSITION_AMOUNT * 2);
+        deal(vm.addr(1), 1e6 ether);
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
         (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.17;
 
-import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
@@ -124,8 +124,19 @@ abstract contract Dispatcher is
                                 r := calldataload(add(inputs.offset, 0xa0))
                                 s := calldataload(add(inputs.offset, 0xc0))
                             }
-                            try // protect against griefing
-                            ERC20Permit(token).permit(lockedBy, map(recipient), amount, deadline, v, r, s) { } catch { }
+                            // protect against griefing
+                            (success_,) = token.call(
+                                abi.encodeWithSignature(
+                                    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+                                    lockedBy,
+                                    map(recipient),
+                                    amount,
+                                    deadline,
+                                    v,
+                                    r,
+                                    s
+                                )
+                            );
                         } else if (command == Commands.PERMIT_TRANSFER) {
                             // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
                             // bytes32))
@@ -145,9 +156,19 @@ abstract contract Dispatcher is
                                 r := calldataload(add(inputs.offset, 0xa0))
                                 s := calldataload(add(inputs.offset, 0xc0))
                             }
-                            try // protect against griefing
-                            ERC20Permit(token).permit(lockedBy, map(recipient), amount, deadline, v, r, s) { } catch { }
-                            ERC20Permit(token).transferFrom(msg.sender, map(recipient), amount);
+                            (success_,) = token.call(
+                                abi.encodeWithSignature(
+                                    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+                                    lockedBy,
+                                    map(recipient),
+                                    amount,
+                                    deadline,
+                                    v,
+                                    r,
+                                    s
+                                )
+                            );
+                            IERC20(token).transferFrom(msg.sender, map(recipient), amount);
                         } else if (command == Commands.SWEEP) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;

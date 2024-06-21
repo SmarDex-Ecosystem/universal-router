@@ -3,7 +3,7 @@ pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
-import { USER_1, PKEY_1 } from "./utils/Constants.sol";
+import { USER_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -22,8 +22,8 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
     function setUp() public {
         _setUp();
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
-        deal(address(wstETH), vm.addr(PKEY_1), OPEN_POSITION_AMOUNT * 2);
-        deal(vm.addr(PKEY_1), 1e6 ether);
+        deal(address(wstETH), vm.addr(1), OPEN_POSITION_AMOUNT * 2);
+        deal(vm.addr(1), 1e6 ether);
         _sigUtils = new SigUtils();
         _securityDeposit = protocol.getSecurityDepositValue();
     }
@@ -97,13 +97,13 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
      * @custom:then Open position is initiated successfully
      */
     function test_ForkInitiateOpenPositionWithPermit() public {
-        uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
-        uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
+        uint256 ethBalanceBefore = vm.addr(1).balance;
+        uint256 wstETHBefore = wstETH.balanceOf(vm.addr(1));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            PKEY_1,
+            1,
             _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
+                vm.addr(1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
 
@@ -121,11 +121,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
             _securityDeposit
         );
 
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        assertEq(vm.addr(PKEY_1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
-        assertEq(wstETH.balanceOf(vm.addr(PKEY_1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
+        assertEq(vm.addr(1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
+        assertEq(wstETH.balanceOf(vm.addr(1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
     }
 
     /**
@@ -138,13 +138,13 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
      * @custom:and The user's asset balance is reduced by `OPEN_POSITION_AMOUNT`
      */
     function test_ForkInitiateOpenPositionFullBalanceWithPermit() public {
-        uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
-        uint256 wstETHBefore = wstETH.balanceOf(vm.addr(PKEY_1));
+        uint256 ethBalanceBefore = vm.addr(1).balance;
+        uint256 wstETHBefore = wstETH.balanceOf(vm.addr(1));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            PKEY_1,
+            1,
             _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
+                vm.addr(1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
 
@@ -162,11 +162,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
             EMPTY_PREVIOUS_DATA,
             _securityDeposit
         );
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        assertEq(vm.addr(PKEY_1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
-        assertEq(wstETH.balanceOf(vm.addr(PKEY_1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
+        assertEq(vm.addr(1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
+        assertEq(wstETH.balanceOf(vm.addr(1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
     }
 
     function _getPermitCommand() internal pure returns (bytes memory) {

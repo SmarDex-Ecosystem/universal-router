@@ -4,7 +4,7 @@ pragma solidity ^0.8.25;
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { DepositPendingAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
-import { USER_1, PKEY_1 } from "./utils/Constants.sol";
+import { USER_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -23,9 +23,9 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         _setUp();
         deal(address(wstETH), address(this), DEPOSIT_AMOUNT * 2);
         deal(address(sdex), address(this), 1e6 ether);
-        deal(address(wstETH), vm.addr(PKEY_1), DEPOSIT_AMOUNT * 2);
-        deal(address(sdex), vm.addr(PKEY_1), 1e6 ether);
-        deal(vm.addr(PKEY_1), 1e6 ether);
+        deal(address(wstETH), vm.addr(1), DEPOSIT_AMOUNT * 2);
+        deal(address(sdex), vm.addr(1), 1e6 ether);
+        deal(vm.addr(1), 1e6 ether);
         _sigUtils = new SigUtils();
         _securityDeposit = protocol.getSecurityDepositValue();
     }
@@ -94,16 +94,14 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
-            PKEY_1,
+            1,
             _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
+                vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
-            PKEY_1,
-            _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR()
-            )
+            1,
+            _sigUtils.getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
         inputs[0] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
         inputs[1] = abi.encode(address(sdex), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
@@ -112,7 +110,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
             abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
 
         // execute
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         DepositPendingAction memory action =
@@ -133,7 +131,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
      */
     function test_ForkInitiateDepositFullBalanceWithPermit() public {
         // initial state
-        uint256 wstEthBalanceBefore = wstETH.balanceOf(vm.addr(PKEY_1));
+        uint256 wstEthBalanceBefore = wstETH.balanceOf(vm.addr(1));
 
         // commands building
         bytes memory commands = _getPermitCommand();
@@ -143,16 +141,14 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
-            PKEY_1,
+            1,
             _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
+                vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
-            PKEY_1,
-            _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR()
-            )
+            1,
+            _sigUtils.getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
         inputs[0] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
         inputs[1] = abi.encode(address(sdex), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
@@ -162,10 +158,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         );
 
         // execute
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        assertEq(wstETH.balanceOf(vm.addr(PKEY_1)), wstEthBalanceBefore - DEPOSIT_AMOUNT, "asset balance");
+        assertEq(wstETH.balanceOf(vm.addr(1)), wstEthBalanceBefore - DEPOSIT_AMOUNT, "asset balance");
     }
 
     receive() external payable { }

@@ -3,7 +3,7 @@ pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
-import { DEPLOYER, USER_1, PKEY_1 } from "./utils/Constants.sol";
+import { DEPLOYER, USER_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -23,10 +23,10 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         WITHDRAW_AMOUNT = usdn.sharesOf(DEPLOYER) / 100;
         vm.startPrank(DEPLOYER);
         usdn.transferShares(address(this), WITHDRAW_AMOUNT);
-        usdn.transferShares(vm.addr(PKEY_1), WITHDRAW_AMOUNT);
+        usdn.transferShares(vm.addr(1), WITHDRAW_AMOUNT);
         vm.stopPrank();
         _sigUtils = new SigUtils();
-        deal(vm.addr(PKEY_1), 1e6 ether);
+        deal(vm.addr(1), 1e6 ether);
         _securityDeposit = protocol.getSecurityDepositValue();
     }
 
@@ -82,15 +82,15 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
      * @custom:then The withdrawal is initiated successfully
      */
     function test_ForkInitiateWithdrawWithPermit() public {
-        uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
-        uint256 usdnSharesBefore = usdn.sharesOf(vm.addr(PKEY_1));
+        uint256 ethBalanceBefore = vm.addr(1).balance;
+        uint256 usdnSharesBefore = usdn.sharesOf(vm.addr(1));
 
         uint256 usdnTokensToTransfer = usdn.convertToTokens(WITHDRAW_AMOUNT);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            PKEY_1,
+            1,
             _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
+                vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
             )
         );
 
@@ -99,11 +99,11 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         inputs[0] = abi.encode(address(usdn), address(router), usdnTokensToTransfer, type(uint256).max, v, r, s);
         inputs[1] = abi.encode(WITHDRAW_AMOUNT, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
 
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        assertEq(vm.addr(PKEY_1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
-        assertEq(usdn.sharesOf(vm.addr(PKEY_1)), usdnSharesBefore - WITHDRAW_AMOUNT, "usdn shares");
+        assertEq(vm.addr(1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
+        assertEq(usdn.sharesOf(vm.addr(1)), usdnSharesBefore - WITHDRAW_AMOUNT, "usdn shares");
     }
 
     /**
@@ -116,15 +116,15 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
      * @custom:and The user's asset balance is reduced by `WITHDRAW_AMOUNT`
      */
     function test_ForkInitiateWithdrawFullBalanceWithPermit() public {
-        uint256 ethBalanceBefore = vm.addr(PKEY_1).balance;
-        uint256 usdnSharesBefore = usdn.sharesOf(vm.addr(PKEY_1));
+        uint256 ethBalanceBefore = vm.addr(1).balance;
+        uint256 usdnSharesBefore = usdn.sharesOf(vm.addr(1));
 
         uint256 usdnTokensToTransfer = usdn.convertToTokensRoundUp(WITHDRAW_AMOUNT);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            PKEY_1,
+            1,
             _sigUtils.getDigest(
-                vm.addr(PKEY_1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
+                vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
             )
         );
 
@@ -134,11 +134,11 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         inputs[1] =
             abi.encode(Constants.CONTRACT_BALANCE, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
 
-        vm.prank(vm.addr(PKEY_1));
+        vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        assertEq(vm.addr(PKEY_1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
-        assertEq(usdn.sharesOf(vm.addr(PKEY_1)), usdnSharesBefore - WITHDRAW_AMOUNT, "usdn shares");
+        assertEq(vm.addr(1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
+        assertEq(usdn.sharesOf(vm.addr(1)), usdnSharesBefore - WITHDRAW_AMOUNT, "usdn shares");
     }
 
     function _getPermitCommand() internal pure returns (bytes memory) {
