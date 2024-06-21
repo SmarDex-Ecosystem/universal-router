@@ -159,7 +159,7 @@ contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture {
 
         sdex.transfer(address(router), BASE_AMOUNT);
 
-        vm.expectRevert(SmardexSwapRouter.tooLittleReceived.selector);
+        vm.expectRevert(SmardexSwapRouter.TooLittleReceived.selector);
         router.execute(commands, inputs);
     }
 }

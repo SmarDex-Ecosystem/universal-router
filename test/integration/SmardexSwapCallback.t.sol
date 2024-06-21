@@ -23,7 +23,7 @@ contract TestForkSmardexSwapCallback is UniversalRouterBaseFixture {
      * @custom:then The transaction should revert with `callbackInvalidAmount`
      */
     function test_RevertWhen_ForkCallbackInvalidAmount() external {
-        vm.expectRevert(SmardexSwapRouter.callbackInvalidAmount.selector);
+        vm.expectRevert(SmardexSwapRouter.CallbackInvalidAmount.selector);
         router.smardexSwapCallback(0, 0, "");
     }
 
@@ -34,7 +34,7 @@ contract TestForkSmardexSwapCallback is UniversalRouterBaseFixture {
      * @custom:then The transaction should revert with `callbackInvalidAmount`
      */
     function test_RevertWhen_ForkInvalidPair() external {
-        vm.expectRevert(SmardexSwapRouter.invalidPair.selector);
+        vm.expectRevert(SmardexSwapRouter.InvalidPair.selector);
         router.smardexSwapCallback(
             1, 0, abi.encode(SmardexSwapRouter.SwapCallbackData(abi.encodePacked(WETH, SDEX), address(this)))
         );
