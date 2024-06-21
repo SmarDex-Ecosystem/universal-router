@@ -6,6 +6,7 @@ import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnP
 import { Script } from "forge-std/Script.sol";
 import { UniversalRouter } from "src/UniversalRouter.sol";
 import { RouterParameters } from "src/base/RouterImmutables.sol";
+import { ISmardexFactory } from "src/interfaces/smardex/ISmardexFactory.sol";
 
 /**
  * @title DeployScript
@@ -26,7 +27,8 @@ contract Deploy is Script {
                 pairInitCodeHash: 0x0,
                 poolInitCodeHash: 0x0,
                 usdnProtocol: IUsdnProtocol(address(0)),
-                wstEth: address(0)
+                wstEth: address(0),
+                smardexFactory: ISmardexFactory(address(0))
             })
         );
 
