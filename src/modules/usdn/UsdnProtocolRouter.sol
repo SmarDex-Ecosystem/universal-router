@@ -232,21 +232,16 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
 
     /**
      * @notice Wrap the usdn shares value into wusdn
-     * @param value The usdn value
+     * @param value The usdn value in shares
      * @param receiver The wusdn receiver
      */
     function _wrapUSDNShares(uint256 value, address receiver) internal {
-        uint256 sharesBalance = USDN.sharesOf(address(this));
-
         if (value == Constants.CONTRACT_BALANCE) {
-            value = sharesBalance;
-        } else if (value > sharesBalance) {
-            revert InsufficientToken();
+            value = USDN.sharesOf(address(this));
         }
 
         if (value > 0) {
-            // To avoid missing approval dust
-            // due of the usdn balanceOf rounding,
+            // due to the rounding in the USDN's `balanceOf` function,
             // we approve max uint256 then reset to 0
             USDN.forceApprove(address(WUSDN), type(uint256).max);
             WUSDN.wrapShares(value, receiver);
@@ -260,12 +255,8 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      * @param receiver The usdn receiver
      */
     function _unwrapUSDN(uint256 value, address receiver) internal {
-        uint256 balance = WUSDN.balanceOf(address(this));
-
         if (value == Constants.CONTRACT_BALANCE) {
-            value = balance;
-        } else if (value > balance) {
-            revert InsufficientToken();
+            value = WUSDN.balanceOf(address(this));
         }
 
         if (value > 0) {
