@@ -8,13 +8,13 @@ import { WETH, SDEX } from "usdn-contracts/test/utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
-import { SmardexSwapRouter } from "../../src/modules/smardex/SmardexSwapRouter.sol";
+import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
 
 /**
  * @custom:feature Test smardex swap exact out command
  * @custom:background A initiated universal router
  */
-contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture {
+contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
     uint256 constant BASE_AMOUNT = 1 ether;
     address constant WBTC = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
 
@@ -134,7 +134,7 @@ contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture {
 
         IERC20(WETH).transfer(address(router), BASE_AMOUNT);
 
-        vm.expectRevert(SmardexSwapRouter.ExcessiveInputAmount.selector);
+        vm.expectRevert(ExcessiveInputAmount.selector);
         router.execute(commands, inputs);
     }
 
@@ -153,7 +153,7 @@ contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture {
 
         IERC20(WETH).transfer(address(router), BASE_AMOUNT);
 
-        vm.expectRevert(SmardexSwapRouter.InvalidRecipient.selector);
+        vm.expectRevert(InvalidRecipient.selector);
         router.execute(commands, inputs);
     }
 }
