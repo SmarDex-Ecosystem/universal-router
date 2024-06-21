@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.25;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
@@ -14,6 +14,7 @@ import { Commands } from "../libraries/Commands.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
+import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
 
 /**
  * @title Decodes and Executes Commands
@@ -25,6 +26,7 @@ abstract contract Dispatcher is
     V3SwapRouter,
     UsdnProtocolRouter,
     LidoRouter,
+    SmardexSwapRouter,
     LockAndMsgSender
 {
     using BytesLib for bytes;
@@ -421,7 +423,21 @@ abstract contract Dispatcher is
             }
         } else {
             if (command == Commands.SMARDEX_SWAP_EXACT_IN) {
-                // TODO SMARDEX_SWAP_EXACT_IN
+                // equivalent: abi.decode(inputs, (address, uint256, uint256, bytes, bool))
+                address recipient;
+                uint256 amountIn;
+                uint256 amountOutMin;
+                bool payerIsUser;
+                assembly {
+                    recipient := calldataload(inputs.offset)
+                    amountIn := calldataload(add(inputs.offset, 0x20))
+                    amountOutMin := calldataload(add(inputs.offset, 0x40))
+                    // 0x60 offset is the path, decoded below
+                    payerIsUser := calldataload(add(inputs.offset, 0x80))
+                }
+                bytes calldata path = inputs.toBytes(3);
+                address payer = payerIsUser ? lockedBy : address(this);
+                _smardexSwapExactInput(map(recipient), amountIn, amountOutMin, path, payer);
             } else if (command == Commands.SMARDEX_SWAP_EXACT_OUT) {
                 // TODO SMARDEX_SWAP_EXACT_OUT
             } else {
