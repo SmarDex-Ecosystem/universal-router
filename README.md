@@ -61,7 +61,8 @@ The environment provides the following tools:
 
 ### Tests
 
-To run tests you need to to build `test-utils`. To do so, we need to run the test utils script : `npm run testutils`.
+To run tests you need to to build `test_utils`. To do so, we need to run `cargo build --release` at the root of the
+repo.
 You also need an archive rpc in the`.env` file (infura, alchemy, ...).
 
 ### Snapshots
