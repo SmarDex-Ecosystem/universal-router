@@ -8,12 +8,15 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 import { PreviousActionsData } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { PositionId } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
+import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Permit2Payments.sol";
+import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
 
 import { UsdnProtocolImmutables } from "./UsdnProtocolImmutables.sol";
 
-abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
+abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments {
     using SafeCast for uint256;
     using SafeERC20 for IERC20Metadata;
+    using SafeERC20 for IUsdn;
 
     /**
      * @notice Initiate a deposit into the USDN protocol vault
@@ -224,6 +227,40 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables {
     ) internal {
         // slither-disable-next-line arbitrary-send-eth
         USDN_PROTOCOL.validateActionablePendingActions{ value: ethAmount }(previousActionsData, maxValidations);
+    }
+
+    /**
+     * @notice Wrap the usdn shares value into wusdn
+     * @param value The usdn value in shares
+     * @param receiver The wusdn receiver
+     */
+    function _wrapUSDNShares(uint256 value, address receiver) internal {
+        if (value == Constants.CONTRACT_BALANCE) {
+            value = USDN.sharesOf(address(this));
+        }
+
+        if (value > 0) {
+            // due to the rounding in the USDN's `balanceOf` function,
+            // we approve max uint256 then reset to 0
+            USDN.forceApprove(address(WUSDN), type(uint256).max);
+            WUSDN.wrapShares(value, receiver);
+            USDN.approve(address(WUSDN), 0);
+        }
+    }
+
+    /**
+     * @notice Unwrap the wusdn value into usdn
+     * @param value The wusdn value
+     * @param receiver The usdn receiver
+     */
+    function _unwrapUSDN(uint256 value, address receiver) internal {
+        if (value == Constants.CONTRACT_BALANCE) {
+            value = WUSDN.balanceOf(address(this));
+        }
+
+        if (value > 0) {
+            WUSDN.unwrap(value, receiver);
+        }
     }
 
     /**

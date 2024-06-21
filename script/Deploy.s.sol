@@ -2,6 +2,7 @@
 pragma solidity ^0.8.25;
 
 import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
+import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
 
 import { Script } from "forge-std/Script.sol";
 import { UniversalRouter } from "src/UniversalRouter.sol";
@@ -28,6 +29,7 @@ contract Deploy is Script {
                 poolInitCodeHash: 0x0,
                 usdnProtocol: IUsdnProtocol(address(0)),
                 wstEth: address(0),
+                wusdn: Wusdn(address(0)),
                 smardexFactory: ISmardexFactory(address(0))
             })
         );

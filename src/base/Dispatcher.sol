@@ -409,9 +409,23 @@ abstract contract Dispatcher is
                 }
             } else {
                 if (command == Commands.WRAP_USDN) {
-                    // TODO WRAP_USDN
+                    // equivalent: abi.decode(inputs, (uint256, address))
+                    uint256 usdnSharesAmount;
+                    address recipient;
+                    assembly {
+                        usdnSharesAmount := calldataload(inputs.offset)
+                        recipient := calldataload(add(inputs.offset, 0x20))
+                    }
+                    _wrapUSDNShares(usdnSharesAmount, map(recipient));
                 } else if (command == Commands.UNWRAP_WUSDN) {
-                    // TODO UNWRAP_WUSDN
+                    // equivalent: abi.decode(inputs, (uint256, address))
+                    uint256 wusdnAmount;
+                    address recipient;
+                    assembly {
+                        wusdnAmount := calldataload(inputs.offset)
+                        recipient := calldataload(add(inputs.offset, 0x20))
+                    }
+                    _unwrapUSDN(wusdnAmount, map(recipient));
                 } else if (command == Commands.WRAP_STETH) {
                     // equivalent: abi.decode(inputs, address)
                     address recipient;

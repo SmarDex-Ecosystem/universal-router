@@ -4,6 +4,7 @@ pragma solidity ^0.8.25;
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { DEPLOYER, WETH, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
+import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
 import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integration/UsdnProtocol/utils/Fixtures.sol";
 
 import { UniversalRouterHandler } from "./Handler.sol";
@@ -18,6 +19,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
     UniversalRouterHandler public router;
     IAllowanceTransfer permit2;
     AggregatorV3Interface public priceFeed;
+    Wusdn internal wusdn;
 
     function _setUp() internal {
         params = DEFAULT_PARAMS;
@@ -25,6 +27,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
         params.initialDeposit = 1000 ether;
         params.initialLong = 1000 ether;
         _setUp(params);
+
+        wusdn = new Wusdn(usdn);
 
         RouterParameters memory params = RouterParameters({
             permit2: 0x000000000022D473030F116dDEE9F6B43aC78BA3,
@@ -35,6 +39,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
             poolInitCodeHash: 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54, // v3 pool hash
             usdnProtocol: protocol,
             wstEth: WSTETH,
+            wusdn: wusdn,
             smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F)
         });
 
