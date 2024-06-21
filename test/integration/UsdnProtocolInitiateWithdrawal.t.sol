@@ -143,7 +143,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
     function _getPermitCommand() internal pure returns (bytes memory) {
         bytes memory commandPermitWsteth =
-            abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)) & Commands.FLAG_ALLOW_REVERT);
+            abi.encodePacked(bytes1(uint8(Commands.PERMIT_TRANSFER)) | Commands.FLAG_ALLOW_REVERT);
         bytes memory commandInitiateDeposit = abi.encodePacked(bytes1(uint8(Commands.INITIATE_WITHDRAWAL)));
         return abi.encodePacked(commandPermitWsteth, commandInitiateDeposit);
     }
