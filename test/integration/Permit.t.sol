@@ -31,7 +31,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
         // commands building
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.PERMIT)));
+        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.PERMIT)) & Commands.FLAG_ALLOW_REVERT);
         // inputs building
         bytes[] memory inputs = new bytes[](1);
         // permits
