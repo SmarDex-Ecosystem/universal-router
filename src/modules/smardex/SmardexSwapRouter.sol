@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.25;
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { TransferHelper } from "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Permit2Payments.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
@@ -16,23 +16,24 @@ import { SmardexImmutables } from "./SmardexImmutables.sol";
 /// @title Router for Smardex
 abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Permit2Payments {
     /// @notice Indicates that the amountOut is lower than the minAmountOut
-    error tooLittleReceived();
+    error TooLittleReceived();
 
     /// @notice Indicates that the amountIn is higher than the maxAmountIn
-    error excessiveInputAmount();
+    error ExcessiveInputAmount();
 
     /// @notice Indicates that the recipient is invalid
-    error invalidRecipient();
+    error InvalidRecipient();
 
     /// @notice Indicates that msg.sender is not the pair
-    error invalidPair();
+    error InvalidPair();
 
     /// @notice Indicates that the callback amount is invalid
-    error callbackInvalidAmount();
+    error CallbackInvalidAmount();
 
     using Path for bytes;
     using SafeCast for uint256;
     using SafeCast for int256;
+    using SafeERC20 for IERC20;
 
     /**
      * @notice callback data for swap from SmardexRouter
@@ -56,7 +57,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
     /// @inheritdoc ISmardexSwapRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
-            revert callbackInvalidAmount();
+            revert CallbackInvalidAmount();
         }
 
         SwapCallbackData memory decodedData = abi.decode(data, (SwapCallbackData));
@@ -64,7 +65,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
 
         // ensure that msg.sender is a pair
         if (msg.sender != ISmardexFactory(SMARDEX_FACTORY).getPair(tokenIn, tokenOut)) {
-            revert invalidPair();
+            revert InvalidPair();
         }
 
         (, uint256 amountToPay) =
@@ -117,7 +118,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
         }
 
         if (amountOut < amountOutMinimum) {
-            revert tooLittleReceived();
+            revert TooLittleReceived();
         }
     }
 
@@ -153,7 +154,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables, Pe
      */
     function _payOrPermit2Transfer(address token, address payer, address recipient, uint256 amount) internal {
         if (payer == address(this)) {
-            TransferHelper.safeTransfer(token, recipient, amount);
+            IERC20(token).safeTransfer(recipient, amount);
         } else {
             permit2TransferFrom(token, payer, recipient, amount.toUint160());
         }
