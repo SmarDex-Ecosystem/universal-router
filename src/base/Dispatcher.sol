@@ -131,8 +131,8 @@ abstract contract Dispatcher is
                             }
                             // protect against griefing
                             (success_,) = token.call(
-                                abi.encodeWithSignature(
-                                    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+                                abi.encodeWithSelector(
+                                    bytes4(keccak256("permit(address,address,uint256,uint256,uint8,bytes32,bytes32)")),
                                     owner,
                                     spender,
                                     amount,
@@ -165,8 +165,8 @@ abstract contract Dispatcher is
                                 s := calldataload(add(inputs.offset, 0xe0))
                             }
                             (success_,) = token.call(
-                                abi.encodeWithSignature(
-                                    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+                                abi.encodeWithSelector(
+                                    bytes4(keccak256("permit(address,address,uint256,uint256,uint8,bytes32,bytes32)")),
                                     owner,
                                     spender,
                                     amount,
