@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.25;
 
 /**
  * @title Commands Library
@@ -18,7 +18,7 @@ library Commands {
     uint256 constant TRANSFER = 0x05;
     uint256 constant PAY_PORTION = 0x06;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant FIRST_IF_BOUNDARY = 0x08;
 
@@ -31,22 +31,21 @@ library Commands {
     uint256 constant PERMIT = 0x0e;
     uint256 constant PERMIT_TRANSFER_FROM = 0x0f;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant SECOND_IF_BOUNDARY = 0x10;
 
     uint256 constant INITIATE_DEPOSIT = 0x10;
     uint256 constant INITIATE_WITHDRAWAL = 0x11;
     uint256 constant INITIATE_OPEN = 0x12;
-    uint256 constant INITIATE_CLOSE = 0x13;
-    uint256 constant VALIDATE_DEPOSIT = 0x14;
-    uint256 constant VALIDATE_WITHDRAWAL = 0x15;
-    uint256 constant VALIDATE_OPEN = 0x16;
-    uint256 constant VALIDATE_CLOSE = 0x17;
-    uint256 constant LIQUIDATE = 0x18;
-    uint256 constant VALIDATE_PENDING = 0x19;
+    uint256 constant VALIDATE_DEPOSIT = 0x13;
+    uint256 constant VALIDATE_WITHDRAWAL = 0x14;
+    uint256 constant VALIDATE_OPEN = 0x15;
+    uint256 constant VALIDATE_CLOSE = 0x16;
+    uint256 constant LIQUIDATE = 0x17;
+    uint256 constant VALIDATE_PENDING = 0x18;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant THIRD_IF_BOUNDARY = 0x1a;
 
@@ -56,7 +55,7 @@ library Commands {
     uint256 constant UNWRAP_WSTETH = 0x1e;
     // COMMAND_PLACEHOLDER = 0x1f;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant FOURTH_IF_BOUNDARY = 0x20;
 
