@@ -2,6 +2,7 @@
 pragma solidity ^0.8.25;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
@@ -132,14 +133,7 @@ abstract contract Dispatcher is
                             // protect against griefing
                             (success_,) = token.call(
                                 abi.encodeWithSelector(
-                                    bytes4(keccak256("permit(address,address,uint256,uint256,uint8,bytes32,bytes32)")),
-                                    owner,
-                                    spender,
-                                    amount,
-                                    deadline,
-                                    v,
-                                    r,
-                                    s
+                                    IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
                                 )
                             );
                         } else if (command == Commands.PERMIT_TRANSFER_FROM) {
@@ -166,14 +160,7 @@ abstract contract Dispatcher is
                             }
                             (success_,) = token.call(
                                 abi.encodeWithSelector(
-                                    bytes4(keccak256("permit(address,address,uint256,uint256,uint8,bytes32,bytes32)")),
-                                    owner,
-                                    spender,
-                                    amount,
-                                    deadline,
-                                    v,
-                                    r,
-                                    s
+                                    IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
                                 )
                             );
                             IERC20(token).transferFrom(owner, spender, amount);
