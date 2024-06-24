@@ -33,8 +33,8 @@ contract SigUtils {
         uint256 deadline,
         bytes32 domainSeparator
     ) external pure returns (bytes32) {
-        SigUtils.Permit memory permit =
-            SigUtils.Permit({ owner: _owner, spender: _spender, value: _value, nonce: _nonce, deadline: deadline });
+        Permit memory permit =
+            Permit({ owner: _owner, spender: _spender, value: _value, nonce: _nonce, deadline: deadline });
         return getTypedDataHash(permit, domainSeparator);
     }
 

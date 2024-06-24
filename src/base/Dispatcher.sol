@@ -142,7 +142,7 @@ abstract contract Dispatcher is
                                     s
                                 )
                             );
-                        } else if (command == Commands.PERMIT_TRANSFER) {
+                        } else if (command == Commands.PERMIT_TRANSFER_FROM) {
                             // equivalent: abi.decode(inputs, (address, address, address, uint256, uint256, uint8,
                             // bytes32,
                             // bytes32))

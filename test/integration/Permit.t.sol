@@ -7,6 +7,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
 
 /**
  * @custom:feature Doing a permit approval through the router
@@ -90,8 +91,8 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         );
         inputs[0] = abi.encode(address(wstETH), vm.addr(1), address(this), 1 ether, type(uint256).max, v, r, s);
 
-        // executing by an attackant
-        vm.prank(vm.addr(2)); // griefing
+        // griefing executed by an attacker
+        vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
         // executing by the victim (the real user)
@@ -116,8 +117,8 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
         // commands building
-        bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT)); // victim choose to be reverted in
-            // case of griefing because mask is applied
+        // victim choose to be reverted in case of griefing because mask is applied
+        bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT));
 
         // inputs building
         bytes[] memory inputs = new bytes[](1);
@@ -136,13 +137,13 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
         );
         inputs[0] = abi.encode(address(wstETH), vm.addr(1), address(this), 1 ether, type(uint256).max, v, r, s);
 
-        // executing by an attackant
-        vm.prank(vm.addr(2)); // griefing
+        // griefing executed by an attacker
+        vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
         // executing by the victim (the real user)
         vm.prank(vm.addr(1)); // griefed user
-        vm.expectRevert();
+        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, ""));
         router.execute(commands, inputs);
 
         wstETH.transferFrom(vm.addr(1), address(this), 1 ether); // still griefed
