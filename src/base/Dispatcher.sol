@@ -202,7 +202,9 @@ abstract contract Dispatcher is
                             }
                             Payments.unwrapWETH9(map(recipient), amountMin);
                         } else if (command == Commands.PERMIT2_TRANSFER_FROM_BATCH) {
-                            // TODO PERMIT2_TRANSFER_FROM_BATCH
+                            (IAllowanceTransfer.AllowanceTransferDetails[] memory batchDetails) =
+                                abi.decode(inputs, (IAllowanceTransfer.AllowanceTransferDetails[]));
+                            permit2TransferFrom(batchDetails, lockedBy);
                         } else {
                             revert InvalidCommandType(command);
                         }
