@@ -207,8 +207,7 @@ abstract contract Dispatcher is
                             // TODO PERMIT2_TRANSFER_FROM_BATCH
                         } else if (command == Commands.PERMIT) {
                             // equivalent: abi.decode(inputs, (address, address, address, uint256, uint256, uint8,
-                            // bytes32,
-                            // bytes32))
+                            // bytes32, bytes32))
                             address token;
                             address owner;
                             address spender;
