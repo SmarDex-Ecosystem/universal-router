@@ -1,0 +1,12 @@
+/home/lilyan/GitRepo/universal-router/target/debug/deps/libconst_hex-bbde43e67941a200.rmeta: /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/lib.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/mod.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/generic.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/impl_core.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/traits.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/buffer.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/x86.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/error.rs
+
+/home/lilyan/GitRepo/universal-router/target/debug/deps/const_hex-bbde43e67941a200.d: /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/lib.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/mod.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/generic.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/impl_core.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/traits.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/buffer.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/x86.rs /home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/error.rs
+
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/lib.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/mod.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/generic.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/impl_core.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/traits.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/buffer.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/arch/x86.rs:
+/home/lilyan/.cargo/registry/src/index.crates.io-6f17d22bba15001f/const-hex-1.12.0/src/error.rs:

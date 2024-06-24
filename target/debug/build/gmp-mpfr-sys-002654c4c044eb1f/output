@@ -1,0 +1,18 @@
+cargo:rerun-if-env-changed=GMP_MPFR_SYS_CACHE
+$ mkdir -p "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/lib"
+$ mkdir -p "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/include"
+$ cp "/home/lilyan/.cache/gmp-mpfr-sys/1.6/x86_64-unknown-linux-gnu/1.6.4/libmpc.a" "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/lib/libmpc.a"
+$ cp "/home/lilyan/.cache/gmp-mpfr-sys/1.6/x86_64-unknown-linux-gnu/1.6.4/mpc.h" "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/include/mpc.h"
+$ cp "/home/lilyan/.cache/gmp-mpfr-sys/1.6/x86_64-unknown-linux-gnu/1.6.4/libmpfr.a" "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/lib/libmpfr.a"
+$ cp "/home/lilyan/.cache/gmp-mpfr-sys/1.6/x86_64-unknown-linux-gnu/1.6.4/mpfr.h" "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/include/mpfr.h"
+$ cp "/home/lilyan/.cache/gmp-mpfr-sys/1.6/x86_64-unknown-linux-gnu/1.6.4/libgmp.a" "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/lib/libgmp.a"
+cargo:limb_bits=64
+$ cp "/home/lilyan/.cache/gmp-mpfr-sys/1.6/x86_64-unknown-linux-gnu/1.6.4/gmp.h" "/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/include/gmp.h"
+cargo:limb_bits=64
+cargo:out_dir=/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out
+cargo:lib_dir=/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/lib
+cargo:include_dir=/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/include
+cargo:rustc-link-search=native=/home/lilyan/GitRepo/universal-router/target/debug/build/gmp-mpfr-sys-002654c4c044eb1f/out/lib
+cargo:rustc-link-lib=static=mpc
+cargo:rustc-link-lib=static=mpfr
+cargo:rustc-link-lib=static=gmp

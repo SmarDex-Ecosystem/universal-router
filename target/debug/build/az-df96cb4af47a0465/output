@@ -1,0 +1,6 @@
+$ mkdir -p "/home/lilyan/GitRepo/universal-router/target/debug/build/az-df96cb4af47a0465/out/try_track_caller"
+$ cd "/home/lilyan/GitRepo/universal-router/target/debug/build/az-df96cb4af47a0465/out/try_track_caller"
+$ printf '%s' "// try_tra"... > "/home/lilyan/GitRepo/universal-router/target/debug/build/az-df96cb4af47a0465/out/try_track_caller/try_track_caller.rs"
+$ cd "/home/lilyan/GitRepo/universal-router/target/debug/build/az-df96cb4af47a0465/out/try_track_caller" && "rustc" "try_track_caller.rs" "--emit=dep-info,metadata" >& /dev/null
+cargo:rustc-cfg=track_caller
+$ rm -r "/home/lilyan/GitRepo/universal-router/target/debug/build/az-df96cb4af47a0465/out/try_track_caller"
