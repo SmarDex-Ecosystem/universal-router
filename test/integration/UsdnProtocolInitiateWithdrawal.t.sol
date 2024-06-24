@@ -13,10 +13,9 @@ import { Commands } from "../../src/libraries/Commands.sol";
  * @custom:feature Initiating a withdrawal through the router
  * @custom:background Given a forked ethereum mainnet chain
  */
-contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture {
+contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture, SigUtils {
     uint256 internal WITHDRAW_AMOUNT;
     uint256 internal _securityDeposit;
-    SigUtils internal _sigUtils;
 
     function setUp() public {
         _setUp();
@@ -25,7 +24,6 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         usdn.transferShares(address(this), WITHDRAW_AMOUNT);
         usdn.transferShares(vm.addr(1), WITHDRAW_AMOUNT);
         vm.stopPrank();
-        _sigUtils = new SigUtils();
         deal(vm.addr(1), 1e6 ether);
         _securityDeposit = protocol.getSecurityDepositValue();
     }
@@ -89,9 +87,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
-                vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
-            )
+            getDigest(vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
         );
 
         bytes memory commands = _getPermitCommand();
@@ -124,9 +120,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
-                vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR()
-            )
+            getDigest(vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
         );
 
         bytes memory commands = _getPermitCommand();

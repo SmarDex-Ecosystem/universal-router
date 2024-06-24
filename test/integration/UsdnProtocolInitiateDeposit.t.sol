@@ -14,10 +14,9 @@ import { Commands } from "../../src/libraries/Commands.sol";
  * @custom:feature Initiating a deposit through the router
  * @custom:background Given a forked ethereum mainnet chain
  */
-contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
+contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, SigUtils {
     uint256 constant DEPOSIT_AMOUNT = 0.1 ether;
     uint256 internal _securityDeposit;
-    SigUtils internal _sigUtils;
 
     function setUp() public {
         _setUp();
@@ -26,7 +25,6 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         deal(address(wstETH), vm.addr(1), DEPOSIT_AMOUNT * 2);
         deal(address(sdex), vm.addr(1), 1e6 ether);
         deal(vm.addr(1), 1e6 ether);
-        _sigUtils = new SigUtils();
         _securityDeposit = protocol.getSecurityDepositValue();
     }
 
@@ -94,14 +92,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
-            1,
-            _sigUtils.getDigest(
-                vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
-            )
+            1, getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
-            1,
-            _sigUtils.getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
+            1, getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
@@ -142,14 +136,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
-            1,
-            _sigUtils.getDigest(
-                vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
-            )
+            1, getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
-            1,
-            _sigUtils.getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
+            1, getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);

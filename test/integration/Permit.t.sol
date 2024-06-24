@@ -13,14 +13,11 @@ import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
  * @custom:feature Doing a permit approval through the router
  * @custom:background Given a forked ethereum mainnet chain
  */
-contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
-    SigUtils internal _sigUtils;
-
+contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
     function setUp() public {
         _setUp();
         deal(address(wstETH), vm.addr(1), 1 ether);
         deal(vm.addr(1), 1e6 ether);
-        _sigUtils = new SigUtils();
     }
 
     /**
@@ -39,7 +36,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
+            getDigest(
                 vm.addr(1),
                 address(this),
                 1 ether,
@@ -76,7 +73,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
+            getDigest(
                 vm.addr(1),
                 address(this),
                 1 ether,
@@ -119,7 +116,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
+            getDigest(
                 vm.addr(1), // victim
                 address(this),
                 1 ether,

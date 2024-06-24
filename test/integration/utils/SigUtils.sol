@@ -32,13 +32,9 @@ contract SigUtils {
         uint256 _nonce,
         uint256 deadline,
         bytes32 domainSeparator
-    ) external pure returns (bytes32) {
+    ) internal pure returns (bytes32) {
         Permit memory permit =
             Permit({ owner: _owner, spender: _spender, value: _value, nonce: _nonce, deadline: deadline });
         return getTypedDataHash(permit, domainSeparator);
     }
-
-    // force ignore from coverage report
-    // until https://github.com/foundry-rs/foundry/issues/2988 is fixed
-    function test() public { }
 }

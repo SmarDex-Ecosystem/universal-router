@@ -13,18 +13,16 @@ import { Commands } from "../../src/libraries/Commands.sol";
  * @custom:feature Initiating an open position through the router
  * @custom:background Given a forked ethereum mainnet chain
  */
-contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixture {
+contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixture, SigUtils {
     uint256 constant OPEN_POSITION_AMOUNT = 2 ether;
     uint256 constant DESIRED_LIQUIDATION = 2500 ether;
     uint256 internal _securityDeposit;
-    SigUtils internal _sigUtils;
 
     function setUp() public {
         _setUp();
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         deal(address(wstETH), vm.addr(1), OPEN_POSITION_AMOUNT * 2);
         deal(vm.addr(1), 1e6 ether);
-        _sigUtils = new SigUtils();
         _securityDeposit = protocol.getSecurityDepositValue();
     }
 
@@ -102,7 +100,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
+            getDigest(
                 vm.addr(1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
@@ -144,7 +142,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            _sigUtils.getDigest(
+            getDigest(
                 vm.addr(1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
