@@ -33,11 +33,10 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
     function test_permit() public {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
-        // commands building
         bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
-        // inputs building
+
         bytes[] memory inputs = new bytes[](1);
-        // permits signature
+
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
             _sigUtils.getDigest(
@@ -50,7 +49,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
             )
         );
         inputs[0] = abi.encode(address(wstETH), address(vm.addr(1)), address(this), 1 ether, type(uint256).max, v, r, s);
-        // execute
+
         vm.prank(vm.addr(1));
         router.execute(commands, inputs);
 
@@ -71,13 +70,10 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
     function test_griefing() public {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
-        // commands building
         bytes memory commands = abi.encodePacked((uint8(Commands.PERMIT)) | uint8(Commands.FLAG_ALLOW_REVERT));
 
-        // inputs building
         bytes[] memory inputs = new bytes[](1);
 
-        // permits
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
             _sigUtils.getDigest(
@@ -116,14 +112,11 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture {
     function test_RevertWhen_griefing() public {
         uint256 wstETHBalanceBefore = wstETH.balanceOf(address(this));
 
-        // commands building
         // victim choose to be reverted in case of griefing because mask is applied
         bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT));
 
-        // inputs building
         bytes[] memory inputs = new bytes[](1);
 
-        // permits
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
             _sigUtils.getDigest(
