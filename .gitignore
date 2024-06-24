@@ -41,3 +41,6 @@ natspec-smells.txt
 
 # Rust
 target/
+
+# Gas snapshot files
+.gas-snapshot

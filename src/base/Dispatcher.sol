@@ -108,7 +108,8 @@ abstract contract Dispatcher is
                             bytes calldata data = inputs.toBytes(1);
                             PERMIT2.permit(lockedBy, permitBatch, data);
                         } else if (command == Commands.PERMIT) {
-                            // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
+                            // equivalent: abi.decode(inputs, (address, address, address, uint256, uint256, uint8,
+                            // bytes32,
                             // bytes32))
                             address token;
                             address owner;
@@ -142,7 +143,8 @@ abstract contract Dispatcher is
                                 )
                             );
                         } else if (command == Commands.PERMIT_TRANSFER) {
-                            // equivalent: abi.decode(inputs, (address, address, uint160, uint256, uint8, bytes32,
+                            // equivalent: abi.decode(inputs, (address, address, address, uint256, uint256, uint8,
+                            // bytes32,
                             // bytes32))
                             address token;
                             address owner;
