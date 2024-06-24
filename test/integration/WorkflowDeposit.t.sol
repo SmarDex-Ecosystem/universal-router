@@ -59,10 +59,11 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
             uint8(Commands.INITIATE_DEPOSIT),
             uint8(Commands.SWEEP),
             uint8(Commands.SWEEP),
+            uint8(Commands.SWEEP),
             uint8(Commands.SWEEP)
         );
 
-        bytes[] memory inputs = new bytes[](7);
+        bytes[] memory inputs = new bytes[](8);
         inputs[0] = abi.encode(Constants.ETH, WETH, DEPOSIT_AMOUNT);
         inputs[1] = input;
         inputs[2] = abi.encode(Constants.ETH, wstETH, DEPOSIT_AMOUNT);
@@ -70,8 +71,9 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
             Constants.CONTRACT_BALANCE, USER_1, USER_1, NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
         );
         inputs[4] = abi.encode(Constants.ETH, address(this), 0);
-        inputs[5] = abi.encode(WETH, address(this), 0);
-        inputs[6] = abi.encode(SDEX, address(this), 0);
+        inputs[5] = abi.encode(wstETH, address(this), 0);
+        inputs[6] = abi.encode(WETH, address(this), 0);
+        inputs[7] = abi.encode(SDEX, address(this), 0);
 
         router.execute{ value: _securityDeposit + DEPOSIT_AMOUNT * 2 }(commands, inputs);
 
@@ -81,6 +83,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         assertEq(action.validator, USER_1, "pending action validator");
         assertGt(action.amount, 0, "pending action amount");
         assertEq(address(router).balance, 0, "ETH balance");
+        assertEq(IERC20(wstETH).balanceOf(address(router)), 0, "WETH balance");
         assertEq(IERC20(SDEX).balanceOf(address(router)), 0, "SDEX balance");
         assertEq(IERC20(WETH).balanceOf(address(router)), 0, "WETH balance");
     }
