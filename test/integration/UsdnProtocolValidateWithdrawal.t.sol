@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { ProtocolAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { PYTH_ETH_USD, DEPLOYER, USER_1, USER_2 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
@@ -44,7 +44,8 @@ contract TestForkUniversalRouterValidateWithdrawal is UniversalRouterBaseFixture
 
         uint256 ethBalanceBefore = address(this).balance;
         uint256 ethBalanceBeforeUser = USER_1.balance;
-        uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.ValidateWithdrawal);
+        uint256 validationCost =
+            oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateWithdrawal);
 
         bytes memory commands = abi.encodePacked(uint8(Commands.VALIDATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);

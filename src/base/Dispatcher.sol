@@ -8,7 +8,7 @@ import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.s
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
-import { PreviousActionsData } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 
 import { Commands } from "../libraries/Commands.sol";
@@ -274,7 +274,7 @@ abstract contract Dispatcher is
                             address validator,
                             Permit2TokenBitfield.Bitfield permit2TokenBitfield,
                             bytes memory currentPriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
                         ) = abi.decode(
                             inputs,
@@ -284,7 +284,7 @@ abstract contract Dispatcher is
                                 address,
                                 Permit2TokenBitfield.Bitfield,
                                 bytes,
-                                PreviousActionsData,
+                                IUsdnProtocolTypes.PreviousActionsData,
                                 uint256
                             )
                         );
@@ -303,9 +303,11 @@ abstract contract Dispatcher is
                             address to,
                             address validator,
                             bytes memory currentPriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
-                        ) = abi.decode(inputs, (uint256, address, address, bytes, PreviousActionsData, uint256));
+                        ) = abi.decode(
+                            inputs, (uint256, address, address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256)
+                        );
                         _usdnInitiateWithdrawal(
                             usdnShares, map(to), map(validator), currentPriceData, previousActionsData, ethAmount
                         );
@@ -317,7 +319,7 @@ abstract contract Dispatcher is
                             address validator,
                             Permit2TokenBitfield.Bitfield permit2TokenBitfield,
                             bytes memory currentPriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
                         ) = abi.decode(
                             inputs,
@@ -328,7 +330,7 @@ abstract contract Dispatcher is
                                 address,
                                 Permit2TokenBitfield.Bitfield,
                                 bytes,
-                                PreviousActionsData,
+                                IUsdnProtocolTypes.PreviousActionsData,
                                 uint256
                             )
                         );
@@ -346,33 +348,33 @@ abstract contract Dispatcher is
                         (
                             address validator,
                             bytes memory depositPriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
-                        ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
+                        ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         _usdnValidateDeposit(map(validator), depositPriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.VALIDATE_WITHDRAWAL) {
                         (
                             address validator,
                             bytes memory withdrawalPriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
-                        ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
+                        ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         _usdnValidateWithdrawal(map(validator), withdrawalPriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.VALIDATE_OPEN) {
                         (
                             address validator,
                             bytes memory depositPriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
-                        ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
+                        ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         _usdnValidateOpenPosition(map(validator), depositPriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.VALIDATE_CLOSE) {
                         (
                             address validator,
                             bytes memory closePriceData,
-                            PreviousActionsData memory previousActionsData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
-                        ) = abi.decode(inputs, (address, bytes, PreviousActionsData, uint256));
+                        ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         _usdnValidateClosePosition(map(validator), closePriceData, previousActionsData, ethAmount);
                     } else if (command == Commands.LIQUIDATE) {
                         // equivalent: abi.decode(inputs, (bytes, uint16, uint256))
@@ -386,8 +388,11 @@ abstract contract Dispatcher is
                         bytes memory currentPriceData = inputs.toBytes(0);
                         _usdnLiquidate(currentPriceData, iterations, ethAmount);
                     } else if (command == Commands.VALIDATE_PENDING) {
-                        (PreviousActionsData memory previousActionsData, uint256 maxValidations, uint256 ethAmount) =
-                            abi.decode(inputs, (PreviousActionsData, uint256, uint256));
+                        (
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
+                            uint256 maxValidations,
+                            uint256 ethAmount
+                        ) = abi.decode(inputs, (IUsdnProtocolTypes.PreviousActionsData, uint256, uint256));
                         _usdnValidateActionablePendingActions(previousActionsData, maxValidations, ethAmount);
                     } else {
                         revert InvalidCommandType(command);
