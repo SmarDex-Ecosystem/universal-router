@@ -5,8 +5,7 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { PreviousActionsData } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { PositionId } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Permit2Payments.sol";
 import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
@@ -37,7 +36,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
         address validator,
         Permit2TokenBitfield.Bitfield permit2TokenBitfield,
         bytes memory currentPriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // use amount == Constants.CONTRACT_BALANCE as a flag to deposit the entire balance of the contract
@@ -66,7 +65,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     function _usdnValidateDeposit(
         address validator,
         bytes memory depositPriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // slither-disable-next-line arbitrary-send-eth
@@ -91,7 +90,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
         address to,
         address validator,
         bytes memory currentPriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // use amount == Constants.CONTRACT_BALANCE as a flag to withdraw the entire balance of the contract
@@ -119,7 +118,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     function _usdnValidateWithdrawal(
         address validator,
         bytes memory withdrawalPriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // slither-disable-next-line arbitrary-send-eth
@@ -150,9 +149,9 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
         address validator,
         Permit2TokenBitfield.Bitfield permit2TokenBitfield,
         bytes memory currentPriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
-    ) internal returns (bool success_, PositionId memory posId_) {
+    ) internal returns (bool success_, IUsdnProtocolTypes.PositionId memory posId_) {
         // use amount == Constants.CONTRACT_BALANCE as a flag to deposit the entire balance of the contract
         if (amount == Constants.CONTRACT_BALANCE) {
             amount = PROTOCOL_ASSET.balanceOf(address(this));
@@ -183,7 +182,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     function _usdnValidateOpenPosition(
         address validator,
         bytes memory openPositionPriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // slither-disable-next-line arbitrary-send-eth
@@ -204,7 +203,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     function _usdnValidateClosePosition(
         address validator,
         bytes memory closePriceData,
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // slither-disable-next-line arbitrary-send-eth
@@ -221,7 +220,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      * @param ethAmount The amount of Ether to send with the transaction
      */
     function _usdnValidateActionablePendingActions(
-        PreviousActionsData memory previousActionsData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 maxValidations,
         uint256 ethAmount
     ) internal {
