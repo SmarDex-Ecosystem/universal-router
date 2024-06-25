@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { ProtocolAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 
@@ -27,7 +27,7 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
     function test_ForkExecuteLiquidate() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.LIQUIDATE));
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
-        uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.Liquidation);
+        uint256 validationCost = oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.Liquidation);
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(data, 10, validationCost);
         router.execute{ value: validationCost }(commands, inputs);
