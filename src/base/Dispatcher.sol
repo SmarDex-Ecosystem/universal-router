@@ -50,8 +50,6 @@ abstract contract Dispatcher is
         internal
         returns (bool success_, bytes memory output_)
     {
-        // TODO CHECK IF USEFUL
-        output_ = "";
         uint256 command = uint8(commandType & Commands.COMMAND_TYPE_MASK);
 
         success_ = true;
@@ -227,7 +225,7 @@ abstract contract Dispatcher is
                                 s := calldataload(add(inputs.offset, 0xe0))
                             }
                             // protect against griefing
-                            (success_,) = token.call(
+                            (success_, output_) = token.call(
                                 abi.encodeWithSelector(
                                     IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
                                 )
@@ -254,7 +252,7 @@ abstract contract Dispatcher is
                                 r := calldataload(add(inputs.offset, 0xc0))
                                 s := calldataload(add(inputs.offset, 0xe0))
                             }
-                            (success_,) = token.call(
+                            (success_, output_) = token.call(
                                 abi.encodeWithSelector(
                                     IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
                                 )
