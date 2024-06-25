@@ -5,13 +5,16 @@ pragma solidity ^0.8.25;
 import "./BytesLib.sol";
 
 /**
- * @title Functions for manipulating path data for multihop swaps
+ * @title Functions for manipulating path data for multi-hop swaps
  * @custom:from UniswapV3
  * @custom:url https://github.com/Uniswap/v3-periphery/blob/main/contracts/libraries/Path.sol
  * @custom:editor SmarDex team
  */
 library Path {
     using BytesLib for bytes;
+
+    /// @dev Indicates that the path length is invalid
+    error InvalidPath();
 
     /// @dev The length of the bytes encoded address
     uint256 private constant ADDR_SIZE = 20;
@@ -63,11 +66,11 @@ library Path {
     /**
      * @notice Skips a token from the buffer and returns the remainder
      * @dev Require a calldata path
-     * @param _path The swap path
+     * @param path The swap path
      * @return The remaining token elements in the path
      */
-    function skipToken(bytes calldata _path) internal pure returns (bytes calldata) {
-        return _path[NEXT_OFFSET:];
+    function skipToken(bytes calldata path) internal pure returns (bytes calldata) {
+        return path[NEXT_OFFSET:];
     }
 
     /**
@@ -81,11 +84,14 @@ library Path {
     }
 
     /**
-     * @notice Returns the _path addresses concatenated in a reversed order as a packed bytes array
+     * @notice Returns the path addresses concatenated in a reversed order as a packed bytes array
      * @param path The swap path
      * @return encoded_ The bytes array containing the packed addresses
      */
     function encodeTightlyPackedReversed(bytes calldata path) external pure returns (bytes memory encoded_) {
+        if (path.length == 0 || path.length % ADDR_SIZE > 0) {
+            revert InvalidPath();
+        }
         uint256 len = path.length / ADDR_SIZE;
         uint256 offSet = (len - 1) * ADDR_SIZE;
         for (uint256 i = len; i != 0;) {
