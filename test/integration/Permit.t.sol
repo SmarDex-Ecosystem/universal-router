@@ -133,7 +133,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
 
         // executing by the victim (the real user)
         vm.prank(vm.addr(1)); // griefed user
-        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, ""));
+        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, abi.encodeWithSignature("Error(string)", "ERC20Permit: invalid signature")));
         router.execute(commands, inputs);
 
         wstETH.transferFrom(vm.addr(1), address(this), 1 ether); // still griefed
