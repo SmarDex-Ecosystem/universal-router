@@ -35,7 +35,7 @@ contract TestForkUniversalRouterExecuteStETH is UniversalRouterBaseFixture {
         wstETH.unwrap(BASE_AMOUNT);
         stETH.transferShares(address(router), stETH.sharesOf(address(this)));
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.WRAP_STETH)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.WRAP_STETH));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.MSG_SENDER);
         router.execute(commands, inputs);
@@ -62,7 +62,7 @@ contract TestForkUniversalRouterExecuteStETH is UniversalRouterBaseFixture {
         wstETH.unwrap(BASE_AMOUNT);
         stETH.transferShares(address(router), stETH.sharesOf(address(this)));
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.WRAP_STETH)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.WRAP_STETH));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.ADDRESS_THIS);
         router.execute(commands, inputs);
@@ -89,7 +89,7 @@ contract TestForkUniversalRouterExecuteStETH is UniversalRouterBaseFixture {
         wstETH.transfer(address(router), BASE_AMOUNT);
         uint256 sharesOfStETHBefore = stETH.sharesOf(address(this));
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.UNWRAP_WSTETH)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.UNWRAP_WSTETH));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.MSG_SENDER);
         router.execute(commands, inputs);
@@ -115,7 +115,7 @@ contract TestForkUniversalRouterExecuteStETH is UniversalRouterBaseFixture {
         wstETH.transfer(address(router), BASE_AMOUNT);
         uint256 sharesOfStETHBefore = stETH.sharesOf(address(this));
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.UNWRAP_WSTETH)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.UNWRAP_WSTETH));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.ADDRESS_THIS);
         router.execute(commands, inputs);
