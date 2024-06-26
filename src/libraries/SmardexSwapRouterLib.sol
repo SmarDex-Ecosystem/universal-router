@@ -30,12 +30,12 @@ library SmardexSwapRouterLib {
     uint8 private constant ADDR_SIZE = 20;
 
     /**
-     * @notice callback data for smardex swap
+     * @notice Callback function for smardex swap
      * @param amountInCached The amountInCached value
-     * @param smardexFactory The smardex factory contract
-     * @param amount0Delta amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
-     * @param amount1Delta amount of token1 for the swap (negative is incoming, positive is required to pay to pair)
-     * @param data for Router path and payer for the swap
+     * @param smardexFactory The Smardex factory contract
+     * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
+     * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to pair)
+     * @param data The router path and payer for the swap
      */
     function smardexSwapCallback(
         uint256 amountInCached,
@@ -74,13 +74,13 @@ library SmardexSwapRouterLib {
 
     /**
      * @notice Performs a Smardex exact input swap
-     * @dev Use router balance if payer is the router or use permit2 from msg.sender
+     * @dev Uses router balance if payer is the router or uses permit2 from msg.sender
      * @param recipient The recipient of the output tokens
      * @param amountIn The amount of input tokens for the trade
      * @param amountOutMinimum The minimum desired amount of output tokens
      * @param path The path of the trade as a bytes string
      * @param payer The address that will be paying the input
-     * @param smardexFactory The smardex factory contract
+     * @param smardexFactory The Smardex factory contract
      */
     function smardexSwapExactInput(
         address recipient,
@@ -131,7 +131,7 @@ library SmardexSwapRouterLib {
      * @param amountInMaximum The maximum desired amount of input tokens
      * @param path The path of the trade as a bytes string
      * @param payer The address that will be paying the input
-     * @param smardexFactory The smardex factory contract
+     * @param smardexFactory The Smardex factory contract
      */
     function smardexSwapExactOutput(
         uint256 amountInCached,
@@ -144,7 +144,7 @@ library SmardexSwapRouterLib {
     ) external {
         amountInCached = amountInMaximum;
 
-        // Path needs to be reversed as to get the amountIn that we will ask from next pair hop
+        // Path needs to be reversed to get the amountIn that we will ask from the next pair hop
         bytes memory _reversedPath = path.encodeTightlyPackedReversed();
         uint256 amountIn = _swapExactOut(
             amountOut,
@@ -165,12 +165,12 @@ library SmardexSwapRouterLib {
     }
 
     /**
-     * @notice internal function to swap quantity of token to receive a determined quantity
-     * @param amountOut quantity to receive
-     * @param to address that will receive the token
-     * @param data SwapCallbackData data of the swap to transmit
-     * @param smardexFactory The smardex factory contract
-     * @return amountIn_ amount of token to pay
+     * @notice Internal function to swap quantity of token to receive a determined quantity
+     * @param amountOut The quantity to receive
+     * @param to The address that will receive the token
+     * @param data The SwapCallbackData data of the swap to transmit
+     * @param smardexFactory The Smardex factory contract
+     * @return amountIn_ The amount of token to pay
      */
     function _swapExactOut(
         uint256 amountOut,
@@ -197,12 +197,12 @@ library SmardexSwapRouterLib {
     }
 
     /**
-     * @notice internal function to swap a determined quantity of token
-     * @param amountIn quantity to swap
-     * @param to address that will receive the token
-     * @param data SwapCallbackData data of the swap to transmit
-     * @param smardexFactory The smardex factory contract
-     * @return amountOut_ amount of token that _to will receive
+     * @notice Internal function to swap a determined quantity of token
+     * @param amountIn The quantity to swap
+     * @param to The address that will receive the token
+     * @param data The SwapCallbackData data of the swap to transmit
+     * @param smardexFactory The Smardex factory contract
+     * @return amountOut_ The amount of token that to will receive
      */
     function _swapExactIn(
         uint256 amountIn,
