@@ -92,10 +92,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
-            1, getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
+            1, _getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
-            1, getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
+            1, _getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
@@ -136,10 +136,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
         // permits
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
-            1, getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
+            1, _getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
-            1, getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
+            1, _getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);

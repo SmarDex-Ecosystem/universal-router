@@ -36,7 +36,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(
+            _getDigest(
                 vm.addr(1),
                 address(this),
                 1 ether,
@@ -73,7 +73,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(
+            _getDigest(
                 vm.addr(1),
                 address(this),
                 1 ether,
@@ -116,7 +116,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(
+            _getDigest(
                 vm.addr(1), // victim
                 address(this),
                 1 ether,

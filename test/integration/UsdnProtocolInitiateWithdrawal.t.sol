@@ -87,7 +87,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
+            _getDigest(vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
         );
 
         bytes memory commands = _getPermitCommand();
@@ -120,7 +120,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
+            _getDigest(vm.addr(1), address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
         );
 
         bytes memory commands = _getPermitCommand();

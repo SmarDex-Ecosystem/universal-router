@@ -100,7 +100,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(
+            _getDigest(
                 vm.addr(1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
@@ -142,7 +142,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
-            getDigest(
+            _getDigest(
                 vm.addr(1), address(router), OPEN_POSITION_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR()
             )
         );
