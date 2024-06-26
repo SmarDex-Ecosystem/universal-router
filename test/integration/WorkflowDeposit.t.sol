@@ -27,12 +27,9 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
     }
 
     function test_ForkWorkflowDepositThroughUniswap() external {
-        uint24 poolFee = 10_000;
         _workflowsDeposit(
             abi.encodePacked(uint8(Commands.V3_SWAP_EXACT_OUT)),
-            abi.encode(
-                Constants.ADDRESS_THIS, _sdexToBurn, DEPOSIT_AMOUNT, abi.encodePacked(SDEX, poolFee, WETH), false
-            )
+            abi.encode(Constants.ADDRESS_THIS, _sdexToBurn, DEPOSIT_AMOUNT, abi.encodePacked(SDEX, 10_000, WETH), false)
         );
     }
 
