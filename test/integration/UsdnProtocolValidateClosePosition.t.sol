@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { ProtocolAction, PositionId } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { PYTH_ETH_USD, USER_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
