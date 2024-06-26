@@ -47,17 +47,17 @@ contract SigUtils {
     /**
      * @dev computes the hash of the fully encoded EIP-712 message for the domain, which can be used to recover the
      * signer
-     * @param _permit The permit struct
+     * @param permit The permit struct
      * @param domainSeparator The domain separator of the token
      */
-    function _getTypedDataHash(Permit memory _permit, bytes32 domainSeparator) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked("\x19\x01", domainSeparator, _getStructHash(_permit)));
+    function _getTypedDataHash(Permit memory permit, bytes32 domainSeparator) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked("\x19\x01", domainSeparator, _getStructHash(permit)));
     }
 
     /// @dev computes the hash of a permit
-    function _getStructHash(Permit memory _permit) internal pure returns (bytes32) {
+    function _getStructHash(Permit memory permit) internal pure returns (bytes32) {
         return keccak256(
-            abi.encode(PERMIT_TYPEHASH, _permit.owner, _permit.spender, _permit.value, _permit.nonce, _permit.deadline)
+            abi.encode(PERMIT_TYPEHASH, permit.owner, permit.spender, permit.value, permit.nonce, permit.deadline)
         );
     }
 }
