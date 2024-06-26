@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { DepositPendingAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { USER_1 } from "usdn-contracts/test/utils/Constants.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
@@ -34,13 +34,13 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         wstETH.transfer(address(router), DEPOSIT_AMOUNT);
         _transferSdex(DEPOSIT_AMOUNT);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.INITIATE_DEPOSIT)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] =
             abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        DepositPendingAction memory action =
+        IUsdnProtocolTypes.DepositPendingAction memory action =
             protocol.i_toDepositPendingAction(protocol.getUserPendingAction(address(this)));
 
         assertEq(action.to, USER_1, "pending action to");
@@ -61,7 +61,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture {
         wstETH.transfer(address(router), DEPOSIT_AMOUNT);
         _transferSdex(DEPOSIT_AMOUNT);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.INITIATE_DEPOSIT)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             Constants.CONTRACT_BALANCE, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
