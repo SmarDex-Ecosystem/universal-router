@@ -88,8 +88,8 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
-        // executing by the victim (the real user)
-        vm.prank(vm.addr(1)); // griefed user
+        // executed by the victim (the griefed user)
+        vm.prank(vm.addr(1));
         router.execute(commands, inputs);
 
         wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
