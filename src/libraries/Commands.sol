@@ -18,7 +18,7 @@ library Commands {
     uint256 constant TRANSFER = 0x05;
     uint256 constant PAY_PORTION = 0x06;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant FIRST_IF_BOUNDARY = 0x08;
 
@@ -28,8 +28,10 @@ library Commands {
     uint256 constant WRAP_ETH = 0x0b;
     uint256 constant UNWRAP_WETH = 0x0c;
     uint256 constant PERMIT2_TRANSFER_FROM_BATCH = 0x0d;
+    uint256 constant PERMIT = 0x0e;
+    uint256 constant PERMIT_TRANSFER_FROM = 0x0f;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant SECOND_IF_BOUNDARY = 0x10;
 
@@ -43,7 +45,7 @@ library Commands {
     uint256 constant LIQUIDATE = 0x17;
     uint256 constant VALIDATE_PENDING = 0x18;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant THIRD_IF_BOUNDARY = 0x1a;
 
@@ -53,7 +55,7 @@ library Commands {
     uint256 constant UNWRAP_WSTETH = 0x1e;
     // COMMAND_PLACEHOLDER = 0x1f;
 
-    // the commands are executed in nested if blocks to minimise gas consumption
+    // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant FOURTH_IF_BOUNDARY = 0x20;
 
