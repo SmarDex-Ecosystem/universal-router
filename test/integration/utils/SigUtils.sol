@@ -25,6 +25,15 @@ contract SigUtils {
         return keccak256(abi.encodePacked("\x19\x01", domainSeparator, getStructHash(_permit)));
     }
 
+    /*
+     * @notice Returns the EIP712 permit signature
+     * @param _owner The owner of the tokens
+     * @param _spender The spender
+     * @param _value The amount of tokens
+     * @param _nonce The nonce of the permit
+     * @param deadline The deadline of the permit
+     * @param domainSeparator The domain separator of the token
+    */
     function getDigest(
         address _owner,
         address _spender,
