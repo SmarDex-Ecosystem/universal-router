@@ -7,8 +7,8 @@ import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.so
 import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 
 /**
- * @notice The smardex parameters struct
- * @param smardexFactory The smardex factory
+ * @notice The Smardex parameters struct
+ * @param smardexFactory The Smardex factory
  * @param weth The wrapped ETH address
  * @param permit2 The permit2 address
  */
@@ -19,7 +19,7 @@ struct SmardexParameters {
 }
 
 contract SmardexImmutables {
-    /// @dev The smardex factory
+    /// @dev The Smardex factory
     ISmardexFactory internal immutable SMARDEX_FACTORY;
 
     /// @dev The wrapped ETH
@@ -28,7 +28,7 @@ contract SmardexImmutables {
     /// @dev The permit2 contract
     IAllowanceTransfer internal immutable SMARDEX_PERMIT2;
 
-    /// @param params The smardex parameters
+    /// @param params The Smardex parameters
     constructor(SmardexParameters memory params) {
         SMARDEX_FACTORY = params.smardexFactory;
         WETH = IWETH9(params.weth);

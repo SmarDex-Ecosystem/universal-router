@@ -14,7 +14,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
     /// @inheritdoc ISmardexSwapRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         SmardexSwapRouterLib.smardexSwapCallback(
-            amountInCached, SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data
+            SMARDEX_FACTORY, SMARDEX_PERMIT2, amountInCached, amount0Delta, amount1Delta, data
         );
     }
 
@@ -34,7 +34,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         bytes calldata path,
         address payer
     ) internal {
-        SmardexSwapRouterLib.smardexSwapExactInput(recipient, amountIn, amountOutMinimum, path, payer, SMARDEX_FACTORY);
+        SmardexSwapRouterLib.smardexSwapExactInput(SMARDEX_FACTORY, recipient, amountIn, amountOutMinimum, path, payer);
     }
 
     /**
@@ -54,7 +54,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         address payer
     ) internal {
         SmardexSwapRouterLib.smardexSwapExactOutput(
-            amountInCached, recipient, amountOut, amountInMaximum, path, payer, SMARDEX_FACTORY
+            SMARDEX_FACTORY, amountInCached, recipient, amountOut, amountInMaximum, path, payer
         );
     }
 }
