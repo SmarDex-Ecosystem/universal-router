@@ -13,7 +13,7 @@ import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexS
 
 /**
  * @custom:feature Entire workflow of deposit through the router
- * @custom:background A initiated universal router
+ * @custom:background An initiated universal router
  */
 contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
     uint256 constant DEPOSIT_AMOUNT = 0.1 ether;
