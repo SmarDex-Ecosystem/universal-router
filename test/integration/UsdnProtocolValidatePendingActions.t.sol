@@ -51,7 +51,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
             EMPTY_PREVIOUS_DATA
         );
         // 4. initiateClosePosition
-        (, PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
+        (, IUsdnProtocolTypes.PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             uint128(openPositionAmount),
             uint128(desiredLiquidation),
             address(this),
@@ -62,7 +62,8 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         );
         _waitDelay(); // to be realistic because not mandatory
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
-        uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.ValidateOpenPosition);
+        uint256 validationCost =
+            oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition);
         protocol.validateOpenPosition{ value: validationCost }(payable(this), data, EMPTY_PREVIOUS_DATA);
         protocol.initiateClosePosition{ value: _securityDeposit }(
             posId, uint128(openPositionAmount), USER_1, USER_4, "", EMPTY_PREVIOUS_DATA
@@ -102,8 +103,8 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         }
         (, uint128[] memory newRawIndices) = protocol.getActionablePendingActions(address(0));
         assertEq(newRawIndices.length, actionsCount, "newRawIndices.length");
-        PreviousActionsData memory previousActionsData =
-            PreviousActionsData({ priceData: priceData, rawIndices: newRawIndices });
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData =
+            IUsdnProtocolTypes.PreviousActionsData({ priceData: priceData, rawIndices: newRawIndices });
         uint256 ethBalanceBefore = address(router).balance;
 
         // validating actionable pending actions through the router

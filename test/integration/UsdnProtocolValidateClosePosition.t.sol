@@ -23,7 +23,7 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
-        (, PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
+        (, IUsdnProtocolTypes.PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
             address(this),
@@ -36,7 +36,7 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         uint256 ts1 = protocol.getUserPendingAction(address(this)).timestamp;
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
         protocol.validateOpenPosition{
-            value: oracleMiddleware.validationCost(data, ProtocolAction.ValidateOpenPosition)
+            value: oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition)
         }(payable(address(this)), data, EMPTY_PREVIOUS_DATA);
         protocol.initiateClosePosition{ value: _securityDeposit }(
             posId, OPEN_POSITION_AMOUNT, USER_1, payable(address(this)), "", EMPTY_PREVIOUS_DATA
@@ -55,9 +55,10 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
 
         uint256 ethBalanceBefore = address(this).balance;
-        uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.ValidateClosePosition);
+        uint256 validationCost =
+            oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateClosePosition);
 
-        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.VALIDATE_CLOSE)));
+        bytes memory commands = abi.encodePacked(uint8(Commands.VALIDATE_CLOSE));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.MSG_SENDER, data, EMPTY_PREVIOUS_DATA, validationCost);
         router.execute{ value: validationCost }(commands, inputs);
