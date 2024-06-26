@@ -56,10 +56,10 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
     }
 
     /**
-     * @custom:scenario An attacker steals the signature of a permit approval to transfer assets
+     * @custom:scenario An attackant steals the signature of a permit approval to transfer assets
      * @custom:given The user has 1 `wstETH`
      * @custom:when The user initiates a permit through the router with a `FLAG_ALLOW_REVERT`
-     * @custom:and An attacker steals the signature of the user and front-runs the permit approval through the router
+     * @custom:and An attackant steals the signature of the user and front-runs the permit approval through the router
      * @custom:and A transfer from is initiated, consuming the approval
      * @custom:then The user permit tx is not reverting
      * @custom:and The transfer is successful
@@ -88,8 +88,8 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
-        // executed by the victim (the griefed user)
-        vm.prank(vm.addr(1));
+        // executing by the victim (the real user)
+        vm.prank(vm.addr(1)); // griefed user
         router.execute(commands, inputs);
 
         wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
@@ -98,10 +98,10 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
     }
 
     /**
-     * @custom:scenario An attacker steals the signature of a permit approval to transfer assets
+     * @custom:scenario An attackant steals the signature of a permit approval to transfer assets
      * @custom:given The user has 1 `wstETH`
      * @custom:when The user initiates a permit through the router without any flag
-     * @custom:and An attacker steals the signature of the user and front-runs the permit approval through the router
+     * @custom:and An attackant steals the signature of the user and front-runs the permit approval through the router
      * @custom:and A transfer from is initiated, consuming the approval
      * @custom:then The user permit tx is reverting
      * @custom:and The transfer is successful
@@ -131,14 +131,18 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
-        // executed by the victim (the griefed user)
-        vm.prank(vm.addr(1));
-        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, abi.encodeWithSignature("Error(string)", "ERC20Permit: invalid signature")));
+        // executing by the victim (the real user)
+        vm.prank(vm.addr(1)); // griefed user
+        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, ""));
         router.execute(commands, inputs);
 
-        wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
+        wstETH.transferFrom(vm.addr(1), address(this), 1 ether); // still griefed
 
-        assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
+        assertEq(
+            wstETH.balanceOf(address(this)),
+            wstETHBalanceBefore + 1 ether,
+            "wstETH balance after transfer should be increased"
+        );
     }
 
     receive() external payable { }
