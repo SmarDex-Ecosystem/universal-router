@@ -56,7 +56,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
     }
 
     /**
-     * @custom:scenario An attackant steals the signature of a permit approval to transfer assets
+     * @custom:scenario An attacker steals the signature of a permit approval to transfer assets
      * @custom:given The user has 1 `wstETH`
      * @custom:when The user initiates a permit through the router with a `FLAG_ALLOW_REVERT`
      * @custom:and An attackant steals the signature of the user and front-runs the permit approval through the router
