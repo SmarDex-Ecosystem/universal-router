@@ -3,7 +3,7 @@ pragma solidity ^0.8.25;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { DepositPendingAction } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { WETH, SDEX, USER_1 } from "usdn-contracts/test/utils/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
@@ -29,7 +29,9 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
     function test_ForkWorkflowDepositThroughUniswap() external {
         _workflowsDeposit(
             abi.encodePacked(uint8(Commands.V3_SWAP_EXACT_OUT)),
-            abi.encode(Constants.ADDRESS_THIS, _sdexToBurn, DEPOSIT_AMOUNT, abi.encodePacked(SDEX, 10_000, WETH), false)
+            abi.encode(
+                Constants.ADDRESS_THIS, _sdexToBurn, DEPOSIT_AMOUNT, abi.encodePacked(SDEX, uint24(10_000), WETH), false
+            )
         );
     }
 
