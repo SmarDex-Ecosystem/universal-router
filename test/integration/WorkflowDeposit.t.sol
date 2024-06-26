@@ -26,6 +26,13 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         _sdexToBurn = _calcSdexToBurn(DEPOSIT_AMOUNT);
     }
 
+    /**
+     * @custom:action Entire workflow of deposit through the router with Uniswap
+     * @custom:given The user has some ETH
+     * @custom:when The user run some commands to deposit through the router
+     * @custom:then The deposit is initiated successfully
+     * @custom:and All tokens are returned to the user
+     */
     function test_ForkWorkflowDepositThroughUniswap() external {
         _workflowsDeposit(
             abi.encodePacked(uint8(Commands.V3_SWAP_EXACT_OUT)),
@@ -35,6 +42,13 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         );
     }
 
+    /**
+     * @custom:action Entire workflow of deposit through the router with smardex
+     * @custom:given The user has some ETH
+     * @custom:when The user run some commands to deposit through the router
+     * @custom:then The deposit is initiated successfully
+     * @custom:and All tokens are returned to the user
+     */
     function test_ForkWorkflowDepositThroughSmardex() external {
         _workflowsDeposit(
             abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT)),
@@ -42,6 +56,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         );
     }
 
+    // @notice Calculate the amount of SDEX to burn
     function _calcSdexToBurn(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
         uint256 usdnSharesToMintEstimated = protocol.i_calcMintUsdnShares(
             depositAmount, protocol.getBalanceVault(), usdn.totalShares(), params.initialPrice
@@ -50,6 +65,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
     }
 
+    // @notice Execute the deposit workflow
     function _workflowsDeposit(bytes memory command, bytes memory input) internal {
         bytes memory commands = abi.encodePacked(
             uint8(Commands.TRANSFER),
