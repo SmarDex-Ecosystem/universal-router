@@ -204,8 +204,20 @@ abstract contract Dispatcher is
                         } else if (command == Commands.PERMIT2_TRANSFER_FROM_BATCH) {
                             // TODO PERMIT2_TRANSFER_FROM_BATCH
                         } else if (command == Commands.PERMIT) {
-                            // equivalent: abi.decode(inputs, (address, address, address, uint256, uint256, uint8,
-                            // bytes32, bytes32))
+                            /*
+                                equivalent: abi.decode(
+                                    inputs, (
+                                        address, 
+                                        address, 
+                                        address, 
+                                        uint256, 
+                                        uint256, 
+                                        uint8,
+                                        bytes32,
+                                        bytes32
+                                    )
+                                )
+                            */
                             address token;
                             address owner;
                             address spender;
@@ -232,19 +244,19 @@ abstract contract Dispatcher is
                             );
                         } else if (command == Commands.PERMIT_TRANSFER_FROM) {
                             /*
-                            equivalent: abi.decode(
-                                inputs, (
-                                    address, 
-                                    address, 
-                                    address, 
-                                    uint256, 
-                                    uint256, 
-                                    uint8,
-                                    bytes32,
-                                    bytes32
+                                equivalent: abi.decode(
+                                    inputs, (
+                                        address, 
+                                        address, 
+                                        address, 
+                                        uint256, 
+                                        uint256, 
+                                        uint8,
+                                        bytes32,
+                                        bytes32
+                                    )
                                 )
-                            )
-                        */
+                            */
                             address token;
                             address owner;
                             address spender;
