@@ -57,7 +57,7 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
         skip(658_069);
         bytes memory commands = abi.encodePacked(uint8(Commands.LIQUIDATE));
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
-        uint256 validationCost = oracleMiddleware.validationCost(data, ProtocolAction.Liquidation);
+        uint256 validationCost = oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.Liquidation);
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(data, 10, validationCost);
         router.execute{ value: validationCost }(commands, inputs);
