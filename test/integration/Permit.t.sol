@@ -136,7 +136,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, abi.encodeWithSignature("Error(string)", "ERC20Permit: invalid signature")));
         router.execute(commands, inputs);
 
-        wstETH.transferFrom(vm.addr(1), address(this), 1 ether); // still griefed
+        wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
 
         assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
     }
