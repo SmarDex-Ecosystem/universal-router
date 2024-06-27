@@ -55,9 +55,10 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
 
         LongPendingAction memory action = protocol.i_toLongPendingAction(protocol.getUserPendingAction(USER_1));
 
+        assertTrue(action.action == ProtocolAction.ValidateOpenPosition, "The action type is wrong");
         assertEq(action.to, USER_1, "pending action to");
         assertEq(action.validator, USER_1, "pending action validator");
-        assertEq(action.tickVersion, 0, "pending action validator");
+        assertEq(action.tickVersion, 0, "pending action tick version");
         assertEq(address(router).balance, 0, "ETH balance");
         assertEq(IERC20(wstETH).balanceOf(address(router)), 0, "wstETH balance");
     }
