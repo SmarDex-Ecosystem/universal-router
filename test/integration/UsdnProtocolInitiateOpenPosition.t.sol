@@ -19,7 +19,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
     uint256 internal _securityDeposit;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         deal(address(wstETH), vm.addr(1), OPEN_POSITION_AMOUNT * 2);
         deal(vm.addr(1), 1e6 ether);

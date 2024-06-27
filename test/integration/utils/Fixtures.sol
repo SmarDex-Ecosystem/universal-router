@@ -21,15 +21,11 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
     AggregatorV3Interface public priceFeed;
     Wusdn internal wusdn;
 
-    constructor() {
-        params = DEFAULT_PARAMS;
-    }
-
-    function _setUp() internal {
-        params.fork = true;
-        params.initialDeposit = 1000 ether;
-        params.initialLong = 1000 ether;
-        _setUp(params);
+    function _setUp(SetUpParams memory setupParams) public virtual override {
+        setupParams.fork = true;
+        setupParams.initialDeposit = 1000 ether;
+        setupParams.initialLong = 1000 ether;
+        super._setUp(setupParams);
 
         wusdn = new Wusdn(usdn);
 

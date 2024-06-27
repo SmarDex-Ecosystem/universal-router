@@ -14,7 +14,7 @@ import { ISmardexSwapRouter } from "../../src/interfaces/smardex/ISmardexSwapRou
  */
 contract TestForkSmardexSwapCallback is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
     function setUp() external {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
     }
 
     /**

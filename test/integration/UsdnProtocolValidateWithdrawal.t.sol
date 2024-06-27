@@ -20,7 +20,7 @@ contract TestForkUniversalRouterValidateWithdrawal is UniversalRouterBaseFixture
     uint256 internal _securityDeposit;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         WITHDRAW_AMOUNT = usdn.sharesOf(DEPLOYER) / 100;
         vm.prank(DEPLOYER);
         usdn.transferShares(address(this), WITHDRAW_AMOUNT);

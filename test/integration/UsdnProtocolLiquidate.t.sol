@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.25;
 
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { DEPLOYER } from "usdn-contracts/test/utils/Constants.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 
@@ -15,23 +13,22 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
  * @custom:background A initiated universal router
  */
 contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
-    using SafeCast for uint256;
-
-    uint256 constant OPEN_POSITION_AMOUNT = 2 ether;
-    uint256 constant DESIRED_LIQUIDATION = 4000 ether;
+    uint128 constant OPEN_POSITION_AMOUNT = 2 ether;
+    uint128 constant DESIRED_LIQUIDATION = 4000 ether;
     PositionId internal _posId;
     uint256 _securityDeposit;
 
     function setUp() external {
-        params.forkWarp = 1_710_256_331;
-        _setUp();
+        SetUpParams memory liquidateParams = DEFAULT_PARAMS;
+        liquidateParams.forkWarp = 1_710_256_331;
+        _setUp(liquidateParams);
         vm.rollFork(19_420_000);
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
         (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
-            OPEN_POSITION_AMOUNT.toUint128(),
-            DESIRED_LIQUIDATION.toUint128(),
+            OPEN_POSITION_AMOUNT,
+            DESIRED_LIQUIDATION,
             address(this),
             payable(address(this)),
             NO_PERMIT2,
