@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.25;
 
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
@@ -48,8 +50,6 @@ abstract contract Dispatcher is
         internal
         returns (bool success_, bytes memory output_)
     {
-        // TODO CHECK IF USEFUL
-        output_ = "";
         uint256 command = uint8(commandType & Commands.COMMAND_TYPE_MASK);
 
         success_ = true;
@@ -110,7 +110,7 @@ abstract contract Dispatcher is
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;
                             address recipient;
-                            uint160 amountMin;
+                            uint256 amountMin;
                             assembly {
                                 token := calldataload(inputs.offset)
                                 recipient := calldataload(add(inputs.offset, 0x20))
@@ -205,6 +205,84 @@ abstract contract Dispatcher is
                             (IAllowanceTransfer.AllowanceTransferDetails[] memory batchDetails) =
                                 abi.decode(inputs, (IAllowanceTransfer.AllowanceTransferDetails[]));
                             permit2TransferFrom(batchDetails, lockedBy);
+                        } else if (command == Commands.PERMIT) {
+                            /*
+                                equivalent: abi.decode(
+                                    inputs, (
+                                        address, 
+                                        address, 
+                                        address, 
+                                        uint256, 
+                                        uint256, 
+                                        uint8,
+                                        bytes32,
+                                        bytes32
+                                    )
+                                )
+                            */
+                            address token;
+                            address owner;
+                            address spender;
+                            uint256 amount;
+                            uint256 deadline;
+                            uint8 v;
+                            bytes32 r;
+                            bytes32 s;
+                            assembly {
+                                token := calldataload(inputs.offset)
+                                owner := calldataload(add(inputs.offset, 0x20))
+                                spender := calldataload(add(inputs.offset, 0x40))
+                                amount := calldataload(add(inputs.offset, 0x60))
+                                deadline := calldataload(add(inputs.offset, 0x80))
+                                v := calldataload(add(inputs.offset, 0xa0))
+                                r := calldataload(add(inputs.offset, 0xc0))
+                                s := calldataload(add(inputs.offset, 0xe0))
+                            }
+                            // protect against griefing
+                            (success_, output_) = token.call(
+                                abi.encodeWithSelector(
+                                    IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
+                                )
+                            );
+                        } else if (command == Commands.PERMIT_TRANSFER_FROM) {
+                            /*
+                                equivalent: abi.decode(
+                                    inputs, (
+                                        address, 
+                                        address, 
+                                        address, 
+                                        uint256, 
+                                        uint256, 
+                                        uint8,
+                                        bytes32,
+                                        bytes32
+                                    )
+                                )
+                            */
+                            address token;
+                            address owner;
+                            address spender;
+                            uint256 amount;
+                            uint256 deadline;
+                            uint8 v;
+                            bytes32 r;
+                            bytes32 s;
+                            assembly {
+                                token := calldataload(inputs.offset)
+                                owner := calldataload(add(inputs.offset, 0x20))
+                                spender := calldataload(add(inputs.offset, 0x40))
+                                amount := calldataload(add(inputs.offset, 0x60))
+                                deadline := calldataload(add(inputs.offset, 0x80))
+                                v := calldataload(add(inputs.offset, 0xa0))
+                                r := calldataload(add(inputs.offset, 0xc0))
+                                s := calldataload(add(inputs.offset, 0xe0))
+                            }
+                            (success_, output_) = token.call(
+                                abi.encodeWithSelector(
+                                    IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
+                                )
+                            );
+                            IERC20(token).transferFrom(owner, spender, amount);
                         } else {
                             revert InvalidCommandType(command);
                         }
