@@ -73,7 +73,6 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
      * @custom:and All tokens are returned to the user
      */
     function test_ForkWorkflowOpenPositionWithPermit() external {
-        deal(address(wstETH), vm.addr(1), OPEN_POSITION_AMOUNT * 2);
         deal(vm.addr(1), 1e6 ether);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             1,
@@ -83,16 +82,20 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         );
 
         bytes memory commands = abi.encodePacked(
+            uint8(Commands.TRANSFER),
+            uint8(Commands.SWEEP),
             uint8(Commands.PERMIT_TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT),
             uint8(Commands.INITIATE_OPEN),
             uint8(Commands.SWEEP),
             uint8(Commands.SWEEP)
         );
 
-        bytes[] memory inputs = new bytes[](4);
-        inputs[0] =
+        bytes[] memory inputs = new bytes[](6);
+        inputs[0] = abi.encode(Constants.ETH, wstETH, OPEN_POSITION_AMOUNT * 2);
+        inputs[1] = abi.encode(wstETH, vm.addr(1), 0);
+        inputs[2] =
             abi.encode(address(wstETH), vm.addr(1), address(router), OPEN_POSITION_AMOUNT, type(uint256).max, v, r, s);
-        inputs[1] = abi.encode(
+        inputs[3] = abi.encode(
             Constants.CONTRACT_BALANCE,
             DESIRED_LIQUIDATION,
             USER_1,
@@ -102,11 +105,11 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
             EMPTY_PREVIOUS_DATA,
             _securityOpenPosition
         );
-        inputs[2] = abi.encode(Constants.ETH, address(this), 0);
-        inputs[3] = abi.encode(wstETH, address(this), 0);
+        inputs[4] = abi.encode(Constants.ETH, address(this), 0);
+        inputs[5] = abi.encode(wstETH, address(this), 0);
 
         vm.prank(vm.addr(1));
-        router.execute{ value: _securityOpenPosition }(commands, inputs);
+        router.execute{ value: _securityOpenPosition + OPEN_POSITION_AMOUNT * 2 }(commands, inputs);
 
         LongPendingAction memory action = protocol.i_toLongPendingAction(protocol.getUserPendingAction(USER_1));
 
