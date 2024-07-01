@@ -15,7 +15,7 @@ import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
  */
 contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         deal(address(wstETH), vm.addr(1), 1 ether);
         deal(vm.addr(1), 1e6 ether);
     }

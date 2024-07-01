@@ -19,7 +19,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
     uint256 internal _securityDeposit;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         deal(address(wstETH), address(this), DEPOSIT_AMOUNT * 2);
         deal(address(sdex), address(this), 1e6 ether);
         deal(address(wstETH), vm.addr(1), DEPOSIT_AMOUNT * 2);
