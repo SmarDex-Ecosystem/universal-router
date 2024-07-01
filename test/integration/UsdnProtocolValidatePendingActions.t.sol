@@ -17,7 +17,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
     uint256 ts1;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         // set 4 pending actions
         ts1 = block.timestamp;
         _securityDeposit = protocol.getSecurityDepositValue();

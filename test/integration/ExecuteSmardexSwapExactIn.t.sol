@@ -19,7 +19,7 @@ contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture, ISmard
     address constant WBTC = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
 
     function setUp() external {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
 
         deal(WETH, address(this), BASE_AMOUNT * 1e3);
         deal(SDEX, address(this), BASE_AMOUNT * 1e3);

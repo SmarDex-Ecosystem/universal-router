@@ -17,7 +17,7 @@ contract TestForkUniversalRouterExecuteStETH is UniversalRouterBaseFixture {
     IStETH stETH;
 
     function setUp() external {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
 
         deal(address(wstETH), address(this), BASE_AMOUNT);
         stETH = IStETH(address(router.STETH()));

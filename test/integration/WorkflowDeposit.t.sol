@@ -20,7 +20,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
     uint256 internal _sdexToBurn;
 
     function setUp() external {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         _securityDeposit = protocol.getSecurityDepositValue();
         _sdexToBurn = _calcSdexToBurn(DEPOSIT_AMOUNT);
     }
