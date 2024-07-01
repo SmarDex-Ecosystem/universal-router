@@ -20,8 +20,10 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
 
     function setUp() external {
         SetUpParams memory liquidateParams = DEFAULT_PARAMS;
+        // Tuesday 12 March 2024 15:12:11
         liquidateParams.forkWarp = 1_710_256_331;
         _setUp(liquidateParams);
+        // block 19_420_000 at Mar-12-2024 03:49:35
         vm.rollFork(19_420_000);
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         wstETH.approve(address(protocol), type(uint256).max);
@@ -51,6 +53,7 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
      * @custom:then The transaction should be executed
      */
     function test_ForkExecuteLiquidate() external {
+        // skip 658_069 seconds to Mar-19-2024 15:41:24
         skip(658_069);
         bytes memory commands = abi.encodePacked(uint8(Commands.LIQUIDATE));
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
