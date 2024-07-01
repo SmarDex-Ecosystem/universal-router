@@ -25,9 +25,9 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
     }
 
     /**
-     * @custom:action Entire workflow of open position through the router
+     * @custom:action Entire workflow of opening a position through the router
      * @custom:given The user has some ETH
-     * @custom:when The user run some commands to open position through the router
+     * @custom:when The user runs some commands to opening a position through the router
      * @custom:then The open position is initiated successfully
      * @custom:and All tokens are returned to the user
      */
@@ -59,6 +59,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         assertEq(action.to, USER_1, "pending action to");
         assertEq(action.validator, USER_1, "pending action validator");
         assertEq(action.tickVersion, 0, "pending action tick version");
+        assertEq(action.securityDepositValue, _securityOpenPosition, "pending action security deposit value");
         assertEq(address(router).balance, 0, "ETH balance");
         assertEq(IERC20(wstETH).balanceOf(address(router)), 0, "wstETH balance");
     }
