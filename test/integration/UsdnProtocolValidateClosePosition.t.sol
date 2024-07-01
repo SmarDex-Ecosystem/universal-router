@@ -19,7 +19,7 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
     uint256 internal _securityDeposit;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();

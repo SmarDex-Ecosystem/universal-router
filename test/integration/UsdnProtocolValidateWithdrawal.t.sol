@@ -3,9 +3,8 @@ pragma solidity ^0.8.25;
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { PYTH_ETH_USD } from "usdn-contracts/test/utils/Constants.sol";
-import { DEPLOYER, USER_1, USER_2 } from "usdn-contracts/test/utils/Constants.sol";
 
+import { PYTH_ETH_USD, DEPLOYER, USER_1, USER_2 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
@@ -21,7 +20,7 @@ contract TestForkUniversalRouterValidateWithdrawal is UniversalRouterBaseFixture
     uint256 internal _securityDeposit;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         WITHDRAW_AMOUNT = usdn.sharesOf(DEPLOYER) / 100;
         vm.prank(DEPLOYER);
         usdn.transferShares(address(this), WITHDRAW_AMOUNT);

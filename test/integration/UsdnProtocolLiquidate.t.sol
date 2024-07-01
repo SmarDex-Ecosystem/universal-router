@@ -13,8 +13,36 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
  * @custom:background A initiated universal router
  */
 contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
+    uint128 constant OPEN_POSITION_AMOUNT = 2 ether;
+    uint128 constant DESIRED_LIQUIDATION = 4000 ether;
+    PositionId internal _posId;
+    uint256 _securityDeposit;
+
     function setUp() external {
-        _setUp();
+        SetUpParams memory liquidateParams = DEFAULT_PARAMS;
+        // Tuesday 12 March 2024 15:12:11
+        liquidateParams.forkWarp = 1_710_256_331;
+        _setUp(liquidateParams);
+        // block 19_420_000 at Mar-12-2024 03:49:35
+        vm.rollFork(19_420_000);
+        deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
+        wstETH.approve(address(protocol), type(uint256).max);
+        _securityDeposit = protocol.getSecurityDepositValue();
+        (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
+            OPEN_POSITION_AMOUNT,
+            DESIRED_LIQUIDATION,
+            address(this),
+            payable(address(this)),
+            NO_PERMIT2,
+            "",
+            EMPTY_PREVIOUS_DATA
+        );
+        _waitDelay();
+        uint256 ts1 = protocol.getUserPendingAction(address(this)).timestamp;
+        (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
+        protocol.validateOpenPosition{
+            value: oracleMiddleware.validationCost(data, ProtocolAction.ValidateOpenPosition)
+        }(payable(address(this)), data, EMPTY_PREVIOUS_DATA);
     }
 
     /**
@@ -25,11 +53,24 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
      * @custom:then The transaction should be executed
      */
     function test_ForkExecuteLiquidate() external {
+        // skip 658_069 seconds to Mar-19-2024 15:41:24
+        skip(658_069);
+        uint256 tickVersionBefore = protocol.getTickVersion(_posId.tick);
         bytes memory commands = abi.encodePacked(uint8(Commands.LIQUIDATE));
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
         uint256 validationCost = oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.Liquidation);
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(data, 10, validationCost);
         router.execute{ value: validationCost }(commands, inputs);
+        assertLt(
+            protocol.getHighestPopulatedTick(),
+            _posId.tick,
+            "The highest populated tick should be lower than the last liquidated tick"
+        );
+        assertEq(
+            protocol.getTickVersion(_posId.tick), tickVersionBefore + 1, "The tick version should be incremented by 1"
+        );
     }
+
+    receive() external payable { }
 }

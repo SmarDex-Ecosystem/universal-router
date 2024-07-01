@@ -3,8 +3,7 @@ pragma solidity ^0.8.25;
 
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
-import { PYTH_ETH_USD } from "./utils/Constants.sol";
-import { DEPLOYER, USER_1, USER_2, USER_3, USER_4 } from "./utils/Constants.sol";
+import { PYTH_ETH_USD, DEPLOYER, USER_1, USER_2, USER_3, USER_4 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
@@ -18,7 +17,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
     uint256 ts1;
 
     function setUp() public {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         // set 4 pending actions
         ts1 = block.timestamp;
         _securityDeposit = protocol.getSecurityDepositValue();
