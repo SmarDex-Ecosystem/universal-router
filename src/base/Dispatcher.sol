@@ -282,6 +282,7 @@ abstract contract Dispatcher is
                                     IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
                                 )
                             );
+                            // slither-disable-next-line unchecked-transfer,arbitrary-send-erc20
                             IERC20(token).transferFrom(owner, spender, amount);
                         } else {
                             revert InvalidCommandType(command);

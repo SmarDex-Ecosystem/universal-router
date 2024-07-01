@@ -18,7 +18,7 @@ contract TestForkExecuteWusdn is UniversalRouterBaseFixture {
     uint256 constant BASE_AMOUNT = 1 ether;
 
     function setUp() external {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
 
         deal(WETH, address(this), BASE_AMOUNT * 1e3);
         deal(address(sdex), address(this), BASE_AMOUNT * 1e3);
