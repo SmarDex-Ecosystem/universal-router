@@ -20,7 +20,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
     uint256 internal _securityOpenPosition;
 
     function setUp() external {
-        _setUp();
+        _setUp(DEFAULT_PARAMS);
         _securityOpenPosition = protocol.getSecurityDepositValue();
     }
 
