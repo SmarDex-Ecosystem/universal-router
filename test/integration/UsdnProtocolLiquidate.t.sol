@@ -55,6 +55,7 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
     function test_ForkExecuteLiquidate() external {
         // skip 658_069 seconds to Mar-19-2024 15:41:24
         skip(658_069);
+        uint256 tickVersionBefore = protocol.getTickVersion(_posId.tick);
         bytes memory commands = abi.encodePacked(uint8(Commands.LIQUIDATE));
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
         uint256 validationCost = oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.Liquidation);
@@ -65,6 +66,9 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
             protocol.getHighestPopulatedTick(),
             _posId.tick,
             "The highest populated tick should be lower than the last liquidated tick"
+        );
+        assertEq(
+            protocol.getTickVersion(_posId.tick), tickVersionBefore + 1, "The tick version should be incremented by 1"
         );
     }
 
