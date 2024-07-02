@@ -39,80 +39,48 @@ Each command is a `bytes1` containing the following 8 bits:
 
 - `command` is a 6 bit unique identifier for the command that should be carried out. The values of these commands can be found within Commands.sol, or can be viewed in the table below.
 
-```
-   ┌──────┬───────────────────────────────┐
-   │ 0x00 │  V3_SWAP_EXACT_IN             │
-   ├──────┼───────────────────────────────┤
-   │ 0x01 │  V3_SWAP_EXACT_OUT            │
-   ├──────┼───────────────────────────────┤
-   │ 0x02 │  PERMIT2_TRANSFER_FROM        │
-   ├──────┼───────────────────────────────┤
-   │ 0x03 │  PERMIT2_PERMIT_BATCH         │
-   ├──────┼───────────────────────────────┤
-   │ 0x04 │  SWEEP                        │
-   ├──────┼───────────────────────────────┤
-   │ 0x05 │  TRANSFER                     │
-   ├──────┼───────────────────────────────┤
-   │ 0x06 │  PAY_PORTION                  │
-   ├──────┼───────────────────────────────┤
-   │ 0x07 │  -------                      │
-   ├──────┼───────────────────────────────┤
-   │ 0x08 │  V2_SWAP_EXACT_IN             │
-   ├──────┼───────────────────────────────┤
-   │ 0x09 │  V2_SWAP_EXACT_OUT            │
-   ├──────┼───────────────────────────────┤
-   │ 0x0a │  PERMIT2_PERMIT               │
-   ├──────┼───────────────────────────────┤
-   │ 0x0b │  WRAP_ETH                     │
-   ├──────┼───────────────────────────────┤
-   │ 0x0c │  UNWRAP_WETH                  │
-   ├──────┼───────────────────────────────┤
-   │ 0x0d │  PERMIT2_TRANSFER_FROM_BATCH  │
-   ├──────┼───────────────────────────────┤
-   │ 0x0e │  PERMIT                       │
-   ├──────┼───────────────────────────────┤
-   │ 0x0f │  PERMIT_TRANSFER_FROM         │
-   ├──────┼───────────────────────────────┤
-   │ 0x10 │  INITIATE_DEPOSIT             │
-   ├──────┼───────────────────────────────┤
-   │ 0x11 │  INITIATE_WITHDRAWAL          │
-   ├──────┼───────────────────────────────┤
-   │ 0x12 │  INITIATE_OPEN                │
-   ├──────┼───────────────────────────────┤
-   │ 0x13 │  VALIDATE_DEPOSIT             │
-   ├──────┼───────────────────────────────┤
-   │ 0x14 │  VALIDATE_WITHDRAWAL          │
-   ├──────┼───────────────────────────────┤
-   │ 0x15 │  VALIDATE_OPEN                │
-   ├──────┼───────────────────────────────┤
-   │ 0x16 │  VALIDATE_CLOSE               │
-   ├──────┼───────────────────────────────┤
-   │ 0x17 │  LIQUIDATE                    │
-   ├──────┼───────────────────────────────┤
-   │ 0x18 │  VALIDATE_PENDING             │
-   ├──────┼───────────────────────────────┤
-   │ 0x19 │  -------                      │
-   ├──────┼───────────────────────────────┤
-   │ 0x1a │  -------                      │
-   ├──────┼───────────────────────────────┤
-   │ 0x1b │  WRAP_USDN                    │
-   ├──────┼───────────────────────────────┤
-   │ 0x1c │  UNWRAP_WUSDN                 │
-   ├──────┼───────────────────────────────┤
-   │ 0x1d │  WRAP_STETH                   │
-   ├──────┼───────────────────────────────┤
-   │ 0x1e │  UNWRAP_WSTETH                │
-   ├──────┼───────────────────────────────┤
-   │ 0x1f │  -------                      │
-   ├──────┼───────────────────────────────┤
-   │ 0x20 │  SMARDEX_SWAP_EXACT_IN        │
-   ├──────┼───────────────────────────────┤
-   │ 0x21 │  SMARDEX_SWAP_EXACT_OUT       │
-   ├──────┼───────────────────────────────┤
-   │ 0x22-│  -------                      │
-   │ 0x3f │                               │
-   └──────┴───────────────────────────────┘
-```
+<table style="width: 50%; float: left;">
+   <tr><th>Code</th><th>Description</th></tr>
+   <tr><td>0x00</td><td>V3_SWAP_EXACT_IN</td></tr>
+   <tr><td>0x01</td><td>V3_SWAP_EXACT_OUT</td></tr>
+   <tr><td>0x02</td><td>PERMIT2_TRANSFER_FROM</td></tr>
+   <tr><td>0x03</td><td>PERMIT2_PERMIT_BATCH</td></tr>
+   <tr><td>0x04</td><td>SWEEP</td></tr>
+   <tr><td>0x05</td><td>TRANSFER</td></tr>
+   <tr><td>0x06</td><td>PAY_PORTION</td></tr>
+   <tr><td>0x07</td><td>-------</td></tr>
+   <tr><td>0x08</td><td>V2_SWAP_EXACT_IN</td></tr>
+   <tr><td>0x09</td><td>V2_SWAP_EXACT_OUT</td></tr>
+   <tr><td>0x0a</td><td>PERMIT2_PERMIT</td></tr>
+   <tr><td>0x0b</td><td>WRAP_ETH</td></tr>
+   <tr><td>0x0c</td><td>UNWRAP_WETH</td></tr>
+   <tr><td>0x0d</td><td>PERMIT2_TRANSFER_FROM_BATCH</td></tr>
+   <tr><td>0x0e</td><td>PERMIT</td></tr>
+   <tr><td>0x0f</td><td>PERMIT_TRANSFER_FROM</td></tr>
+</table>
+
+<table style="width: 50%; float: left; border-left:1px solid gray">
+   <tr><th>Code</th><th>Description</th></tr>
+   <tr><td>0x10</td><td>INITIATE_DEPOSIT</td></tr>
+   <tr><td>0x11</td><td>INITIATE_WITHDRAWAL</td></tr>
+   <tr><td>0x12</td><td>INITIATE_OPEN</td></tr>
+   <tr><td>0x13</td><td>VALIDATE_DEPOSIT</td></tr>
+   <tr><td>0x14</td><td>VALIDATE_WITHDRAWAL</td></tr>
+   <tr><td>0x15</td><td>VALIDATE_OPEN</td></tr>
+   <tr><td>0x16</td><td>VALIDATE_CLOSE</td></tr>
+   <tr><td>0x17</td><td>LIQUIDATE</td></tr>
+   <tr><td>0x18</td><td>VALIDATE_PENDING</td></tr>
+   <tr><td>0x19</td><td>-------</td></tr>
+   <tr><td>0x1a</td><td>-------</td></tr>
+   <tr><td>0x1b</td><td>WRAP_USDN</td></tr>
+   <tr><td>0x1c</td><td>UNWRAP_WUSDN</td></tr>
+   <tr><td>0x1d</td><td>WRAP_STETH</td></tr>
+   <tr><td>0x1e</td><td>UNWRAP_WSTETH</td></tr>
+   <tr><td>0x1f</td><td>-------</td></tr>
+   <tr><td>0x20</td><td>SMARDEX_SWAP_EXACT_IN</td></tr>
+   <tr><td>0x21</td><td>SMARDEX_SWAP_EXACT_OUT</td></tr>
+   <tr><td>0x22-0x3f</td><td>-------</td></tr>
+</table>
 
 Note that some of the commands in the middle of the series are unused. These gaps allowed us to create gas-efficiencies when selecting which command to execute.
 
