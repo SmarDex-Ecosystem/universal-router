@@ -142,7 +142,7 @@ Developer documentation to give a detailed explanation of the inputs for every c
 ### UniversalRouter workflow commands
 
 You can run a series of commands in a single transaction. The commands are executed in the order they are provided in the `commands` parameter. If a command reverts, the transaction will revert, unless the command has the `f` flag set to `true`.
-For example, if you want to make a Deposit in the protocol, you would need to run the following steps: `eth -> wEth`, `wEth -> sdex`,`eth -> wstEth`, `INITIATE_DEPOSIT`, `sweep(wstEth)`, `sweep(sdex)`, `sweep(wEth)`.
+For example, if you want to make a Deposit in the protocol, you would need to run the following steps: `eth -> wEth` with `TRANSFER`, `wEth -> sdex` with `SMARDEX_SWAP_EXACT_OUT`,`eth -> wstEth` with `TRANSFER`, `INITIATE_DEPOSIT` with `INITIATE_DEPOSIT`, `sweep(wstEth)` with `SWEEP`, `sweep(sdex)` with `SWEEP`, `sweep(wEth)` with `SWEEP`.
 If you want to make a OpenPosition in the protocol, you would need to run the following steps: `eth -> wEth`, `INITIATE_OPEN`, `sweep(eth)`, `sweep(wEth)`.
 
 ### Commands
