@@ -53,8 +53,8 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         bytes calldata path,
         address payer
     ) internal {
-        SmardexSwapRouterLib.smardexSwapExactOutput(
-            SMARDEX_FACTORY, amountInCached, recipient, amountOut, amountInMaximum, path, payer
-        );
+        amountInCached = amountInMaximum;
+        SmardexSwapRouterLib.smardexSwapExactOutput(SMARDEX_FACTORY, recipient, amountOut, amountInMaximum, path, payer);
+        amountInCached = type(uint256).max;
     }
 }

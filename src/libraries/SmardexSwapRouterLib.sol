@@ -126,7 +126,6 @@ library SmardexSwapRouterLib {
      * @notice Performs a Smardex exact output swap
      * @dev Use router balance if the payer is the router or use permit2 from msg.sender
      * @param smardexFactory The Smardex factory contract
-     * @param amountInCached The cached amountIn value
      * @param recipient The recipient of the output tokens
      * @param amountInMaximum The maximum desired amount of input tokens
      * @param path The path of the trade as a bytes string
@@ -134,33 +133,29 @@ library SmardexSwapRouterLib {
      */
     function smardexSwapExactOutput(
         ISmardexFactory smardexFactory,
-        uint256 amountInCached,
         address recipient,
         uint256 amountOut,
         uint256 amountInMaximum,
         bytes calldata path,
         address payer
     ) external {
-        amountInCached = amountInMaximum;
-
         // path needs to be reversed to get the amountIn that we will ask from the next pair hop
-        bytes memory _reversedPath = path.encodeTightlyPackedReversed();
+        bytes memory reversedPath = path.encodeTightlyPackedReversed();
         uint256 amountIn = _swapExactOut(
             smardexFactory,
             amountOut,
             recipient,
-            ISmardexSwapRouter.SwapCallbackData({ path: _reversedPath, payer: payer })
+            ISmardexSwapRouter.SwapCallbackData({ path: reversedPath, payer: payer })
         );
 
         // amountIn is the right one for the first hop, otherwise we need the cached amountIn from callback
         if (path.length > 2 * ADDR_SIZE) {
-            amountIn = amountInCached;
+            amountIn = amountInMaximum;
         }
 
         if (amountIn > amountInMaximum) {
             revert ISmardexSwapRouterErrors.ExcessiveInputAmount();
         }
-        amountInCached = DEFAULT_MAX_AMOUNT_IN;
     }
 
     /**
@@ -208,7 +203,7 @@ library SmardexSwapRouterLib {
         uint256 amountIn,
         address to,
         ISmardexSwapRouter.SwapCallbackData memory data
-    ) internal returns (uint256 amountOut_) {
+    ) private returns (uint256 amountOut_) {
         // allow swapping to the router address with address 0
         if (to == address(0)) {
             to = address(this);
@@ -236,7 +231,7 @@ library SmardexSwapRouterLib {
         address payer,
         address recipient,
         uint256 amount
-    ) internal {
+    ) private {
         if (payer == address(this)) {
             IERC20(token).safeTransfer(recipient, amount);
         } else {
