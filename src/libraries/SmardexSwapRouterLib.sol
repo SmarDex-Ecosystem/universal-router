@@ -33,7 +33,6 @@ library SmardexSwapRouterLib {
      * @notice The Smardex callback for Smardex swap
      * @param smardexFactory The Smardex factory contract
      * @param permit2 The permit2 contract
-     * @param amountInCached The cached amountIn value
      * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
      * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to pair)
      * @param data The data path and payer for the swap
@@ -41,11 +40,10 @@ library SmardexSwapRouterLib {
     function smardexSwapCallback(
         ISmardexFactory smardexFactory,
         IAllowanceTransfer permit2,
-        uint256 amountInCached,
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata data
-    ) external {
+    ) external returns (uint256 amountInCached_) {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
             revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
         }
@@ -66,7 +64,7 @@ library SmardexSwapRouterLib {
             decodedData.path = decodedData.path.skipToken();
             _swapExactOut(smardexFactory, amountToPay, msg.sender, decodedData);
         } else {
-            amountInCached = amountToPay;
+            amountInCached_ = amountToPay;
             // swap in/out because exact output swaps are reversed
             tokenIn = tokenOut;
             _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);

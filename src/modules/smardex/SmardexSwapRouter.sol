@@ -13,9 +13,12 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
 
     /// @inheritdoc ISmardexSwapRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
-        SmardexSwapRouterLib.smardexSwapCallback(
-            SMARDEX_FACTORY, SMARDEX_PERMIT2, amountInCached, amount0Delta, amount1Delta, data
-        );
+        uint256 amountIn =
+            SmardexSwapRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
+
+        if (amountIn > 0) {
+            amountInCached = amountIn;
+        }
     }
 
     /**
