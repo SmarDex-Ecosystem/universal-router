@@ -118,7 +118,7 @@ Note that some of the commands in the middle of the series are unused. These gap
 
 #### How the input bytes are structures
 
-Each input bytes string is merely the abi encoding of a set of parameters. Depending on the command chosen, the input bytes string will be different. For example:
+Each input bytes string is simply the abi encoding of a set of parameters. Depending on the command chosen, the input bytes string will be different. For example:
 
 The inputs for `SMARDEX_SWAP_EXACT_IN` is the encoding of 4 parameters:
 
