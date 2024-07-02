@@ -63,7 +63,7 @@ library SmardexSwapRouterLib {
         if (isExactInput) {
             _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         } else if (decodedData.path.hasMultiplePools()) {
-            decodedData.path = decodedData.path.skipTokenMemory();
+            decodedData.path = decodedData.path.skipToken();
             _swapExactOut(smardexFactory, amountToPay, msg.sender, decodedData);
         } else {
             amountInCached = amountToPay;
@@ -88,7 +88,7 @@ library SmardexSwapRouterLib {
         address recipient,
         uint256 amountIn,
         uint256 amountOutMinimum,
-        bytes calldata path,
+        bytes memory path,
         address payer
     ) external {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
@@ -136,7 +136,7 @@ library SmardexSwapRouterLib {
         address recipient,
         uint256 amountOut,
         uint256 amountInMaximum,
-        bytes calldata path,
+        bytes memory path,
         address payer
     ) external {
         // path needs to be reversed to get the amountIn that we will ask from the next pair hop
