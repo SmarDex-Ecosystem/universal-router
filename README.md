@@ -122,9 +122,10 @@ Each input bytes string is merely the abi encoding of a set of parameters. Depen
 
 The inputs for `SMARDEX_SWAP_EXACT_IN` is the encoding of 4 parameters:
 
-- `address` The recipient of the output of the trade
+- `address` The recipient of the output tokens
 - `uint256` The amount of input tokens for the trade
 - `uint256` The minimum amount of output tokens the user wants
+- `bytes` The path of tokens to trade through
 - `bool` A flag for whether the input funds should come from the caller (through Permit2) or whether the funds are already in the UniversalRouter
 
 Whereas in contrast `WRAP_ETH` has just 2 parameters encoded:
