@@ -149,7 +149,11 @@ If you want to make a OpenPosition in the protocol, you would need to run the fo
 
 Some commands explained :
 
-- `PERMIT` : This command is used to approve the UniversalRouter contract to spend the user's tokens. This is useful to avoid the need for the user to approve the UniversalRouter contract to spend their tokens before executing a transaction.
+- `PERMIT` : This command is used to approve the UniversalRouter contract to spend the user's tokens using [permit](https://eips.ethereum.org/EIPS/eip-2612) feature if the token support it. This is useful to avoid the need for the user to approve the UniversalRouter contract to spend their tokens before executing a transaction.
+- `PERMIT_TRANSFER_FROM` : This command is used to execute a permit and a transfer (usually to the router).
+- `PERMIT2` : This command is used to approve the UniversalRouter contract to spend the user's tokens using [permit2](https://github.com/Uniswap/permit2) feature which is supported by any ERC-20 token.
+  Usage of permit2 requires an initial approval of an uniswap contract, so we prefer to use permit when the token supports it. You can find more details [here](https://blog.uniswap.org/permit2-and-universal-router).
+- `PERMIT2_PERMIT_BATCH` : This command is used to do a permit2 for multiple tokens at the same time.
 - `SWEEP` : This command is used to sweep the remaining funds in the UniversalRouter contract to the recipient address. This is useful to ensure that no funds are left in the contract after the transaction is executed. Need to be executed for every token that was sent to the UniversalRouter contract.
 - `INITIATE_DEPOSIT` : Initiate a deposit in the protocol. The user must have already sent wsEth and sdex to the UniversalRouter contract.
 - `INITIATE_WITHDRAWAL` : Initiate a withdrawal in the protocol. The user must have already sent usdn to the UniversalRouter contract.
