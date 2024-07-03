@@ -33,7 +33,7 @@ Each command is a `bytes1` containing the following 8 bits:
 └─┴─┴───────────┘
 ```
 
-- `f` is a single bit flag, that signals whether or not the command should be allowed to revert. If `f` is `false`, and the command reverts, then the entire transaction will revert. If `f` is `true` and the command reverts then the transaction will continue, allowing us to achieve partial fills. If using this flag, be careful to include further commands that will remove any funds that could be left unused in the `UniversalRouter` contract.
+- `f` is a single bit flag, that signals whether or not the command should be allowed to fail. If `f` is `false`, and the command fails, then the entire transaction will revert. If `f` is `true` and the command fails then the transaction will continue, allowing us to achieve partial fills. If using this flag, be careful to include further commands that will remove any funds that could be left unused in the `UniversalRouter` contract.
 
 - `r` is one bit of reserved space. This will allow us to increase the space used for commands, or add new flags in future.
 
