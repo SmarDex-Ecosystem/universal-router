@@ -15,6 +15,14 @@ interface ISmardexSwapRouter is ISmardexSwapRouterErrors {
     }
 
     /**
+     * @notice Storage struct of cached amountIn
+     * @param amountInCached The transient storage variable used for checking slippage
+     */
+    struct AmountInStruct {
+        uint256 amountInCached;
+    }
+
+    /**
      * @notice Callback of the Smardex swap
      * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
      * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to pair)

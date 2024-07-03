@@ -8,17 +8,14 @@ import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
 abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
-    /// @dev Transient storage variable used for checking slippage
-    uint256 private amountInCached = type(uint256).max;
+    /// @notice The storage struct of cached amountIn
+    AmountInStruct private amountInStruct;
 
     /// @inheritdoc ISmardexSwapRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
-        uint256 amountIn =
-            SmardexSwapRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
-
-        if (amountIn > 0) {
-            amountInCached = amountIn;
-        }
+        SmardexSwapRouterLib.smardexSwapCallback(
+            amountInStruct, SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data
+        );
     }
 
     /**
@@ -56,8 +53,8 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         bytes calldata path,
         address payer
     ) internal {
-        amountInCached = amountInMaximum;
-        SmardexSwapRouterLib.smardexSwapExactOutput(SMARDEX_FACTORY, recipient, amountOut, amountInMaximum, path, payer);
-        amountInCached = type(uint256).max;
+        SmardexSwapRouterLib.smardexSwapExactOutput(
+            amountInStruct, SMARDEX_FACTORY, recipient, amountOut, amountInMaximum, path, payer
+        );
     }
 }

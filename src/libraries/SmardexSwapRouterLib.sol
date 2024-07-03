@@ -20,12 +20,6 @@ library SmardexSwapRouterLib {
     using SafeCast for int256;
     using SafeERC20 for IERC20;
 
-    /**
-     * @notice Used as the placeholder value for maxAmountIn, because the computed amount
-     * in for an exact output swap can never actually be this value
-     */
-    uint256 private constant DEFAULT_MAX_AMOUNT_IN = type(uint256).max;
-
     /// @notice The address size
     uint8 private constant ADDR_SIZE = 20;
 
@@ -38,12 +32,13 @@ library SmardexSwapRouterLib {
      * @param data The data path and payer for the swap
      */
     function smardexSwapCallback(
+        ISmardexSwapRouter.AmountInStruct storage amountInStruct,
         ISmardexFactory smardexFactory,
         IAllowanceTransfer permit2,
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata data
-    ) external returns (uint256 amountInCached_) {
+    ) external {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
             revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
         }
@@ -64,7 +59,7 @@ library SmardexSwapRouterLib {
             decodedData.path = decodedData.path.skipToken();
             _swapExactOut(smardexFactory, amountToPay, msg.sender, decodedData);
         } else {
-            amountInCached_ = amountToPay;
+            amountInStruct.amountInCached = amountToPay;
             // swap in/out because exact output swaps are reversed
             tokenIn = tokenOut;
             _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
@@ -90,7 +85,7 @@ library SmardexSwapRouterLib {
         address payer
     ) external {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
-        if (amountIn == Constants.CONTRACT_BALANCE) {
+        if (amountIn == Constants.CONTRACT_BALANCE && payer == address(this)) {
             address tokenIn = path.decodeFirstToken();
             amountIn = IERC20(tokenIn).balanceOf(address(this));
         }
@@ -125,15 +120,16 @@ library SmardexSwapRouterLib {
      * @dev Use router balance if the payer is the router or use permit2 from msg.sender
      * @param smardexFactory The Smardex factory contract
      * @param recipient The recipient of the output tokens
-     * @param amountInMaximum The maximum desired amount of input tokens
+     * @param amountInMax The maximum desired amount of input tokens
      * @param path The path of the trade as a bytes string
      * @param payer The address that will be paying the input
      */
     function smardexSwapExactOutput(
+        ISmardexSwapRouter.AmountInStruct storage amountInStruct,
         ISmardexFactory smardexFactory,
         address recipient,
         uint256 amountOut,
-        uint256 amountInMaximum,
+        uint256 amountInMax,
         bytes memory path,
         address payer
     ) external {
@@ -148,12 +144,14 @@ library SmardexSwapRouterLib {
 
         // amountIn is the right one for the first hop, otherwise we need the cached amountIn from callback
         if (path.length > 2 * ADDR_SIZE) {
-            amountIn = amountInMaximum;
+            amountIn = amountInStruct.amountInCached;
         }
 
-        if (amountIn > amountInMaximum) {
+        if (amountIn > amountInMax) {
             revert ISmardexSwapRouterErrors.ExcessiveInputAmount();
         }
+
+        amountInStruct.amountInCached = type(uint256).max;
     }
 
     /**
