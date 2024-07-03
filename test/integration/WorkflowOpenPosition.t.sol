@@ -48,8 +48,8 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
             EMPTY_PREVIOUS_DATA,
             _securityOpenPosition
         );
-        inputs[2] = abi.encode(Constants.ETH, address(this), 0);
-        inputs[3] = abi.encode(wstETH, address(this), 0);
+        inputs[2] = abi.encode(Constants.ETH, address(this), 0, 0);
+        inputs[3] = abi.encode(wstETH, address(this), 0, 0);
 
         router.execute{ value: _securityOpenPosition + OPEN_POSITION_AMOUNT * 2 }(commands, inputs);
 

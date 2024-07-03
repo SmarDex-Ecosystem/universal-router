@@ -108,16 +108,18 @@ abstract contract Dispatcher is
                             bytes calldata data = inputs.toBytes(1);
                             PERMIT2.permit(lockedBy, permitBatch, data);
                         } else if (command == Commands.SWEEP) {
-                            // equivalent:  abi.decode(inputs, (address, address, uint256))
+                            // equivalent:  abi.decode(inputs, (address, address, uint256, uint256))
                             address token;
                             address recipient;
                             uint256 amountMin;
+                            uint256 amountMinGas;
                             assembly {
                                 token := calldataload(inputs.offset)
                                 recipient := calldataload(add(inputs.offset, 0x20))
                                 amountMin := calldataload(add(inputs.offset, 0x40))
+                                amountMinGas := calldataload(add(inputs.offset, 0x60))
                             }
-                            Sweep.sweep(token, map(recipient), amountMin);
+                            Sweep.sweep(token, map(recipient), amountMin, amountMinGas);
                         } else if (command == Commands.TRANSFER) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;

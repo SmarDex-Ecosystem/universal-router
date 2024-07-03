@@ -17,17 +17,22 @@ library Sweep {
      *  @param token The token to sweep (can be ETH using Constants.ETH)
      * @param recipient The address that will receive payment
      * @param amountMinimum The minimum desired amount
+     * @param amountMinimumForGas The minimum amount to activate the sweep
      */
-    function sweep(address token, address recipient, uint256 amountMinimum) internal {
+    function sweep(address token, address recipient, uint256 amountMinimum, uint256 amountMinimumForGas) internal {
         uint256 balance;
         if (token == Constants.ETH) {
             balance = address(this).balance;
             if (balance < amountMinimum) revert InsufficientETH();
-            if (balance > 0) recipient.safeTransferETH(balance);
+            if (balance > amountMinimumForGas) {
+                recipient.safeTransferETH(balance);
+            }
         } else {
             balance = ERC20(token).balanceOf(address(this));
             if (balance < amountMinimum) revert InsufficientToken();
-            if (balance > 0) ERC20(token).safeTransfer(recipient, balance);
+            if (balance > amountMinimumForGas) {
+                ERC20(token).safeTransfer(recipient, balance);
+            }
         }
     }
 }
