@@ -149,6 +149,7 @@ If you want to make a OpenPosition in the protocol, you would need to run the fo
 
 Some commands explained :
 
+- `PERMIT` : This command is used to approve the UniversalRouter contract to spend the user's tokens. This is useful to avoid the need for the user to approve the UniversalRouter contract to spend their tokens before executing a transaction.
 - `SWEEP` : This command is used to sweep the remaining funds in the UniversalRouter contract to the recipient address. This is useful to ensure that no funds are left in the contract after the transaction is executed. Need to be executed for every token that was sent to the UniversalRouter contract.
 - `INITIATE_DEPOSIT` : Initiate a deposit in the protocol. The user must have already sent wsEth and sdex to the UniversalRouter contract.
 - `INITIATE_WITHDRAWAL` : Initiate a withdrawal in the protocol. The user must have already sent usdn to the UniversalRouter contract.
