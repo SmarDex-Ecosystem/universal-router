@@ -12,6 +12,7 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 
 import { Commands } from "../libraries/Commands.sol";
+import { Sweep } from "../libraries/Sweep.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
@@ -116,7 +117,7 @@ abstract contract Dispatcher is
                                 recipient := calldataload(add(inputs.offset, 0x20))
                                 amountMin := calldataload(add(inputs.offset, 0x40))
                             }
-                            Payments.sweep(token, map(recipient), amountMin);
+                            Sweep.sweep(token, map(recipient), amountMin);
                         } else if (command == Commands.TRANSFER) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;
