@@ -25,13 +25,17 @@ library Sweep {
         uint256 balance;
         if (token == Constants.ETH) {
             balance = address(this).balance;
-            if (balance < amountMinimum) revert InsufficientETH();
+            if (balance < amountMinimum) {
+                revert InsufficientETH();
+            }
             if (balance > amountMinimumForGas) {
                 recipient.safeTransferETH(balance);
             }
         } else {
             balance = ERC20(token).balanceOf(address(this));
-            if (balance < amountMinimum) revert InsufficientToken();
+            if (balance < amountMinimum) {
+                revert InsufficientToken();
+            }
             if (balance > amountMinimumForGas) {
                 ERC20(token).safeTransfer(recipient, balance);
             }

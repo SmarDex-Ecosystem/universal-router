@@ -41,9 +41,9 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
 
     /**
      * @custom:action Sweep token to an address
-     * @custom:given The router has token
+     * @custom:given The router has tokens
      * @custom:when The `execute` function is called for `SWEEP` command
-     * @custom:then The `SWEEP` command should transfer all token to the address
+     * @custom:then The `SWEEP` command should transfer all tokens   to the address
      */
     function test_SweepToken() public {
         uint256 balanceRouterBefore = wstETH.balanceOf(address(router));
@@ -57,8 +57,8 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep ETH to an address with to high amount
-     * @custom:given The router has enough ETH
+     * @custom:action Revert when sweep ETH an amount higher than the router balance
+     * @custom:given The router does not have enough ETH
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should revert with `InsufficientETH`
      */
@@ -72,8 +72,8 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep token to an address with to high amount
-     * @custom:given The router has enough token
+     * @custom:action Revert when sweep token an amount higher than the router balance
+     * @custom:given The router does not have enough tokens
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should revert with `InsufficientToken`
      */
