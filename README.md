@@ -161,6 +161,11 @@ Some commands explained :
 - `VALIDATE_DEPOSIT` : Validate a deposit in the protocol.
 - `VALIDATE_WITHDRAWAL` : Validate a withdrawal in the protocol.
 - `VALIDATE_OPEN` : Validate an open in the protocol.
+- `VALIDATE_CLOSE` : Validate a close in the protocol.
+
+### Command not implemented
+
+- `initiateClosePosition` : This command is used to initiate a close position in the protocol. Protocol verify the msg.sender of the transaction to verify that the user is the owner of the position. So, this command is not implemented in the UniversalRouter contract because user must call the initiateClosePosition function directly on the protocol contract.
 
 ## Installation
 
