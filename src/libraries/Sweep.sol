@@ -9,12 +9,14 @@ library Sweep {
     using SafeTransferLib for ERC20;
     using SafeTransferLib for address;
 
+    /// @notice Indicates that the contract has insufficient tokens
     error InsufficientToken();
+    /// @notice Indicates that the contract has insufficient ETH
     error InsufficientETH();
 
     /**
      * @notice Sweeps all of the contract's ERC20 or ETH to an address
-     *  @param token The token to sweep (can be ETH using Constants.ETH)
+     * @param token The token to sweep (can be ETH using Constants.ETH)
      * @param recipient The address that will receive payment
      * @param amountMinimum The minimum desired amount
      * @param amountMinimumForGas The minimum amount to activate the sweep
