@@ -57,7 +57,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Revert when sweep ETH an amount higher than the router balance
+     * @custom:action Revert when sweep ETH amount greater than the router balance
      * @custom:given The router does not have enough ETH
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should revert with `InsufficientETH`
@@ -72,7 +72,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Revert when sweep token an amount higher than the router balance
+     * @custom:action Revert when sweep token amount greater than the router balance
      * @custom:given The router does not have enough tokens
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should revert with `InsufficientToken`
@@ -87,12 +87,12 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep doesn't activate when ETh is lower than minimum token gas efficiency
+     * @custom:action Sweep doesn't activate when ETh is less than minimum tokens gas efficiency
      * @custom:given The gas price is greater than the router balance, so is not profitable to transfer ETH
      * @custom:when The `execute` function is called for `SWEEP` command
-     * @custom:then The `SWEEP` command should pass without transfer ETH
+     * @custom:then The `SWEEP` command should pass without transferring ETH
      */
-    function test_ETHLowerThanMinTokenGasEfficiency() public {
+    function test_ETHLessThanMinTokenGasEfficiency() public {
         uint256 balanceRouterBefore = address(router).balance;
         uint256 balanceBefore = address(this).balance;
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
@@ -106,12 +106,12 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep doesn't activate when token is lower than minimum token gas efficiency
-     * @custom:given The gas price is greater than the router balance, so is not profitable to transfer token
+     * @custom:action Sweep doesn't activate when tokens is less than minimum tokens gas efficiency
+     * @custom:given The gas price is greater than the router balance, so is not profitable to transfer tokens
      * @custom:when The `execute` function is called for `SWEEP` command
-     * @custom:then The `SWEEP` command should pass without transfer token
+     * @custom:then The `SWEEP` command should pass without transferring tokens
      */
-    function test_TokenLowerThanMinTokenGasEfficiency() public {
+    function test_TokenLessThanMinTokenGasEfficiency() public {
         uint256 balanceRouterBefore = wstETH.balanceOf(address(router));
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
         bytes[] memory inputs = new bytes[](1);
