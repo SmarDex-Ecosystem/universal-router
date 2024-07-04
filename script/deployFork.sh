@@ -27,6 +27,10 @@ export CHAINLINK_GAS_PRICE_ADDRESS=0x169E633A2D1E6c10dD91238Ba11c4A708dfEF37C
 export CHAINLINK_GAS_PRICE_VALIDITY=7500
 export GET_WSTETH=true
 
+export DEPLOY_PROTOCOL=true
+export USDN=
+export USDN_PROTOCOL=
+
 export WETH=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
 export PERMIT2=0x000000000022D473030F116dDEE9F6B43aC78BA3
 export UNISWAP_V2_FACTORY=0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f
@@ -40,9 +44,12 @@ export HERMES_RA2_NODE_URL="https://hermes.pyth.network/"
 # Execute in the context of the project's root
 pushd $SCRIPT_DIR/..
 
-forge script --non-interactive --private-key $DEPLOYER_PRIVATE_KEY -f $RPC_URL ./lib/usdn-contracts/script/Deploy.s.sol:Deploy --broadcast
-export USDN=$(cat broadcast/Deploy.s.sol/31337/run-latest.json | jq -r '.returns.Usdn_.value')
-export USDN_PROTOCOL=$(cat broadcast/Deploy.s.sol/31337/run-latest.json | jq -r '.returns.UsdnProtocol_.value')
+if $DEPLOY_PROTOCOL ; then
+    forge script --non-interactive --private-key $DEPLOYER_PRIVATE_KEY -f $RPC_URL ./lib/usdn-contracts/script/Deploy.s.sol:Deploy --broadcast
+    export USDN=$(cat broadcast/Deploy.s.sol/31337/run-latest.json | jq -r '.returns.Usdn_.value')
+    export USDN_PROTOCOL=$(cat broadcast/Deploy.s.sol/31337/run-latest.json | jq -r '.returns.UsdnProtocol_.value')
+fi
+
 forge script --non-interactive --private-key $DEPLOYER_PRIVATE_KEY -f $RPC_URL ./script/DeployRouter.s.sol:DeployRouter --broadcast
 
 popd
