@@ -18,25 +18,25 @@ library Sweep {
      * @notice Sweeps all of the contract's ERC20 or ETH to an address
      * @param token The token to sweep (can be ETH using Constants.ETH)
      * @param recipient The address that will receive payment
-     * @param amountMinimum The minimum desired amount
-     * @param amountMinimumForGas The minimum amount to activate the sweep
+     * @param amountMinOut The minimum desired amount
+     * @param minTokenGasEfficiency The minimum amount to activate the sweep
      */
-    function sweep(address token, address recipient, uint256 amountMinimum, uint256 amountMinimumForGas) internal {
+    function sweep(address token, address recipient, uint256 amountMinOut, uint256 minTokenGasEfficiency) internal {
         uint256 balance;
         if (token == Constants.ETH) {
             balance = address(this).balance;
-            if (balance < amountMinimum) {
+            if (balance < amountMinOut) {
                 revert InsufficientETH();
             }
-            if (balance > amountMinimumForGas) {
+            if (balance > minTokenGasEfficiency) {
                 recipient.safeTransferETH(balance);
             }
         } else {
             balance = ERC20(token).balanceOf(address(this));
-            if (balance < amountMinimum) {
+            if (balance < amountMinOut) {
                 revert InsufficientToken();
             }
-            if (balance > amountMinimumForGas) {
+            if (balance > minTokenGasEfficiency) {
                 ERC20(token).safeTransfer(recipient, balance);
             }
         }

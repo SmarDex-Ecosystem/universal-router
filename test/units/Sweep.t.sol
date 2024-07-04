@@ -87,12 +87,12 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep ETH to an address with lower than minimum token gas
-     * @custom:given The router has ETH
+     * @custom:action Sweep doesn't activate when ETh is lower than minimum token gas efficiency
+     * @custom:given The gas price is greater than the router balance, so is not profitable to transfer ETH
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should pass without transfer ETH
      */
-    function test_ETHLowerThanMinimumGas() public {
+    function test_ETHLowerThanMinTokenGasEfficiency() public {
         uint256 balanceRouterBefore = address(router).balance;
         uint256 balanceBefore = address(this).balance;
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
@@ -106,12 +106,12 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep token to an address with lower than minimum token gas
-     * @custom:given The router has token
+     * @custom:action Sweep doesn't activate when token is lower than minimum token gas efficiency
+     * @custom:given The gas price is greater than the router balance, so is not profitable to transfer token
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should pass without transfer token
      */
-    function test_TokenLowerThanMinimumGas() public {
+    function test_TokenLowerThanMinTokenGasEfficiency() public {
         uint256 balanceRouterBefore = wstETH.balanceOf(address(router));
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
         bytes[] memory inputs = new bytes[](1);
