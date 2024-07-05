@@ -28,7 +28,7 @@ library Sweep {
             if (balance < amountMinOut) {
                 revert InsufficientETH();
             }
-            if (balance > minTokenGasEfficiency) {
+            if (balance >= minTokenGasEfficiency) {
                 recipient.safeTransferETH(balance);
             }
         } else {
@@ -36,7 +36,7 @@ library Sweep {
             if (balance < amountMinOut) {
                 revert InsufficientToken();
             }
-            if (balance > minTokenGasEfficiency) {
+            if (balance >= minTokenGasEfficiency) {
                 ERC20(token).safeTransfer(recipient, balance);
             }
         }
