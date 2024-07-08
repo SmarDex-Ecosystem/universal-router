@@ -20,12 +20,6 @@ library SmardexSwapRouterLib {
     using SafeCast for int256;
     using SafeERC20 for IERC20;
 
-    /**
-     * @notice Used as the placeholder value for maxAmountIn, because the computed amount
-     * in for an exact output swap can never actually be this value
-     */
-    uint256 private constant DEFAULT_MAX_AMOUNT_IN = type(uint256).max;
-
     /// @notice The address size
     uint8 private constant ADDR_SIZE = 20;
 

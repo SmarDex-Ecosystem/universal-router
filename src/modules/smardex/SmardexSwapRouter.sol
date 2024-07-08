@@ -69,5 +69,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         if (amountIn > amountInMax) {
             revert ISmardexSwapRouterErrors.ExcessiveInputAmount();
         }
+
+        amountInCached = type(uint256).max;
     }
 }
