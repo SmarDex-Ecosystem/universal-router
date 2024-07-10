@@ -23,9 +23,6 @@ export SMARDEX_FACTORY=0xB878DC600550367e14220d4916Ff678fB284214F
 
 export HERMES_RA2_NODE_URL="https://hermes.pyth.network/"
 
-export USDN=
-export USDN_PROTOCOL=
-
 # Execute in the context of the project's root
 pushd $SCRIPT_DIR/..
 
