@@ -4,6 +4,7 @@ pragma solidity ^0.8.25;
 import { Script } from "forge-std/Script.sol";
 
 import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
+import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
 import { Usdn } from "usdn-contracts/src/Usdn/Usdn.sol";
 import { UsdnProtocol } from "usdn-contracts/src/UsdnProtocol/UsdnProtocol.sol";
 
@@ -19,7 +20,7 @@ contract DeployRouter is Script {
     function run() external returns (UniversalRouter UniversalRouter_) {
         // Broadcast transactions using the deployer address from the environment
         vm.startBroadcast(vm.envAddress("DEPLOYER_ADDRESS"));
-        Wusdn wusdn = new Wusdn(Usdn(vm.envAddress("USDN")));
+        Wusdn wusdn = new Wusdn(IUsdn(vm.envAddress("USDN")));
 
         // Create a new Contract
         UniversalRouter_ = new UniversalRouter(
