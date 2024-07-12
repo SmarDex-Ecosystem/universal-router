@@ -87,7 +87,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep doesn't activate when ETh is less than minimum tokens gas efficiency
+     * @custom:action Sweep doesn't activate when ETh is less than amount token threshold
      * @custom:given The gas price is greater than the router balance, so is not profitable to transfer ETH
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should pass without transferring ETH
@@ -106,7 +106,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:action Sweep doesn't activate when tokens is less than minimum tokens gas efficiency
+     * @custom:action Sweep doesn't activate when tokens is less than amount token threshold
      * @custom:given The gas price is greater than the router balance, so is not profitable to transfer tokens
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should pass without transferring tokens
