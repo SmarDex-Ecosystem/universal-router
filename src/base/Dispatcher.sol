@@ -112,14 +112,14 @@ abstract contract Dispatcher is
                             address token;
                             address recipient;
                             uint256 amountMinOut;
-                            uint256 minTokenEfficiency;
+                            uint256 amountTokenThreshold;
                             assembly {
                                 token := calldataload(inputs.offset)
                                 recipient := calldataload(add(inputs.offset, 0x20))
                                 amountMinOut := calldataload(add(inputs.offset, 0x40))
-                                minTokenEfficiency := calldataload(add(inputs.offset, 0x60))
+                                amountTokenThreshold := calldataload(add(inputs.offset, 0x60))
                             }
-                            Sweep.sweep(token, map(recipient), amountMinOut, minTokenEfficiency);
+                            Sweep.sweep(token, map(recipient), amountMinOut, amountTokenThreshold);
                         } else if (command == Commands.TRANSFER) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;
