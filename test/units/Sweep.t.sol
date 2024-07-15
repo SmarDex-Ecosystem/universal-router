@@ -27,7 +27,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should transfer all ETH to the address
      */
-    function test_SweepETH() public {
+    function test_sweepETH() public {
         uint256 balanceRouterBefore = address(router).balance;
         uint256 balanceBefore = address(this).balance;
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
@@ -45,7 +45,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should transfer all tokens   to the address
      */
-    function test_SweepToken() public {
+    function test_sweepToken() public {
         uint256 balanceRouterBefore = wstETH.balanceOf(address(router));
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
         bytes[] memory inputs = new bytes[](1);
@@ -62,7 +62,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should revert with `InsufficientETH`
      */
-    function test_RevertWhen_EnoughtETHForSweep() public {
+    function test_RevertWhen_enoughETHForSweep() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.ETH, address(this), address(router).balance + 1, 0);
@@ -77,7 +77,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should revert with `InsufficientToken`
      */
-    function test_RevertWhen_EnoughtTokenForSweep() public {
+    function test_RevertWhen_enoughTokenForSweep() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(wstETH, address(this), wstETH.balanceOf(address(router)) + 1, 0);
@@ -92,7 +92,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should pass without transferring ETH
      */
-    function test_ETHLessThanAmountTokenThreshold() public {
+    function test_ethLessThanAmountTokenThreshold() public {
         uint256 balanceRouterBefore = address(router).balance;
         uint256 balanceBefore = address(this).balance;
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
@@ -111,7 +111,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
      * @custom:when The `execute` function is called for `SWEEP` command
      * @custom:then The `SWEEP` command should pass without transferring tokens
      */
-    function test_TokenLessThanAmountTokenThreshold() public {
+    function test_tokenLessThanAmountTokenThreshold() public {
         uint256 balanceRouterBefore = wstETH.balanceOf(address(router));
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
         bytes[] memory inputs = new bytes[](1);
