@@ -24,6 +24,7 @@ import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
  */
 abstract contract Dispatcher is
     Payments,
+    Sweep,
     V2SwapRouter,
     V3SwapRouter,
     UsdnProtocolRouter,

@@ -63,4 +63,6 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         assertEq(address(router).balance, 0, "ETH balance");
         assertEq(IERC20(wstETH).balanceOf(address(router)), 0, "wstETH balance");
     }
+
+    receive() external payable { }
 }

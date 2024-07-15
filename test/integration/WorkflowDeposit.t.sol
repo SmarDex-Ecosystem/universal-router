@@ -101,4 +101,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         assertEq(IERC20(SDEX).balanceOf(address(router)), 0, "SDEX balance");
         assertEq(IERC20(WETH).balanceOf(address(router)), 0, "WETH balance");
     }
+
+    /// @notice To receive ETH
+    receive() external payable { }
 }
