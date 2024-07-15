@@ -18,14 +18,14 @@ library Sweep {
      * @notice Sweeps all of the contract's ERC20 or ETH to an address
      * @param token The token to sweep (can be ETH using Constants.ETH)
      * @param recipient The address that will receive payment
-     * @param amountMinOut The minimum desired amount
+     * @param amountOutMin The minimum desired amount
      * @param amountTokenThreshold The minimum amount to activate the sweep
      */
-    function sweep(address token, address recipient, uint256 amountMinOut, uint256 amountTokenThreshold) internal {
+    function sweep(address token, address recipient, uint256 amountOutMin, uint256 amountTokenThreshold) internal {
         uint256 balance;
         if (token == Constants.ETH) {
             balance = address(this).balance;
-            if (balance < amountMinOut) {
+            if (balance < amountOutMin) {
                 revert InsufficientETH();
             }
             if (balance >= amountTokenThreshold) {
@@ -33,7 +33,7 @@ library Sweep {
             }
         } else {
             balance = ERC20(token).balanceOf(address(this));
-            if (balance < amountMinOut) {
+            if (balance < amountOutMin) {
                 revert InsufficientToken();
             }
             if (balance >= amountTokenThreshold) {
