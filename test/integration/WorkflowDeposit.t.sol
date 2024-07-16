@@ -84,10 +84,10 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         inputs[3] = abi.encode(
             Constants.CONTRACT_BALANCE, USER_1, USER_1, NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
         );
-        inputs[4] = abi.encode(Constants.ETH, address(this), 0);
-        inputs[5] = abi.encode(wstETH, address(this), 0);
-        inputs[6] = abi.encode(WETH, address(this), 0);
-        inputs[7] = abi.encode(SDEX, address(this), 0);
+        inputs[4] = abi.encode(Constants.ETH, address(this), 0, 0);
+        inputs[5] = abi.encode(wstETH, address(this), 0, 0);
+        inputs[6] = abi.encode(WETH, address(this), 0, 0);
+        inputs[7] = abi.encode(SDEX, address(this), 0, 0);
 
         router.execute{ value: _securityDeposit + DEPOSIT_AMOUNT * 2 }(commands, inputs);
 
@@ -101,4 +101,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         assertEq(IERC20(SDEX).balanceOf(address(router)), 0, "SDEX balance");
         assertEq(IERC20(WETH).balanceOf(address(router)), 0, "WETH balance");
     }
+
+    /// @notice To receive ETH
+    receive() external payable { }
 }

@@ -12,6 +12,7 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 
 import { Commands } from "../libraries/Commands.sol";
+import { Sweep } from "../modules/Sweep.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
@@ -23,6 +24,7 @@ import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
  */
 abstract contract Dispatcher is
     Payments,
+    Sweep,
     V2SwapRouter,
     V3SwapRouter,
     UsdnProtocolRouter,
@@ -107,16 +109,18 @@ abstract contract Dispatcher is
                             bytes calldata data = inputs.toBytes(1);
                             PERMIT2.permit(lockedBy, permitBatch, data);
                         } else if (command == Commands.SWEEP) {
-                            // equivalent:  abi.decode(inputs, (address, address, uint256))
+                            // equivalent:  abi.decode(inputs, (address, address, uint256, uint256))
                             address token;
                             address recipient;
-                            uint256 amountMin;
+                            uint256 amountOutMin;
+                            uint256 amountOutThreshold;
                             assembly {
                                 token := calldataload(inputs.offset)
                                 recipient := calldataload(add(inputs.offset, 0x20))
-                                amountMin := calldataload(add(inputs.offset, 0x40))
+                                amountOutMin := calldataload(add(inputs.offset, 0x40))
+                                amountOutThreshold := calldataload(add(inputs.offset, 0x60))
                             }
-                            Payments.sweep(token, map(recipient), amountMin);
+                            Sweep.sweep(token, map(recipient), amountOutMin, amountOutThreshold);
                         } else if (command == Commands.TRANSFER) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;
