@@ -6,6 +6,7 @@ import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/I
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IRebalancer } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancer.sol";
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Permit2Payments.sol";
 import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
@@ -271,5 +272,39 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     function _usdnLiquidate(bytes memory currentPriceData, uint16 iterations, uint256 ethAmount) internal {
         // slither-disable-next-line arbitrary-send-eth
         USDN_PROTOCOL.liquidate{ value: ethAmount }(currentPriceData, iterations);
+    }
+
+    /**
+     * @notice Performs rebalancer initiate deposit
+     * @param amount The initiateDeposit amount
+     * @param to The address for which the deposit will be initiated
+     * @return success_ Whether the initiate deposit is successful
+     * @return data_ The transaction data
+     */
+    function _rebalancerInitiateDeposit(uint256 amount, address to)
+        internal
+        returns (bool success_, bytes memory data_)
+    {
+        address rebalancerAddress = address(USDN_PROTOCOL.getRebalancer());
+
+        if (rebalancerAddress == address(0)) {
+            return (false, "");
+        }
+
+        IERC20Metadata asset = IRebalancer(rebalancerAddress).getAsset();
+
+        if (amount == Constants.CONTRACT_BALANCE) {
+            amount = asset.balanceOf(address(this));
+        }
+
+        if (amount == 0) {
+            return (false, "");
+        }
+
+        asset.forceApprove(rebalancerAddress, amount);
+
+        (success_, data_) = rebalancerAddress.call(
+            abi.encodeWithSelector(IRebalancer.initiateDepositAssets.selector, uint80(amount), to)
+        );
     }
 }
