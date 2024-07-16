@@ -50,7 +50,7 @@ library Path {
      * @param path The bytes encoded swap path
      * @return tokenA_ The first token of the given pool
      */
-    function decodeFirstToken(bytes calldata path) internal pure returns (address tokenA_) {
+    function decodeFirstToken(bytes memory path) internal pure returns (address tokenA_) {
         tokenA_ = path.toAddress(0);
     }
 
@@ -69,17 +69,7 @@ library Path {
      * @param path The swap path
      * @return The remaining token elements in the path
      */
-    function skipToken(bytes calldata path) internal pure returns (bytes calldata) {
-        return path[NEXT_OFFSET:];
-    }
-
-    /**
-     * @notice Skips a token from the buffer and returns the remainder
-     * @dev Require a memory path
-     * @param path The swap path
-     * @return The remaining token elements in the path
-     */
-    function skipTokenMemory(bytes memory path) internal pure returns (bytes memory) {
+    function skipToken(bytes memory path) internal pure returns (bytes memory) {
         return path.slice(NEXT_OFFSET, path.length - NEXT_OFFSET);
     }
 
@@ -88,7 +78,7 @@ library Path {
      * @param path The swap path
      * @return encoded_ The bytes array containing the packed addresses
      */
-    function encodeTightlyPackedReversed(bytes calldata path) external pure returns (bytes memory encoded_) {
+    function encodeTightlyPackedReversed(bytes memory path) external pure returns (bytes memory encoded_) {
         if (path.length == 0 || path.length % ADDR_SIZE > 0) {
             revert InvalidPath();
         }

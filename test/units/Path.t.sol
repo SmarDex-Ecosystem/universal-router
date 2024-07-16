@@ -44,9 +44,9 @@ contract PathTest is Test {
      * @custom:when The `decodeFirstToken` function is called with a 3 addresses length path
      * @custom:then The call return the first address
      */
-    function test_decodeFirstToken() external view {
+    function test_decodeFirstToken() external pure {
         bytes memory multiplePools = abi.encodePacked(address(1), address(2), address(3));
-        assertEq(this.getFirstToken(multiplePools), address(1), "The decodeFirstToken call should return address 1");
+        assertEq(Path.decodeFirstToken(multiplePools), address(1), "The decodeFirstToken call should return address 1");
     }
 
     /**
@@ -65,21 +65,10 @@ contract PathTest is Test {
      * @custom:when The `skipToken` function is called with a 3 addresses length path
      * @custom:then The call return the 2 last addresses length path
      */
-    function test_skipToken() external view {
+    function test_skipToken() external pure {
         bytes memory multiplePools = abi.encodePacked(address(1), address(2), address(3));
         bytes memory simplePool = abi.encodePacked(address(2), address(3));
-        assertEq(this.getSkipToken(multiplePools), simplePool, "The skipToken call should return simple pool");
-    }
-
-    /**
-     * @custom:scenario The `skipTokenMemory` function return a shorted path
-     * @custom:when The `skipTokenMemory` function is called with a 3 addresses length path
-     * @custom:then The call return the 2 last addresses length path
-     */
-    function test_skipTokenMemory() external pure {
-        bytes memory multiplePools = abi.encodePacked(address(1), address(2), address(3));
-        bytes memory simplePool = abi.encodePacked(address(2), address(3));
-        assertEq(Path.skipTokenMemory(multiplePools), simplePool, "The skipTokenMemory call should return simple pool");
+        assertEq(Path.skipToken(multiplePools), simplePool, "The skipToken call should return simple pool");
     }
 
     /**
@@ -114,15 +103,5 @@ contract PathTest is Test {
     function test_RevertWhen_encodeTightlyPackedReversedInvalid() external {
         vm.expectRevert(Path.InvalidPath.selector);
         Path.encodeTightlyPackedReversed(new bytes(1));
-    }
-
-    /* <--------------------------------------     calldata helpers     --------------------------------------> */
-
-    function getSkipToken(bytes calldata path) external pure returns (bytes calldata) {
-        return Path.skipToken(path);
-    }
-
-    function getFirstToken(bytes calldata path) external pure returns (address tokenA_) {
-        tokenA_ = Path.decodeFirstToken(path);
     }
 }
