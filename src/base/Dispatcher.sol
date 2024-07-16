@@ -12,7 +12,7 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 
 import { Commands } from "../libraries/Commands.sol";
-import { Sweep } from "../libraries/Sweep.sol";
+import { Sweep } from "../modules/Sweep.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
@@ -113,14 +113,14 @@ abstract contract Dispatcher is
                             address token;
                             address recipient;
                             uint256 amountOutMin;
-                            uint256 amountTokenThreshold;
+                            uint256 amountOutThreshold;
                             assembly {
                                 token := calldataload(inputs.offset)
                                 recipient := calldataload(add(inputs.offset, 0x20))
                                 amountOutMin := calldataload(add(inputs.offset, 0x40))
-                                amountTokenThreshold := calldataload(add(inputs.offset, 0x60))
+                                amountOutThreshold := calldataload(add(inputs.offset, 0x60))
                             }
-                            Sweep.sweep(token, map(recipient), amountOutMin, amountTokenThreshold);
+                            Sweep.sweep(token, map(recipient), amountOutMin, amountOutThreshold);
                         } else if (command == Commands.TRANSFER) {
                             // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;

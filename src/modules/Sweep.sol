@@ -19,16 +19,16 @@ abstract contract Sweep {
      * @param token The token to sweep (can be ETH using Constants.ETH)
      * @param recipient The address that will receive payment
      * @param amountOutMin The minimum desired amount
-     * @param amountTokenThreshold The minimum amount to activate the sweep
+     * @param amountOutThreshold The minimum amount to activate the sweep
      */
-    function sweep(address token, address recipient, uint256 amountOutMin, uint256 amountTokenThreshold) internal {
+    function sweep(address token, address recipient, uint256 amountOutMin, uint256 amountOutThreshold) internal {
         uint256 balance;
         if (token == Constants.ETH) {
             balance = address(this).balance;
             if (balance < amountOutMin) {
                 revert Payments.InsufficientETH();
             }
-            if (balance >= amountTokenThreshold) {
+            if (balance >= amountOutThreshold) {
                 recipient.safeTransferETH(balance);
             }
         } else {
@@ -36,7 +36,7 @@ abstract contract Sweep {
             if (balance < amountOutMin) {
                 revert Payments.InsufficientToken();
             }
-            if (balance >= amountTokenThreshold) {
+            if (balance >= amountOutThreshold) {
                 ERC20(token).safeTransfer(recipient, balance);
             }
         }
