@@ -44,6 +44,7 @@ library Commands {
     uint256 constant VALIDATE_CLOSE = 0x16;
     uint256 constant LIQUIDATE = 0x17;
     uint256 constant VALIDATE_PENDING = 0x18;
+    uint256 constant REBALANCER_INITIATE_DEPOSIT = 0x19;
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands

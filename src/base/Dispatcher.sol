@@ -424,6 +424,15 @@ abstract contract Dispatcher is
                             uint256 ethAmount
                         ) = abi.decode(inputs, (IUsdnProtocolTypes.PreviousActionsData, uint256, uint256));
                         _usdnValidateActionablePendingActions(previousActionsData, maxValidations, ethAmount);
+                    } else if (command == Commands.REBALANCER_INITIATE_DEPOSIT) {
+                        // equivalent: abi.decode(inputs, (uint256, address))
+                        uint256 amount;
+                        address to;
+                        assembly {
+                            amount := calldataload(inputs.offset)
+                            to := calldataload(add(inputs.offset, 0x20))
+                        }
+                        (success_, output_) = _rebalancerInitiateDeposit(amount, map(to));
                     } else {
                         revert InvalidCommandType(command);
                     }
