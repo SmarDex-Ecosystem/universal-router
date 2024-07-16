@@ -3,9 +3,10 @@ pragma solidity ^0.8.25;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { IRebalancerTypes } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancerTypes.sol";
+import { IRebalancer } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancer.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
-
+import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
@@ -21,9 +22,9 @@ contract TestForkUniversalRouterRebalancerInitiateDeposit is UniversalRouterBase
     }
 
     /**
-     * @custom:scenario The rebalancer initiate timestamp
-     * @custom:when The command is triggered
-     * @custom:then The transaction success
+     * @custom:scenario The rebalancer initiate deposit
+     * @custom:when The router command is triggered
+     * @custom:then The transaction should be successful
      */
     function test_executeRebalancerInitiateDeposit() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_DEPOSIT));
@@ -37,5 +38,36 @@ contract TestForkUniversalRouterRebalancerInitiateDeposit is UniversalRouterBase
 
         assertEq(userDeposit.amount, BASE_AMOUNT, "Amount should be base amount");
         assertGt(userDeposit.initiateTimestamp, 0, "Initial timestamp should be greater than 0");
+    }
+
+    /**
+     * @custom:scenario The rebalancer initiate deposit
+     * @custom:when The router command is triggered without rebalancer address
+     * @custom:then The transaction should revert
+     */
+    function test_RevertWhen_executeRebalancerInitiateDepositNoRebalancer() external {
+        vm.prank(roles.setExternalAdmin);
+        protocol.setRebalancer(IRebalancer(address(0)));
+
+        bytes memory commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_DEPOSIT));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(Constants.CONTRACT_BALANCE, Constants.MSG_SENDER);
+
+        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, ""));
+        router.execute(commands, inputs);
+    }
+
+    /**
+     * @custom:scenario The rebalancer initiate deposit
+     * @custom:when The router command is triggered without assets
+     * @custom:then The transaction should revert
+     */
+    function test_RevertWhen_executeRebalancerInitiateDepositZero() external {
+        bytes memory commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_DEPOSIT));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(Constants.CONTRACT_BALANCE, Constants.MSG_SENDER);
+
+        vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, ""));
+        router.execute(commands, inputs);
     }
 }
