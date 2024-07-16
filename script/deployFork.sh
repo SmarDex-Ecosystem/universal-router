@@ -21,8 +21,6 @@ export UNISWAP_PAIR_INIT_HASH=0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee
 export UNISWAP_POOL_INIT_HASH=0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54
 export SMARDEX_FACTORY=0xB878DC600550367e14220d4916Ff678fB284214F
 
-export HERMES_RA2_NODE_URL="https://hermes.pyth.network/"
-
 # Execute in the context of the project's root
 pushd $SCRIPT_DIR/..
 
