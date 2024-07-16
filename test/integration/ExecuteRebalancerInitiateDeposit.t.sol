@@ -38,6 +38,10 @@ contract TestForkUniversalRouterRebalancerInitiateDeposit is UniversalRouterBase
 
         assertEq(userDeposit.amount, BASE_AMOUNT, "Amount should be base amount");
         assertGt(userDeposit.initiateTimestamp, 0, "Initial timestamp should be greater than 0");
+
+        // validate
+        skip(25);
+        rebalancer.validateDepositAssets();
     }
 
     /**
