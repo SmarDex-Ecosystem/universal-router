@@ -28,6 +28,9 @@ jobs:
 
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
+        with:
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
