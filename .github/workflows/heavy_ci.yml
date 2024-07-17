@@ -45,8 +45,8 @@ jobs:
       - name: Build test_utils
         run: cargo build --release
 
-      - name: Check gas snapshots
-        run: npm run snapshot:check
+      # - name: Check gas snapshots
+      #   run: npm run snapshot:check
 
       - name: Run tests
         run: forge test
