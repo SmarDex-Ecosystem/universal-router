@@ -44,3 +44,6 @@ target/
 
 # Gas snapshot files
 .gas-snapshot
+
+# TruffleHog
+.trufflehog.yml
