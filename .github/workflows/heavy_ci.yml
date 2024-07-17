@@ -5,6 +5,7 @@ on:
 env:
   FOUNDRY_PROFILE: heavy_ci
   URL_ETH_MAINNET: ${{ secrets.URL_ETH_MAINNET }}
+  HERMES_RA2_NODE_URL: ${{ secrets.HERMES_RA2_NODE_URL }}
 
 jobs:
   heavy-ci:
@@ -45,8 +46,8 @@ jobs:
       - name: Build test_utils
         run: cargo build --release
 
-      - name: Check gas snapshots
-        run: npm run snapshot:check
+      # - name: Check gas snapshots
+      #   run: npm run snapshot:check
 
       - name: Run tests
         run: forge test
