@@ -38,13 +38,15 @@
             toolchain
           ];
           packages = with pkgs; [
-            nodejs_20
-            typescript
-            foundry-bin
-            solc_0_8_26
             (solc.mkDefault pkgs solc_0_8_26)
-            slither-analyzer
+            foundry-bin
+            just
             lcov
+            nodejs_20
+            slither-analyzer
+            solc_0_8_26
+            trufflehog
+            typescript
           ];
 
           shellHook = ''
