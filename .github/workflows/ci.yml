@@ -41,6 +41,7 @@ jobs:
         run: |
           TOKEN_BASE64=$(echo "x-access-token:${APP_TOKEN}" | base64)
           git config --global "http.extraHeader" "AUTHORIZATION: basic ${TOKEN_BASE64}"
+          git config --global "core.askPass" "echo \"${APP_TOKEN}\""
           git config --global "credential.username" "x-access-token"
           git config --global 'url."https://github.com/".insteadOf' "git@github.com:"
       - name: Install deps
