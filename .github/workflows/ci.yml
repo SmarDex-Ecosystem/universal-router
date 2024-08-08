@@ -35,9 +35,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Add app token to git URL for soldeer to use
+      - name: Add app token to git config for soldeer to use
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          sed -i 's/git@github.com:/https:\/\/x-access-token:${{ steps.app-token.outputs.token }}@github.com\//g' foundry.toml
+          git config --local 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ${APP_TOKEN}'
+          git config --local 'url."https://x-access-token@github.com/".insteadOf' 'git@github.com:'
       - name: Install deps
         run: npm ci && forge soldeer install
 
