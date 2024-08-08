@@ -6,7 +6,7 @@ pushd $SCRIPT_DIR/..
 pushd lib/usdn-contracts/
 
 npm ci
-forge install
+forge soldeer install
 
 script/deployFork.sh
 

@@ -26,6 +26,7 @@ remappings = [
     "@pythnetwork=node_modules/@pythnetwork/",
     "@chainlink/=node_modules/@chainlink/",
 ]
+auto_detect_remappings = false
 
 # ---------------------------------- Format ---------------------------------- #
 
