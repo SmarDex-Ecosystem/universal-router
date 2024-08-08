@@ -42,7 +42,7 @@ jobs:
           # TOKEN_BASE64=$(echo "x-access-token:${APP_TOKEN}" | base64)
           # git config --global "http.extraHeader" "AUTHORIZATION: basic ${TOKEN_BASE64}"
           # git config --global "credential.username" "x-access-token"
-          git config --global url."https://git:$APP_TOKEN@github.com/".insteadOf "git@github.com:"
+          git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:"
       - name: Install deps
         run: npm ci && forge soldeer install
 
