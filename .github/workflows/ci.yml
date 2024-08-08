@@ -36,7 +36,7 @@ jobs:
           node-version: 20
 
       - name: Install deps
-        run: npm ci && forge install
+        run: npm ci && forge soldeer install
 
       # - name: Check gas snapshots
       #   run: npm run snapshot:check
@@ -71,7 +71,7 @@ jobs:
           node-version: 20
 
       - name: Install deps
-        run: npm ci && forge install
+        run: npm ci && forge soldeer install
 
       - name: Install slither
         run: pip3 install slither-analyzer
