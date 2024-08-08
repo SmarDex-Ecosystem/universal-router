@@ -35,6 +35,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Add app token to git config for soldeer to use
+        run: |
+          git config --local 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ${{ steps.app-token.outputs.token }}'
+          git config --local 'url."https://github.com/".insteadOf' 'git@github.com:'
       - name: Install deps
         run: npm ci && forge soldeer install
 
