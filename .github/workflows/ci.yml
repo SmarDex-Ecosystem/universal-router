@@ -40,7 +40,7 @@ jobs:
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git config --global 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ${APP_TOKEN}'
-          git config --global 'url."https://x-access-token@github.com/".insteadOf' 'git@github.com:'
+          git config --global 'url."https://github.com/".insteadOf' 'git@github.com:'
       - name: Install deps
         run: npm ci && forge soldeer install
 
