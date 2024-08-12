@@ -15,16 +15,20 @@ invariant = { fail_on_revert = true }
 # -------------------------------- Remappings -------------------------------- #
 
 remappings = [
-    "usdn-contracts/=lib/usdn-contracts/",
-    "@openzeppelin/=node_modules/@openzeppelin/",
-    "permit2/=node_modules/@uniswap/permit2/",
-    "@uniswap/v2-core/=node_modules/@uniswap/v2-core/",
-    "@uniswap/v3-core/=node_modules/@uniswap/v3-core/",
-    "@uniswap/universal-router/=node_modules/@uniswap/universal-router/",
-    "solmate/=node_modules/solmate/",
-    "solady/src/=node_modules/solady/src/",
-    "@pythnetwork=node_modules/@pythnetwork/",
-    "@chainlink/=node_modules/@chainlink/",
+    "forge-std=dependencies/forge-std-1.9.2/src",
+    "@uniswap/universal-router=dependencies/@uniswap-universal-router-1.6.0",
+    "usdn-contracts=dependencies/@smardex-usdn-contracts-0.17.1",
+    "permit2=dependencies/@uniswap-permit2-1.0.0",
+    "@chainlink/=dependencies/@chainlink-1.2.0/",
+    "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.0.2/",
+    "@uniswap/v2-core=dependencies/@uniswap-v2-core-1.0.1",
+    "solmate=dependencies/solmate-6.7.0",
+    "solady=dependencies/solady-0.0.228",
+    "@uniswap/v3-core=dependencies/@uniswap-v3-core-1.0.2-solc-0.8-simulate",
+    "openzeppelin-foundry-upgrades/=dependencies/openzeppelin-foundry-upgrades-0.3.1/src/",
+    "solidity-stringutils=dependencies/openzeppelin-foundry-upgrades-0.3.1/lib/solidity-stringutils",
+    "@pythnetwork/pyth-sdk-solidity/=dependencies/@pythnetwork-pyth-sdk-solidity-3.1.0/",
+    "@openzeppelin/contracts-upgradeable/=dependencies/@openzeppelin-contracts-upgradeable-5.0.2/",
 ]
 
 # ---------------------------------- Format ---------------------------------- #
@@ -131,3 +135,18 @@ polygon = { key = "${POLYGONSCAN_API_KEY}" }
 bsc = { key = "${BSCSCAN_API_KEY}" }
 arbitrum = { key = "${ARBISCAN_API_KEY}" }
 base = { key = "${BASESCAN_API_KEY}" }
+
+[dependencies]
+"@uniswap-universal-router" = "1.6.0"
+forge-std = "1.9.2"
+"@smardex-usdn-contracts" = { version = "0.17.1", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", rev = "86a10125c663b7d9e888909ca4c174c4863b74d1" }
+"@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
+"@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
+"@openzeppelin-contracts" = "5.0.2"
+"@uniswap-v2-core" = "1.0.1"
+solady = "0.0.228"
+solmate = "6.7.0"
+"@uniswap-v3-core" = "1.0.2-solc-0.8-simulate"
+openzeppelin-foundry-upgrades = "0.3.1"
+"@pythnetwork-pyth-sdk-solidity" = "3.1.0"
+"@openzeppelin-contracts-upgradeable" = "5.0.2"

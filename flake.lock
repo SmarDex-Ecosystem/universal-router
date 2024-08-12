@@ -59,27 +59,26 @@
         ]
       },
       "locked": {
-        "lastModified": 1719997877,
-        "narHash": "sha256-/Edw+w0PiGgxwnCeJycM0VgH4HtlCi91v1d8xbi+REE=",
+        "lastModified": 1723108187,
+        "narHash": "sha256-TBvKCNqJ+TdUzM2RrGUAOuHhDmD/iYNGoPiQIZlBGOs=",
         "owner": "shazow",
         "repo": "foundry.nix",
-        "rev": "02febba4f1cf0606d790acdb24adcf7a64afb4e1",
+        "rev": "196047b07562f179dae9139db2219836e9af8f4a",
         "type": "github"
       },
       "original": {
         "owner": "shazow",
-        "ref": "monthly",
         "repo": "foundry.nix",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1721116560,
-        "narHash": "sha256-++TYlGMAJM1Q+0nMVaWBSEvEUjRs7ZGiNQOpqbQApCU=",
+        "lastModified": 1723019560,
+        "narHash": "sha256-O/kxmybNecC3Efr6ITOdtCzFv90/B2Iiedavj5aRWt0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9355fa86e6f27422963132c2c9aeedb0fb963d93",
+        "rev": "f5129fb42b9c262318130a97b47516946da3e7d7",
         "type": "github"
       },
       "original": {
@@ -105,11 +104,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1721182796,
-        "narHash": "sha256-n6w4IhmVeRU+32vH93+8nqZtEZ0Zcy31Hg1GpH1g4Rk=",
+        "lastModified": 1723083652,
+        "narHash": "sha256-ait+SeO67n8b3lIaBWwuzVX6F1zyTJ0cY6cHWtvhTyc=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "d064703dc0657a49a17671c74b1a15ea7433e753",
+        "rev": "69e0ad9289fc08ee5a313fb107f00e0f21e7cbb2",
         "type": "github"
       },
       "original": {
@@ -127,11 +126,11 @@
         "solc-macos-amd64-list-json": "solc-macos-amd64-list-json"
       },
       "locked": {
-        "lastModified": 1717442267,
-        "narHash": "sha256-6TnQvA6Q/xC3r1M+wGC5gnDc/5XfOPjC8X6LlGDWDNc=",
+        "lastModified": 1723108822,
+        "narHash": "sha256-0SToQBucC4haDvgiG+JyL566ylCLl8s3SKaBT9m/nVo=",
         "owner": "hellwolf",
         "repo": "solc.nix",
-        "rev": "2ac2862f224aa0d67cbc6b3246392489f8a50596",
+        "rev": "d1f30906719dfcbd69a90996aa98d8e5322e5705",
         "type": "github"
       },
       "original": {

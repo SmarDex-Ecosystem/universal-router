@@ -22,6 +22,9 @@ cache/
 
 # Dependencies
 node_modules/
+dependencies/
+# We use custom remappings in foundry.toml
+remappings.txt
 
 # direnv
 .direnv
