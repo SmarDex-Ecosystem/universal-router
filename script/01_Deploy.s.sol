@@ -18,14 +18,14 @@ contract Deploy is Script {
     address constant WETH_MAINNET = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address constant WETH_SEPOLIA = 0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14;
     address constant V2_FACTORY_MAINNET = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
-    address constant V2_FACTORY_SEPOLIA = 0x5302086A3a25d473aAbBd0356eFf8Dd811a4d89B; // not supported on sepolia
+    address constant V2_FACTORY_SEPOLIA = address(0); // not supported on sepolia
     address constant V3_FACTORY_MAINNET = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
     address constant V3_FACTORY_SEPOLIA = 0x0227628f3F023bb0B980b67D528571c95c6DaC1c;
     bytes32 constant PAIR_INIT_HASH_MAINNET = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
     bytes32 constant PAIR_INIT_HASH_SEPOLIA = 0; // not supported on sepolia
     bytes32 constant POOL_INIT_HASH = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
     address constant SMARDEX_FACTORY_MAINNET = 0xB878DC600550367e14220d4916Ff678fB284214F;
-    address constant SMARDEX_FACTORY_SEPOLIA = 0x5302086A3a25d473aAbBd0356eFf8Dd811a4d89B; // not supported on sepolia
+    address constant SMARDEX_FACTORY_SEPOLIA = address(0); // not supported on sepolia
 
     ChainId _chainId;
 
