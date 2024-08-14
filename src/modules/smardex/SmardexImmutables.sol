@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.25;
+pragma solidity 0.8.26;
 
 import { IWETH9 } from "@uniswap/universal-router/contracts/interfaces/external/IWETH9.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";

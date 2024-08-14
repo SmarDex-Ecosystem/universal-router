@@ -10,7 +10,7 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && forge clean && npm i && forge soldeer install",
+    "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && rm -rf dependencies && forge clean && npm i && forge soldeer install",
     "coverage": "npm run cov -- --report lcov",
     "cov": "forge build --skip .sol && forge coverage --no-match-test \"(FFI|Fork|Fuzz|invariant)\" --no-match-contract Fork -vvv --offline",
     "cov:html": "npm run coverage && genhtml -o .coverage lcov.info && open .coverage/index.html",
@@ -40,6 +40,6 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
-    "viem": "^2.19.2"
+    "viem": "^2.19.4"
   }
 }
