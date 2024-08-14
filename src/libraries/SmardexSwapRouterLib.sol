@@ -38,7 +38,7 @@ library SmardexSwapRouterLib {
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata data
-    ) external returns (uint256 amountInCached_) {
+    ) internal returns (uint256 amountInCached_) {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
             revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
         }
@@ -83,7 +83,7 @@ library SmardexSwapRouterLib {
         uint256 amountOutMinimum,
         bytes memory path,
         address payer
-    ) external {
+    ) internal {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         if (amountIn == Constants.CONTRACT_BALANCE && payer == address(this)) {
             address tokenIn = path.decodeFirstToken();
@@ -131,7 +131,7 @@ library SmardexSwapRouterLib {
         uint256 amountOut,
         bytes memory path,
         address payer
-    ) external returns (uint256 amountIn_) {
+    ) internal returns (uint256 amountIn_) {
         // path needs to be reversed to get the amountIn that we will ask from the next pair hop
         bytes memory reversedPath = path.encodeTightlyPackedReversed();
 
