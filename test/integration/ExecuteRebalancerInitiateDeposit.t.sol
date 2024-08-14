@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.25;
+pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { IRebalancerTypes } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancerTypes.sol";
