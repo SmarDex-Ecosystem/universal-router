@@ -9,7 +9,8 @@ solc_version = "0.8.26"
 evm_version = "cancun"
 optimizer = true
 optimizer_runs = 20_000
-libs = ["node_modules", "lib"]
+libs = ["dependencies"]
+auto_detect_remappings = false
 invariant = { fail_on_revert = true }
 
 # -------------------------------- Remappings -------------------------------- #
@@ -126,7 +127,7 @@ mainnet = { key = "${ETHERSCAN_API_KEY}" }
 [dependencies]
 "@uniswap-universal-router" = "1.6.0"
 forge-std = "1.9.2"
-"@smardex-usdn-contracts" = { version = "0.17.1", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", rev = "86a10125c663b7d9e888909ca4c174c4863b74d1" }
+"@smardex-usdn-contracts" = { version = "0.17.1", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", rev = "2c083e96512e9fc33d417229171f14461e835df6" }
 "@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
 "@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
 "@openzeppelin-contracts" = "5.0.2"
