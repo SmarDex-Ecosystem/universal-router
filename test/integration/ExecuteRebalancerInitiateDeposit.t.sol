@@ -50,7 +50,7 @@ contract TestForkUniversalRouterRebalancerInitiateDeposit is UniversalRouterBase
      * @custom:then The transaction should revert
      */
     function test_RevertWhen_executeRebalancerInitiateDepositNoRebalancer() external {
-        vm.prank(roles.setExternalAdmin);
+        vm.prank(managers.setExternalManager);
         protocol.setRebalancer(IRebalancer(address(0)));
 
         bytes memory commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_DEPOSIT));
