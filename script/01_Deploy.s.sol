@@ -11,7 +11,11 @@ import { RouterParameters } from "../src/base/RouterImmutables.sol";
 import { ISmardexFactory } from "../src/interfaces/smardex/ISmardexFactory.sol";
 
 contract Deploy is Script {
-    address _deployerAddress;
+    enum ChainId {
+        Mainnet,
+        Sepolia,
+        Fork
+    }
 
     address constant WSTETH_MAINNET = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
@@ -21,19 +25,14 @@ contract Deploy is Script {
     address constant V2_FACTORY_SEPOLIA = address(0); // not supported on sepolia
     address constant V3_FACTORY_MAINNET = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
     address constant V3_FACTORY_SEPOLIA = 0x0227628f3F023bb0B980b67D528571c95c6DaC1c;
+    address constant SMARDEX_FACTORY_MAINNET = 0xB878DC600550367e14220d4916Ff678fB284214F;
+    address constant SMARDEX_FACTORY_SEPOLIA = address(0); // not supported on sepolia
     bytes32 constant PAIR_INIT_HASH_MAINNET = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
     bytes32 constant PAIR_INIT_HASH_SEPOLIA = 0; // not supported on sepolia
     bytes32 constant POOL_INIT_HASH = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
-    address constant SMARDEX_FACTORY_MAINNET = 0xB878DC600550367e14220d4916Ff678fB284214F;
-    address constant SMARDEX_FACTORY_SEPOLIA = address(0); // not supported on sepolia
 
+    address _deployerAddress;
     ChainId _chainId;
-
-    enum ChainId {
-        Mainnet,
-        Sepolia,
-        Fork
-    }
 
     function run() external returns (UniversalRouter UniversalRouter_) {
         if (block.chainid == 1) {
