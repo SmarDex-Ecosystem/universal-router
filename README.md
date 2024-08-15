@@ -197,17 +197,19 @@ forge soldeer install
 npm install
 ```
 
-The `forge soldeer install` command is only used to add the forge standard library. Other dependencies should be managed with
+The `forge soldeer install` command is only used to add libraries for the smart contracts. Other dependencies should be managed with
 npm.
 
-In order to add a new dependency, use the `npm i [packagename]` command with any package from the
-[npm registry](https://www.npmjs.com/).
+In order to add a new dependency, use the `forge soldeer install [packagename]~[version]` command with any package from the
+[soldeer registry](https://soldeer.xyz/).
 
-For instance, to add the latest [OpenZeppelin library](https://github.com/OpenZeppelin/openzeppelin-contracts):
+For instance, to add [OpenZeppelin library](https://github.com/OpenZeppelin/openzeppelin-contracts) version 5.0.2:
 
 ```bash
-npm i @openzeppelin/contracts
+forge soldeer install @openzeppelin-contracts~5.0.2
 ```
+
+The last step is to update the remappings array in the `foundry.toml` config file.
 
 ### Nix
 
@@ -251,7 +253,7 @@ which records gas usage for all tests. When tests have changed, a new snapshot s
 
 ### Deployment scripts
 
-Deployment for anvil forks should be done with a custom bash script at `script/deployAllFork.sh` which can be run
+Deployment for anvil forks should be done with a custom bash script at `script/deployFork.sh` which can be run
 without arguments. It must set up any environment variable required by the foundry deployment script.
 
 Common arguments to `forge script` are described in
@@ -259,7 +261,7 @@ Common arguments to `forge script` are described in
 
 Notably, the `--rpc-url` argument allows to choose which RPC will receive the transactions. The available shorthand
 names are defined in [`foundry.toml`](https://github.com/SmarDex-Ecosystem/universal-router/blob/master/foundry.toml),
-(e.g. `mainnet`, `goerli`) and use URLs defined as environment variables (see `.env.example`).
+(e.g. `mainnet`, `sepolia`) and use URLs defined as environment variables (see `.env.example`).
 
 ## Foundry Documentation
 
