@@ -11,8 +11,6 @@ nc='\033[0m'
 
 read -p $'\n'"Enter rpc url : " userRpcUrl
 rpcUrl=$userRpcUrl
-deployerPrivateKey=""
-address=""
 
 while true; do
     read -p $'\n'"Do you wish to use a ledger? (Yy/Nn) : " yn

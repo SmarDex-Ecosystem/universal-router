@@ -5,16 +5,16 @@ SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 pushd $SCRIPT_DIR/.. > /dev/null
 
 # Deploy USDN contracts
-pushd lib/usdn-contracts/ > /dev/null
+pushd dependencies/usdn-contracts/ > /dev/null
 
 npm ci
 forge soldeer install
 
 script/deployFork.sh
 
+# Deploy Router
 popd  > /dev/null
 
-# Deploy Router
 npm ci
 forge soldeer install
 
