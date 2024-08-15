@@ -12,7 +12,7 @@ broadcast/*.sol/31337/**/*.json
 #!broadcast/*.sol/1/run-*.json
 
 # To exclude only dry-run files, uncomment the following line
-#broadcast/*.sol/*/dry-run/*.json
+broadcast/*.sol/*/dry-run/*.json
 
 # Private files
 .env
