@@ -12,7 +12,8 @@ SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 pushd $SCRIPT_DIR/.. > /dev/null
 
 # Deploy USDN contracts
-pushd dependencies/@smardex-usdn-contracts-0.17.1 > /dev/null
+pushd dependencies/@smardex-usdn-contracts-* > /dev/null
+usdnFolder=$(pwd)
 
 npm ci
 forge soldeer install
@@ -22,11 +23,11 @@ script/deployFork.sh
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
-broadcast="broadcast/01_Deploy.s.sol/$chainId/run-latest.json"
+broadcast="$usdnFolder/broadcast/01_Deploy.s.sol/$chainId/run-latest.json"
+export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
 printf "$green USDN protocol has been deployed !\n"
-printf " Waiting for confirmation... (12s) $nc\n"
-sleep 12s
+sleep 1s
 
 for i in {1..15}; do
     printf "$green Trying to fetch WUSDN address... (attempt $i/15)$nc\n"
