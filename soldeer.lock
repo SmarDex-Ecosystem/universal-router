@@ -13,9 +13,9 @@ checksum = "20fd008c7c69b6c737cc0284469d1c76497107bc3e004d8381f6d8781cb27980"
 
 [[dependencies]]
 name = "@smardex-usdn-contracts"
-version = "0.17.1"
+version = "0.17.2"
 source = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git"
-checksum = "2c083e96512e9fc33d417229171f14461e835df6"
+checksum = "6df17cabcb42d6d0f28e9066fa33b89405425cdc"
 
 [[dependencies]]
 name = "@uniswap-permit2"
