@@ -16,17 +16,20 @@ invariant = { fail_on_revert = true }
 # -------------------------------- Remappings -------------------------------- #
 
 remappings = [
-    "usdn-contracts/=lib/usdn-contracts/",
-    "@openzeppelin/contracts/=node_modules/@openzeppelin/contracts",
-    "@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable",
-    "permit2/=node_modules/@uniswap/permit2/",
-    "@uniswap/v2-core/=node_modules/@uniswap/v2-core/",
-    "@uniswap/v3-core/=node_modules/@uniswap/v3-core/",
-    "@uniswap/universal-router/=node_modules/@uniswap/universal-router/",
-    "solmate/=node_modules/solmate/",
-    "solady/src/=node_modules/solady/src/",
-    "@pythnetwork=node_modules/@pythnetwork/",
-    "@chainlink/=node_modules/@chainlink/",
+    "forge-std=dependencies/forge-std-1.9.2/src",
+    "@uniswap/universal-router=dependencies/@uniswap-universal-router-1.6.0",
+    "usdn-contracts=dependencies/@smardex-usdn-contracts-0.17.2",
+    "permit2=dependencies/@uniswap-permit2-1.0.0",
+    "@chainlink/=dependencies/@chainlink-1.2.0/",
+    "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.0.2/",
+    "@uniswap/v2-core=dependencies/@uniswap-v2-core-1.0.1",
+    "solmate=dependencies/solmate-6.7.0",
+    "solady=dependencies/solady-0.0.228",
+    "@uniswap/v3-core=dependencies/@uniswap-v3-core-1.0.2-solc-0.8-simulate",
+    "openzeppelin-foundry-upgrades/=dependencies/openzeppelin-foundry-upgrades-0.3.1/src/",
+    "solidity-stringutils=dependencies/openzeppelin-foundry-upgrades-0.3.1/lib/solidity-stringutils",
+    "@pythnetwork/pyth-sdk-solidity/=dependencies/@pythnetwork-pyth-sdk-solidity-3.1.0/",
+    "@openzeppelin/contracts-upgradeable/=dependencies/@openzeppelin-contracts-upgradeable-5.0.2/",
 ]
 
 # ---------------------------------- Format ---------------------------------- #
