@@ -88,20 +88,31 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         bytes memory commands = _getPermitCommand();
 
         // inputs building
-        bytes[] memory inputs = new bytes[](3);
+        bytes[] memory inputs = new bytes[](5);
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
-        // permits
+        // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
             1, _getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
             1, _getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
+
+        // PERMIT wsteth
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
-        inputs[1] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
+
+        // TRANSFER_FROM wsteth
+        inputs[1] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT);
+
+        // PERMIT sdex
+        inputs[2] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
+
+        // TRANSFER_FROM sdex
+        inputs[3] = abi.encode(address(sdex), address(router), sdexAmount);
+
         // deposit
-        inputs[2] =
+        inputs[4] =
             abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
 
         // execute
@@ -132,20 +143,32 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         bytes memory commands = _getPermitCommand();
 
         // inputs building
-        bytes[] memory inputs = new bytes[](3);
+        bytes[] memory inputs = new bytes[](5);
         uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
-        // permits
+
+        // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
             1, _getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
         );
         (uint8 v1, bytes32 r1, bytes32 s1) = vm.sign(
             1, _getDigest(vm.addr(1), address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
+
+        // PERMIT wsteth
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
-        inputs[1] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
+
+        // TRANSFER_FROM wsteth
+        inputs[1] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT);
+
+        // PERMIT sdex
+        inputs[2] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
+
+        // TRANSFER_FROM sdex
+        inputs[3] = abi.encode(address(sdex), address(router), sdexAmount);
+
         // deposit
-        inputs[2] = abi.encode(
+        inputs[4] = abi.encode(
             Constants.CONTRACT_BALANCE, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
         );
 
@@ -167,11 +190,21 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
     }
 
     function _getPermitCommand() internal pure returns (bytes memory) {
-        bytes memory commandPermitWsteth =
-            abi.encodePacked(uint8(Commands.PERMIT_TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT));
-        bytes memory commandPermitSdex =
-            abi.encodePacked(uint8(Commands.PERMIT_TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandPermitWsteth = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandTransferFromWsteth =
+            abi.encodePacked(uint8(Commands.TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandPermitSdex = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandTransferFromSdex =
+            abi.encodePacked(uint8(Commands.TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT));
+
         bytes memory commandInitiateDeposit = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
-        return abi.encodePacked(commandPermitWsteth, commandPermitSdex, commandInitiateDeposit);
+
+        return abi.encodePacked(
+            commandPermitWsteth,
+            commandTransferFromWsteth,
+            commandPermitSdex,
+            commandTransferFromSdex,
+            commandInitiateDeposit
+        );
     }
 }

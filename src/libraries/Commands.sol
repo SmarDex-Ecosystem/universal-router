@@ -29,7 +29,7 @@ library Commands {
     uint256 constant UNWRAP_WETH = 0x0c;
     uint256 constant PERMIT2_TRANSFER_FROM_BATCH = 0x0d;
     uint256 constant PERMIT = 0x0e;
-    uint256 constant PERMIT_TRANSFER_FROM = 0x0f;
+    uint256 constant TRANSFER_FROM = 0x0f;
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
