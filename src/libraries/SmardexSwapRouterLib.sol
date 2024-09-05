@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.25;
+pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
@@ -30,6 +30,7 @@ library SmardexSwapRouterLib {
      * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
      * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to pair)
      * @param data The data path and payer for the swap
+     * @return amountInCached_ Cached input amount, used to check slippage
      */
     function smardexSwapCallback(
         ISmardexFactory smardexFactory,
@@ -37,7 +38,7 @@ library SmardexSwapRouterLib {
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata data
-    ) external returns (uint256 amountInCached_) {
+    ) internal returns (uint256 amountInCached_) {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
             revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
         }
@@ -82,7 +83,7 @@ library SmardexSwapRouterLib {
         uint256 amountOutMinimum,
         bytes memory path,
         address payer
-    ) external {
+    ) internal {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         if (amountIn == Constants.CONTRACT_BALANCE && payer == address(this)) {
             address tokenIn = path.decodeFirstToken();
@@ -119,8 +120,10 @@ library SmardexSwapRouterLib {
      * @dev Use router balance if the payer is the router or use permit2 from msg.sender
      * @param smardexFactory The Smardex factory contract
      * @param recipient The recipient of the output tokens
+     * @param amountOut The amount of output tokens to receive for the swap
      * @param path The path of the trade as a bytes string
      * @param payer The address that will be paying the input
+     * @return amountIn_ The amount of input tokens to pay
      */
     function smardexSwapExactOutput(
         ISmardexFactory smardexFactory,
@@ -128,7 +131,7 @@ library SmardexSwapRouterLib {
         uint256 amountOut,
         bytes memory path,
         address payer
-    ) external returns (uint256 amountIn_) {
+    ) internal returns (uint256 amountIn_) {
         // path needs to be reversed to get the amountIn that we will ask from the next pair hop
         bytes memory reversedPath = path.encodeTightlyPackedReversed();
 

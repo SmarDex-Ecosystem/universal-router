@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.25;
+pragma solidity 0.8.26;
 
 import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
 import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
@@ -11,6 +11,8 @@ import { SmardexImmutables } from "./SmardexImmutables.sol";
 abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
     /// @dev Transient storage variable used for checking slippage
     uint256 private amountInCached = type(uint256).max;
+
+    /// @dev The size in bytes of a single address
     uint8 private constant ADDR_SIZE = 20;
 
     /// @inheritdoc ISmardexSwapRouter
@@ -44,7 +46,6 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
     /**
      * @notice Performs a Smardex exact output swap
      * @dev Use router balance if payer is the router or use permit2 from msg.sender
-     * @param recipient The recipient of the output tokens
      * @param recipient The recipient of the output tokens
      * @param amountOut The amount of output tokens to receive for the trade
      * @param amountInMax The maximum desired amount of input tokens

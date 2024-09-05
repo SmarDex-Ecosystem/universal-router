@@ -35,8 +35,13 @@ jobs:
         with:
           node-version: 20
 
+      - name: Add app token to git config for soldeer to use
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "https://github.com/"
       - name: Install deps
-        run: npm ci && forge install
+        run: npm ci && forge soldeer install
 
       - name: Report natspec smells findings
         uses: SmarDex-Ecosystem/natspec-smells-action@v2

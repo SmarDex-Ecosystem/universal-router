@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.25;
+pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { IRebalancerTypes } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancerTypes.sol";
@@ -50,7 +50,7 @@ contract TestForkUniversalRouterRebalancerInitiateDeposit is UniversalRouterBase
      * @custom:then The transaction should revert
      */
     function test_RevertWhen_executeRebalancerInitiateDepositNoRebalancer() external {
-        vm.prank(roles.setExternalAdmin);
+        vm.prank(managers.setExternalManager);
         protocol.setRebalancer(IRebalancer(address(0)));
 
         bytes memory commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_DEPOSIT));

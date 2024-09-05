@@ -12,7 +12,7 @@ broadcast/*.sol/31337/**/*.json
 #!broadcast/*.sol/1/run-*.json
 
 # To exclude only dry-run files, uncomment the following line
-#broadcast/*.sol/*/dry-run/*.json
+broadcast/*.sol/*/dry-run/*.json
 
 # Private files
 .env
@@ -22,6 +22,9 @@ cache/
 
 # Dependencies
 node_modules/
+dependencies/
+# We use custom remappings in foundry.toml
+remappings.txt
 
 # direnv
 .direnv
@@ -44,3 +47,6 @@ target/
 
 # Gas snapshot files
 .gas-snapshot
+
+# TruffleHog
+.trufflehog.yml

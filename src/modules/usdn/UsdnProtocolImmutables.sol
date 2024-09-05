@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.25;
+pragma solidity 0.8.26;
 
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
@@ -32,7 +32,7 @@ contract UsdnProtocolImmutables {
         USDN_PROTOCOL = params.usdnProtocol;
         PROTOCOL_ASSET = params.usdnProtocol.getAsset();
         SDEX = params.usdnProtocol.getSdex();
-        USDN = params.usdnProtocol.getUsdn();
         WUSDN = params.wusdn;
+        USDN = params.wusdn.USDN();
     }
 }

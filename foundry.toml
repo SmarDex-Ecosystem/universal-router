@@ -9,7 +9,8 @@ solc_version = "0.8.26"
 evm_version = "cancun"
 optimizer = true
 optimizer_runs = 20_000
-libs = ["node_modules", "lib"]
+libs = ["dependencies"]
+auto_detect_remappings = false
 invariant = { fail_on_revert = true }
 
 # -------------------------------- Remappings -------------------------------- #
@@ -114,21 +115,23 @@ dictionary_weight = 60
 
 [rpc_endpoints]
 mainnet = "${URL_ETH_MAINNET}"
-goerli = "${URL_GOERLI}"
 sepolia = "${URL_SEPOLIA}"
-arbitrum = "${URL_ARBITRUM}"
-arbitrumtest = "${URL_GOERLI_ARBITRUM}"
-polygon = "${URL_POLYGON}"
-mumbai = "${URL_MUMBAI}"
-bsc = "${URL_BSC}"
-bsctest = "${URL_BSC_TESTNET}"
-base = "${URL_BASE}"
-basetest = "${URL_GOERLI_BASE}"
 anvil = "${URL_ANVIL}"
 
 [etherscan]
 mainnet = { key = "${ETHERSCAN_API_KEY}" }
-polygon = { key = "${POLYGONSCAN_API_KEY}" }
-bsc = { key = "${BSCSCAN_API_KEY}" }
-arbitrum = { key = "${ARBISCAN_API_KEY}" }
-base = { key = "${BASESCAN_API_KEY}" }
+
+[dependencies]
+"@uniswap-universal-router" = "1.6.0"
+forge-std = "1.9.2"
+"@smardex-usdn-contracts" = { version = "0.17.2", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", rev = "6df17cabcb42d6d0f28e9066fa33b89405425cdc" }
+"@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
+"@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
+"@openzeppelin-contracts" = "5.0.2"
+"@uniswap-v2-core" = "1.0.1"
+solady = "0.0.228"
+solmate = "6.7.0"
+"@uniswap-v3-core" = "1.0.2-solc-0.8-simulate"
+openzeppelin-foundry-upgrades = "0.3.1"
+"@pythnetwork-pyth-sdk-solidity" = "3.1.0"
+"@openzeppelin-contracts-upgradeable" = "5.0.2"

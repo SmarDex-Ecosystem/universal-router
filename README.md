@@ -179,26 +179,37 @@ source ~/.bashrc
 foundryup
 ```
 
+### Just
+
+We use [`just`](https://github.com/casey/just) to expose some useful commands and for pre-commit hooks. It can be
+installed with `apt` or `nix` (see dev shell info below):
+
+```bash
+sudo apt install just
+```
+
 ### Dependencies
 
 To install existing dependencies, run the following commands:
 
 ```bash
-forge install
+forge soldeer install
 npm install
 ```
 
-The `forge install` command is only used to add the forge standard library. Other dependencies should be managed with
+The `forge soldeer install` command is only used to add libraries for the smart contracts. Other dependencies should be managed with
 npm.
 
-In order to add a new dependency, use the `npm i [packagename]` command with any package from the
-[npm registry](https://www.npmjs.com/).
+In order to add a new dependency, use the `forge soldeer install [packagename]~[version]` command with any package from the
+[soldeer registry](https://soldeer.xyz/).
 
-For instance, to add the latest [OpenZeppelin library](https://github.com/OpenZeppelin/openzeppelin-contracts):
+For instance, to add [OpenZeppelin library](https://github.com/OpenZeppelin/openzeppelin-contracts) version 5.0.2:
 
 ```bash
-npm i @openzeppelin/contracts
+forge soldeer install @openzeppelin-contracts~5.0.2
 ```
+
+The last step is to update the remappings array in the `foundry.toml` config file.
 
 ### Nix
 
@@ -217,9 +228,14 @@ The environment provides the following tools:
 
 - load `.env` file as environment variables
 - foundry
-- solc v0.8.20
+- solc v0.8.26
 - slither
-- Node 18
+- Node 20 + TypeScript
+- just
+- TruffleHog
+- lcov
+- Rust toolchain
+- USDN `test_utils` dependencies
 
 ## Usage
 
@@ -237,15 +253,15 @@ which records gas usage for all tests. When tests have changed, a new snapshot s
 
 ### Deployment scripts
 
-Deployment for anvil forks should be done with a custom bash script at `script/deployFork.sh` which can be run without
-arguments. It must set up any environment variable required by the foundry deployment script.
+Deployment for anvil forks should be done with a custom bash script at `script/deployFork.sh` which can be run
+without arguments. It must set up any environment variable required by the foundry deployment script.
 
 Common arguments to `forge script` are described in
 [the documentation](https://book.getfoundry.sh/reference/forge/forge-script#forge-script).
 
 Notably, the `--rpc-url` argument allows to choose which RPC will receive the transactions. The available shorthand
 names are defined in [`foundry.toml`](https://github.com/SmarDex-Ecosystem/universal-router/blob/master/foundry.toml),
-(e.g. `mainnet`, `goerli`) and use URLs defined as environment variables (see `.env.example`).
+(e.g. `mainnet`, `sepolia`) and use URLs defined as environment variables (see `.env.example`).
 
 ## Foundry Documentation
 
@@ -271,13 +287,26 @@ wrap_comments = true # use max line length for comments as well
 number_underscore = "thousands" # add underscore separators in large numbers
 ```
 
+### TruffleHog
+
+[TruffleHog](https://github.com/trufflesecurity/trufflehog) scans the files for leaked secrets. It is installed by the
+nix devShell, and can otherwise be installed with one of the commands below:
+
+```bash
+# install via brew
+brew install trufflehog
+# install via script
+curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+```
+
 ### Husky
 
-The pre-commit configuration for Husky runs `forge fmt --check` to check the code formatting before each commit. It also
-checks the gas snapshot and prevents committing if it has changed.
+The pre-commit configuration for Husky runs `forge fmt --check` to check the code formatting before each commit, and
+`just trufflehog` to detect leaked secrets.
 
-In order to setup the git pre-commit hook, run `npm install`.
+In order to setup the git pre-commit hook, you need to first install foundry, just and TruffleHog, then run
+`npm install`.
 
 ### Slither
 
-Slither is integrated into a GitHub workflow and runs on every push to the master branch.
+Slither is integrated into a GitHub workflow and runs on every push to the main branch.
