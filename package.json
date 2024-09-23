@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && rm -rf dependencies && forge clean && npm i && forge soldeer install",
     "coverage": "npm run cov -- --report lcov",
-    "cov": "forge build --skip .sol && forge coverage --no-match-test \"(FFI|Fork|Fuzz|invariant)\" --no-match-contract Fork -vvv",
+    "cov": "forge build --skip .sol && forge coverage --no-match-test \"(FFI|Fork|Fuzz|invariant)\" --no-match-contract Fork -vvv --offline",
     "cov:html": "npm run coverage && genhtml -o .coverage lcov.info && open .coverage/index.html",
     "deploy:fork": "forge script -i 1 -f anvil script/Deploy.s.sol",
     "exportAbi": "forge build --skip \"test/**/*\" --skip script && ts-node ./script/exportAbi.ts -g '{*.sol,!(libraries|interfaces)/**/*.sol}' && tsup ./dist/abi/index.ts --format cjs --format esm --dts --sourcemap",
