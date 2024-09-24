@@ -471,6 +471,17 @@ abstract contract Dispatcher is
                         recipient := calldataload(inputs.offset)
                     }
                     success_ = LidoRouter._unwrapSTETH(map(recipient));
+                } else if (command == Commands.USDN_TRANSFER_SHARES_FROM) {
+                    // equivalent:  abi.decode(inputs, (address, uint256))
+                    address recipient;
+                    uint256 sharesAmount;
+                    assembly {
+                        recipient := calldataload(inputs.offset)
+                        sharesAmount := calldataload(add(inputs.offset, 0x20))
+                    }
+                    (success_, output_) = address(USDN).call(
+                        abi.encodeWithSelector(USDN.transferSharesFrom.selector, lockedBy, map(recipient), sharesAmount)
+                    );
                 } else {
                     revert InvalidCommandType(command);
                 }
