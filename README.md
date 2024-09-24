@@ -93,15 +93,15 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x19 │  REBALANCER_INITIATE_DEPOSIT  │
    ├──────┼───────────────────────────────┤
-   │ 0x1a │  -------                      │
+   │ 0x1a │  WRAP_USDN                    │
    ├──────┼───────────────────────────────┤
-   │ 0x1b │  WRAP_USDN                    │
+   │ 0x1b │  UNWRAP_WUSDN                 │
    ├──────┼───────────────────────────────┤
-   │ 0x1c │  UNWRAP_WUSDN                 │
+   │ 0x1c │  WRAP_STETH                   │
    ├──────┼───────────────────────────────┤
-   │ 0x1d │  WRAP_STETH                   │
+   │ 0x1d │  UNWRAP_WSTETH                │
    ├──────┼───────────────────────────────┤
-   │ 0x1e │  UNWRAP_WSTETH                │
+   │ 0x1e │  USDN_TRANSFER_SHARES_FROM    │
    ├──────┼───────────────────────────────┤
    │ 0x1f │  -------                      │
    ├──────┼───────────────────────────────┤
