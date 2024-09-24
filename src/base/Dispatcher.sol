@@ -260,7 +260,7 @@ abstract contract Dispatcher is
                             }
 
                             (success_, output_) = token.call(
-                                abi.encodeWithSelector(IERC20.transferFrom.selector, lockedBy, recipient, amount)
+                                abi.encodeWithSelector(IERC20.transferFrom.selector, lockedBy, map(recipient), amount)
                             );
                         } else {
                             revert InvalidCommandType(command);
