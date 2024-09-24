@@ -28,7 +28,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         wstETH.approve(address(protocol), type(uint256).max);
         sdex.approve(address(protocol), type(uint256).max);
         protocol.initiateDeposit{ value: _securityDeposit }(
-            0.1 ether, USER_2, USER_1, NO_PERMIT2, "", EMPTY_PREVIOUS_DATA
+            0.1 ether, 0, USER_2, USER_1, type(uint256).max, "", EMPTY_PREVIOUS_DATA
         );
         // 2. initiateWithdrawal
         uint256 withdrawAmount = usdn.sharesOf(DEPLOYER) / 100;
@@ -36,16 +36,18 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         usdn.transferShares(address(this), withdrawAmount);
         usdn.approve(address(protocol), type(uint256).max);
         protocol.initiateWithdrawal{ value: _securityDeposit }(
-            uint128(withdrawAmount), USER_2, USER_2, "", EMPTY_PREVIOUS_DATA
+            uint128(withdrawAmount), 0, USER_2, USER_2, type(uint256).max, "", EMPTY_PREVIOUS_DATA
         );
         // 3. initiateOpenPosition
         uint256 desiredLiquidation = 2500 ether;
         protocol.initiateOpenPosition{ value: _securityDeposit }(
             uint128(openPositionAmount),
             uint128(desiredLiquidation),
+            type(uint128).max,
+            maxLeverage,
             address(this),
             USER_3,
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA
         );
@@ -53,9 +55,11 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         (, IUsdnProtocolTypes.PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             uint128(openPositionAmount),
             uint128(desiredLiquidation),
+            type(uint128).max,
+            maxLeverage,
             address(this),
             payable(this),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA
         );
@@ -64,8 +68,19 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         uint256 validationCost =
             oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition);
         protocol.validateOpenPosition{ value: validationCost }(payable(this), data, EMPTY_PREVIOUS_DATA);
+        /* 
+          PositionId calldata posId,
+        uint128 amountToClose,
+        uint256 userMinPrice,
+        address to,
+        address payable validator,
+        uint256 deadline,
+        bytes calldata currentPriceData,
+        PreviousActionsData calldata previousActionsData
+         */
+
         protocol.initiateClosePosition{ value: _securityDeposit }(
-            posId, uint128(openPositionAmount), USER_1, USER_4, "", EMPTY_PREVIOUS_DATA
+            posId, uint128(openPositionAmount), 0, USER_1, USER_4, type(uint256).max, "", EMPTY_PREVIOUS_DATA
         );
     }
 
@@ -91,7 +106,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
 
         (uint80 roundId,,) = getNextChainlinkPriceAfterTimestamp(ts1, startBlock, endBlock);
 
-        skip(protocol.getValidationDeadline());
+        skip(protocol.getLowLatencyValidatorDeadline() + 1);
 
         // prepare data for the validation
         bytes memory data = abi.encode(roundId);

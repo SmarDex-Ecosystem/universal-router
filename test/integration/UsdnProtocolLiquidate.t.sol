@@ -28,12 +28,15 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
         deal(address(wstETH), address(this), OPEN_POSITION_AMOUNT * 2);
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
+
         (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             address(this),
             payable(address(this)),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA
         );

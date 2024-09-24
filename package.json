@@ -15,7 +15,7 @@
     "cov": "forge build --skip .sol && forge coverage --no-match-test \"(FFI|Fork|Fuzz|invariant)\" --no-match-contract Fork -vvv --offline",
     "cov:html": "npm run coverage && genhtml -o .coverage lcov.info && open .coverage/index.html",
     "deploy:fork": "forge script -i 1 -f anvil script/Deploy.s.sol",
-    "exportAbi": "forge build --skip \"test/**/*\" --skip script && ts-node ./script/exportAbi.ts -g '{*.sol,!(libraries|interfaces)/**/*.sol}' && tsup ./dist/abi/index.ts --format cjs --format esm --dts --sourcemap",
+    "exportAbi": "forge build --skip \"test/**/*\" --skip script && tsx ./script/exportAbi.ts -g '{*.sol,!(libraries|interfaces)/**/*.sol}' && tsup ./dist/abi/index.ts --format cjs --format esm --dts --sourcemap",
     "format": "forge fmt",
     "format:js": "npx @biomejs/biome format . --write",
     "installDeps": "npm i && forge soldeer install",
@@ -41,9 +41,11 @@
     "commander": "^12.1.0",
     "glob": "^11.0.0",
     "husky": "^9.1.4",
-    "ts-node": "^10.9.2",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
     "viem": "^2.19.4"
+  },
+  "dependencies": {
+    "tsx": "^4.19.1"
   }
 }

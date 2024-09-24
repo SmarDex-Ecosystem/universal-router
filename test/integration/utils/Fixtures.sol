@@ -6,6 +6,8 @@ import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.so
 import { DEPLOYER, WETH, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
 import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
 import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integration/UsdnProtocol/utils/Fixtures.sol";
+import { UsdnProtocolUtilsLibrary as Utils } from
+    "usdn-contracts/src/UsdnProtocol/libraries/UsdnProtocolUtilsLibrary.sol";
 
 import { UniversalRouterHandler } from "./Handler.sol";
 import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
@@ -20,6 +22,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
     IAllowanceTransfer permit2;
     AggregatorV3Interface public priceFeed;
     Wusdn internal wusdn;
+    uint256 internal maxLeverage;
 
     function _setUp(SetUpParams memory setupParams) public virtual override {
         setupParams.fork = true;
@@ -47,6 +50,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
 
         permit2 = IAllowanceTransfer(params.permit2);
         priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
+
+        maxLeverage = protocol.getMaxLeverage();
     }
 
     /**
@@ -87,5 +92,15 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
         assertTrue(updateAtOne < lowLatencyLimit, "updateAtOne < lowLatencyLimit");
         assertTrue(updateAtTwo >= lowLatencyLimit, "updateAtTwo >= lowLatencyLimit");
         return (roundId_, price_, timestamp_);
+    }
+
+    /// @dev Calculate the amount of SDEX to burn
+    function _calcSdexToBurn(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
+        uint256 amountAfterFees = uint128(depositAmount - uint256(depositAmount) * protocol.getVaultFeeBps() / 10_000);
+        uint256 usdnSharesToMintEstimated =
+            Utils._calcMintUsdnShares(amountAfterFees, protocol.getBalanceVault(), protocol.getUsdn().totalShares());
+
+        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
+        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
     }
 }

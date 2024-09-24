@@ -7,7 +7,6 @@ import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { IRebalancer } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancer.sol";
-import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Permit2Payments.sol";
 import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
 
@@ -23,9 +22,10 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      * @dev Check the protocol's documentation for information about how this function should be used
      * Note: the deposit can fail without reverting, in case there are some pending liquidations in the protocol
      * @param amount The amount of asset to deposit into the vault
+     * @param sharesOutMin The minimum amount of shares to receive
      * @param to The address that will receive the USDN tokens upon validation
      * @param validator The address that should validate the deposit (receives the security deposit back)
-     * @param permit2TokenBitfield The bitfield indicating which tokens should be used with permit2
+     * @param deadline The transaction deadline
      * @param currentPriceData The current price data
      * @param previousActionsData The data needed to validate actionable pending actions
      * @param ethAmount The amount of Ether to send with the transaction
@@ -33,9 +33,10 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      */
     function _usdnInitiateDeposit(
         uint256 amount,
+        uint256 sharesOutMin,
         address to,
         address validator,
-        Permit2TokenBitfield.Bitfield permit2TokenBitfield,
+        uint256 deadline,
         bytes memory currentPriceData,
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
@@ -49,7 +50,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
         // we send the full ETH balance, the protocol will refund any excess
         // slither-disable-next-line arbitrary-send-eth
         success_ = USDN_PROTOCOL.initiateDeposit{ value: ethAmount }(
-            amount.toUint128(), to, payable(validator), permit2TokenBitfield, currentPriceData, previousActionsData
+            amount.toUint128(), sharesOutMin, to, payable(validator), deadline, currentPriceData, previousActionsData
         );
         SDEX.approve(address(USDN_PROTOCOL), 0);
     }
@@ -78,31 +79,41 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      * @notice Initiate a withdrawal from the USDN protocol vault
      * @dev Check the protocol's documentation for information about how this function should be used
      * Note: the withdrawal can fail without reverting, in case there are some pending liquidations in the protocol
-     * @param amount The amount of USDN shares to burn
+     * @param sharesAmount The amount of USDN shares to burn
+     * @param amountOutMin The minimum amount of assets to receive
      * @param to The address that will receive the asset upon validation
      * @param validator The address that should validate the withdrawal (receives the security deposit back)
+     * @param deadline The transaction deadline
      * @param currentPriceData The current price data
      * @param previousActionsData The data needed to validate actionable pending actions
      * @param ethAmount The amount of Ether to send with the transaction
      * @return success_ Whether the withdrawal was successful
      */
     function _usdnInitiateWithdrawal(
-        uint256 amount,
+        uint256 sharesAmount,
+        uint256 amountOutMin,
         address to,
         address validator,
+        uint256 deadline,
         bytes memory currentPriceData,
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) internal returns (bool success_) {
         // use amount == Constants.CONTRACT_BALANCE as a flag to withdraw the entire balance of the contract
-        if (amount == Constants.CONTRACT_BALANCE) {
-            amount = USDN.sharesOf(address(this));
+        if (sharesAmount == Constants.CONTRACT_BALANCE) {
+            sharesAmount = USDN.sharesOf(address(this));
         }
-        USDN.approve(address(USDN_PROTOCOL), USDN.convertToTokensRoundUp(amount));
+        USDN.approve(address(USDN_PROTOCOL), USDN.convertToTokensRoundUp(sharesAmount));
         // we send the full ETH balance, the protocol will refund any excess
         // slither-disable-next-line arbitrary-send-eth
         success_ = USDN_PROTOCOL.initiateWithdrawal{ value: ethAmount }(
-            amount.toUint152(), to, payable(validator), currentPriceData, previousActionsData
+            sharesAmount.toUint152(),
+            amountOutMin,
+            to,
+            payable(validator),
+            deadline,
+            currentPriceData,
+            previousActionsData
         );
     }
 
@@ -134,9 +145,11 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      * Note: the open position can fail without reverting, in case there are some pending liquidations in the protocol
      * @param amount The amount of assets used to open the position
      * @param desiredLiqPrice The desired liquidation price for the position
+     * @param userMaxPrice The maximum price
+     * @param userMaxLeverage The maximum leverage
      * @param to The address that will receive the position
      * @param validator The address that should validate the open position (receives the security deposit back)
-     * @param permit2TokenBitfield The bitfield indicating which tokens should be used with permit2
+     * @param deadline The transaction deadline
      * @param currentPriceData The current price data
      * @param previousActionsData The data needed to validate actionable pending actions
      * @param ethAmount The amount of Ether to send with the transaction
@@ -146,9 +159,11 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     function _usdnInitiateOpenPosition(
         uint256 amount,
         uint128 desiredLiqPrice,
+        uint128 userMaxPrice,
+        uint256 userMaxLeverage,
         address to,
         address validator,
-        Permit2TokenBitfield.Bitfield permit2TokenBitfield,
+        uint256 deadline,
         bytes memory currentPriceData,
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
@@ -163,9 +178,11 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
         (success_, posId_) = USDN_PROTOCOL.initiateOpenPosition{ value: ethAmount }(
             amount.toUint128(),
             desiredLiqPrice,
+            userMaxPrice,
+            userMaxLeverage,
             to,
             payable(validator),
-            permit2TokenBitfield,
+            deadline,
             currentPriceData,
             previousActionsData
         );
@@ -266,12 +283,11 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
     /**
      * @notice Performs tick liquidations of the USDN protocol
      * @param currentPriceData The current price data
-     * @param iterations The liquidation iterations
      * @param ethAmount The amount of Ether to send with the transaction
      */
-    function _usdnLiquidate(bytes memory currentPriceData, uint16 iterations, uint256 ethAmount) internal {
+    function _usdnLiquidate(bytes memory currentPriceData, uint256 ethAmount) internal {
         // slither-disable-next-line arbitrary-send-eth
-        USDN_PROTOCOL.liquidate{ value: ethAmount }(currentPriceData, iterations);
+        USDN_PROTOCOL.liquidate{ value: ethAmount }(currentPriceData);
     }
 
     /**

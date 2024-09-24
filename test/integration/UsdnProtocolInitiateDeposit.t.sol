@@ -36,12 +36,13 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
      */
     function test_ForkInitiateDeposit() public {
         wstETH.transfer(address(router), DEPOSIT_AMOUNT);
-        sdex.transfer(address(router), _calculateBurnAmount(DEPOSIT_AMOUNT));
+        sdex.transfer(address(router), _calcSdexToBurn(DEPOSIT_AMOUNT));
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] =
-            abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+        inputs[0] = abi.encode(
+            DEPOSIT_AMOUNT, 0, USER_1, address(this), type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+        );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         IUsdnProtocolTypes.DepositPendingAction memory action =
@@ -63,12 +64,20 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         uint256 wstEthBalanceBefore = wstETH.balanceOf(address(this));
 
         wstETH.transfer(address(router), DEPOSIT_AMOUNT);
-        sdex.transfer(address(router), _calculateBurnAmount(DEPOSIT_AMOUNT));
+        sdex.transfer(address(router), _calcSdexToBurn(DEPOSIT_AMOUNT));
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
+
         inputs[0] = abi.encode(
-            Constants.CONTRACT_BALANCE, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+            Constants.CONTRACT_BALANCE,
+            0,
+            USER_1,
+            address(this),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
         );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -89,7 +98,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
 
         // inputs building
         bytes[] memory inputs = new bytes[](5);
-        uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
+        uint256 sdexAmount = _calcSdexToBurn(DEPOSIT_AMOUNT);
         // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
             1, _getDigest(vm.addr(1), address(router), DEPOSIT_AMOUNT, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
@@ -112,8 +121,9 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         inputs[3] = abi.encode(address(sdex), address(router), sdexAmount);
 
         // deposit
-        inputs[4] =
-            abi.encode(DEPOSIT_AMOUNT, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+        inputs[4] = abi.encode(
+            DEPOSIT_AMOUNT, 0, USER_1, address(this), type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+        );
 
         // execute
         vm.prank(vm.addr(1));
@@ -144,7 +154,7 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
 
         // inputs building
         bytes[] memory inputs = new bytes[](5);
-        uint256 sdexAmount = _calculateBurnAmount(DEPOSIT_AMOUNT);
+        uint256 sdexAmount = _calcSdexToBurn(DEPOSIT_AMOUNT);
 
         // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
@@ -169,7 +179,14 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
 
         // deposit
         inputs[4] = abi.encode(
-            Constants.CONTRACT_BALANCE, USER_1, address(this), NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+            Constants.CONTRACT_BALANCE,
+            0,
+            USER_1,
+            address(this),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
         );
 
         // execute
@@ -180,14 +197,6 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
     }
 
     receive() external payable { }
-
-    function _calculateBurnAmount(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
-        uint256 usdnSharesToMintEstimated = protocol.i_calcMintUsdnShares(
-            depositAmount, protocol.getBalanceVault(), usdn.totalShares(), params.initialPrice
-        );
-        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
-        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
-    }
 
     function _getPermitCommand() internal pure returns (bytes memory) {
         bytes memory commandPermitWsteth = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));

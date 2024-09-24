@@ -42,7 +42,16 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(WITHDRAW_AMOUNT, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+        inputs[0] = abi.encode(
+            usdn.sharesOf(address(router)),
+            0,
+            USER_1,
+            address(this),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
+        );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
@@ -64,8 +73,16 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] =
-            abi.encode(Constants.CONTRACT_BALANCE, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+        inputs[0] = abi.encode(
+            Constants.CONTRACT_BALANCE,
+            0,
+            USER_1,
+            address(this),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
+        );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
@@ -97,7 +114,9 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
 
-        inputs[2] = abi.encode(WITHDRAW_AMOUNT, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+        inputs[2] = abi.encode(
+            WITHDRAW_AMOUNT, 0, USER_1, address(this), type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+        );
 
         vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
@@ -133,8 +152,16 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
 
-        inputs[2] =
-            abi.encode(Constants.CONTRACT_BALANCE, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+        inputs[2] = abi.encode(
+            Constants.CONTRACT_BALANCE,
+            0,
+            USER_1,
+            address(this),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
+        );
 
         vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);

@@ -40,12 +40,15 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
         bytes[] memory inputs = new bytes[](1);
+
         inputs[0] = abi.encode(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             USER_1,
             address(this),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA,
             _securityDeposit
@@ -74,9 +77,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         inputs[0] = abi.encode(
             Constants.CONTRACT_BALANCE,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             USER_1,
             address(this),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA,
             _securityDeposit
@@ -115,9 +120,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         inputs[2] = abi.encode(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             USER_1,
             address(this),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA,
             _securityDeposit
@@ -161,9 +168,11 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         inputs[2] = abi.encode(
             Constants.CONTRACT_BALANCE,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             USER_1,
             address(this),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA,
             _securityDeposit

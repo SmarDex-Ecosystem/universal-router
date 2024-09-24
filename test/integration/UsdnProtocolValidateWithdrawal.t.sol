@@ -27,7 +27,7 @@ contract TestForkUniversalRouterValidateWithdrawal is UniversalRouterBaseFixture
         usdn.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
         protocol.initiateWithdrawal{ value: _securityDeposit }(
-            WITHDRAW_AMOUNT.toUint152(), USER_2, USER_1, "", EMPTY_PREVIOUS_DATA
+            WITHDRAW_AMOUNT.toUint152(), 0, USER_2, USER_1, type(uint256).max, "", EMPTY_PREVIOUS_DATA
         );
     }
 
