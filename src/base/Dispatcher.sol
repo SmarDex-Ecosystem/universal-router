@@ -479,7 +479,7 @@ abstract contract Dispatcher is
                         sharesAmount := calldataload(add(inputs.offset, 0x20))
                     }
                     (success_, output_) = address(USDN).call(
-                        abi.encodeWithSelector(USDN.transferSharesFrom.selector, lockedBy, recipient, sharesAmount)
+                        abi.encodeWithSelector(USDN.transferSharesFrom.selector, lockedBy, map(recipient), sharesAmount)
                     );
                 } else {
                     revert InvalidCommandType(command);
