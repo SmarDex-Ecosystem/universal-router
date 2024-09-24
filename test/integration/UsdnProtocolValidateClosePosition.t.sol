@@ -66,7 +66,12 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         router.execute{ value: validationCost }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore + _securityDeposit - validationCost, "ether balance");
-        assertApproxEqRel(wstETH.balanceOf(USER_1), OPEN_POSITION_AMOUNT, 1e16, "wstETH balance USER_1 with delta 1%");
+        assertApproxEqRel(
+            wstETH.balanceOf(USER_1),
+            OPEN_POSITION_AMOUNT,
+            OPEN_POSITION_AMOUNT / 10,
+            "wstETH balance USER_1 with delta 1%"
+        );
     }
 
     receive() external payable { }

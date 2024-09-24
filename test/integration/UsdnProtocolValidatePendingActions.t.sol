@@ -95,7 +95,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
 
         (uint80 roundId,,) = getNextChainlinkPriceAfterTimestamp(ts1, startBlock, endBlock);
 
-        skip(protocol.getLowLatencyValidatorDeadline() + 1);
+        skip(protocol.getLowLatencyValidatorDeadline() + protocol.getOnChainValidatorDeadline() + 1);
 
         // prepare data for the validation
         bytes memory data = abi.encode(roundId);
