@@ -48,7 +48,7 @@ jobs:
         env:
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:"
       - name: Install dependencies
         run: npm ci && forge soldeer install
         if: ${{ steps.release.outputs.release_created }}
