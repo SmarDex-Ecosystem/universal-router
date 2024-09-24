@@ -248,46 +248,20 @@ abstract contract Dispatcher is
                                     IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
                                 )
                             );
-                        } else if (command == Commands.PERMIT_TRANSFER_FROM) {
-                            /*
-                                equivalent: abi.decode(
-                                    inputs, (
-                                        address,
-                                        address,
-                                        address,
-                                        uint256,
-                                        uint256,
-                                        uint8,
-                                        bytes32,
-                                        bytes32
-                                    )
-                                )
-                            */
+                        } else if (command == Commands.TRANSFER_FROM) {
+                            // equivalent:  abi.decode(inputs, (address, address, uint256))
                             address token;
-                            address owner;
-                            address spender;
+                            address recipient;
                             uint256 amount;
-                            uint256 deadline;
-                            uint8 v;
-                            bytes32 r;
-                            bytes32 s;
                             assembly {
                                 token := calldataload(inputs.offset)
-                                owner := calldataload(add(inputs.offset, 0x20))
-                                spender := calldataload(add(inputs.offset, 0x40))
-                                amount := calldataload(add(inputs.offset, 0x60))
-                                deadline := calldataload(add(inputs.offset, 0x80))
-                                v := calldataload(add(inputs.offset, 0xa0))
-                                r := calldataload(add(inputs.offset, 0xc0))
-                                s := calldataload(add(inputs.offset, 0xe0))
+                                recipient := calldataload(add(inputs.offset, 0x20))
+                                amount := calldataload(add(inputs.offset, 0x40))
                             }
+
                             (success_, output_) = token.call(
-                                abi.encodeWithSelector(
-                                    IERC20Permit.permit.selector, owner, spender, amount, deadline, v, r, s
-                                )
+                                abi.encodeWithSelector(IERC20.transferFrom.selector, lockedBy, map(recipient), amount)
                             );
-                            // slither-disable-next-line unchecked-transfer,arbitrary-send-erc20
-                            IERC20(token).transferFrom(owner, spender, amount);
                         } else {
                             revert InvalidCommandType(command);
                         }

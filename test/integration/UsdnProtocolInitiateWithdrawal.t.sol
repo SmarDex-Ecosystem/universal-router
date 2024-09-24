@@ -91,10 +91,13 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         );
 
         bytes memory commands = _getPermitCommand();
-        bytes[] memory inputs = new bytes[](2);
+        bytes[] memory inputs = new bytes[](3);
         inputs[0] =
             abi.encode(address(usdn), vm.addr(1), address(router), usdnTokensToTransfer, type(uint256).max, v, r, s);
-        inputs[1] = abi.encode(WITHDRAW_AMOUNT, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
+
+        inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
+
+        inputs[2] = abi.encode(WITHDRAW_AMOUNT, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
 
         vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
@@ -124,10 +127,13 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         );
 
         bytes memory commands = _getPermitCommand();
-        bytes[] memory inputs = new bytes[](2);
+        bytes[] memory inputs = new bytes[](3);
         inputs[0] =
             abi.encode(address(usdn), vm.addr(1), address(router), usdnTokensToTransfer, type(uint256).max, v, r, s);
-        inputs[1] =
+
+        inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
+
+        inputs[2] =
             abi.encode(Constants.CONTRACT_BALANCE, USER_1, address(this), "", EMPTY_PREVIOUS_DATA, _securityDeposit);
 
         vm.prank(vm.addr(1));
@@ -138,9 +144,11 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
     }
 
     function _getPermitCommand() internal pure returns (bytes memory) {
-        bytes memory commandPermitWsteth =
-            abi.encodePacked(uint8(Commands.PERMIT_TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandPermitWsteth = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandTransferFromWsteth =
+            abi.encodePacked(uint8(Commands.TRANSFER_FROM) | uint8(Commands.FLAG_ALLOW_REVERT));
+
         bytes memory commandInitiateDeposit = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
-        return abi.encodePacked(commandPermitWsteth, commandInitiateDeposit);
+        return abi.encodePacked(commandPermitWsteth, commandTransferFromWsteth, commandInitiateDeposit);
     }
 }
