@@ -71,7 +71,7 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x0e │  PERMIT                       │
    ├──────┼───────────────────────────────┤
-   │ 0x0f │  TRANSFER_FROM         │
+   │ 0x0f │  TRANSFER_FROM                │
    ├──────┼───────────────────────────────┤
    │ 0x10 │  INITIATE_DEPOSIT             │
    ├──────┼───────────────────────────────┤
