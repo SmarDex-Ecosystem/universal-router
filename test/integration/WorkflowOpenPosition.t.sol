@@ -9,6 +9,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 
 /**
  * @custom:feature Entire workflow of open position through the router
@@ -39,16 +40,18 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         bytes[] memory inputs = new bytes[](4);
         inputs[0] = abi.encode(Constants.ETH, wstETH, OPEN_POSITION_AMOUNT * 2);
         inputs[1] = abi.encode(
-            Constants.CONTRACT_BALANCE,
-            DESIRED_LIQUIDATION,
-            type(uint128).max,
-            maxLeverage,
-            USER_1,
-            USER_1,
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityOpenPosition
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                Constants.CONTRACT_BALANCE,
+                DESIRED_LIQUIDATION,
+                type(uint128).max,
+                maxLeverage,
+                USER_1,
+                USER_1,
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityOpenPosition
+            )
         );
         inputs[2] = abi.encode(Constants.ETH, address(this), 0, 0);
         inputs[3] = abi.encode(wstETH, address(this), 0, 0);
