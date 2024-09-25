@@ -27,8 +27,6 @@ library UsdnProtocolRouterLib {
      * @param sdex The SDEX token
      * @param usdnProtocol The USDN protocol
      * @param amount The amount of asset to deposit into the vault
-     * @param amount The amount of asset to deposit into the vault
-     * @param amount The amount of asset to deposit into the vault
      * @param sharesOutMin The minimum amount of shares to receive
      * @param to The address that will receive the USDN tokens upon validation
      * @param validator The address that should validate the deposit (receives the security deposit back)
@@ -164,6 +162,8 @@ library UsdnProtocolRouterLib {
      * @param protocolAsset The USDN protocol asset
      * @param usdnProtocol The USDN protocol
      * @param data The router initiateOpenPosition data struct
+     * @return success_ Whether the open position was successful
+     * @return posId_ The position ID of the newly opened position
      */
     function usdnInitiateOpenPosition(
         IERC20Metadata protocolAsset,
