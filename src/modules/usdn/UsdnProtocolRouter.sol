@@ -158,8 +158,8 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
      */
     function _usdnInitiateOpenPosition(
         uint256 amount,
-        uint128 desiredLiqPrice,
-        uint128 userMaxPrice,
+        uint256 desiredLiqPrice,
+        uint256 userMaxPrice,
         uint256 userMaxLeverage,
         address to,
         address validator,
@@ -177,8 +177,8 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, Permit2Payments 
         // slither-disable-next-line arbitrary-send-eth
         (success_, posId_) = USDN_PROTOCOL.initiateOpenPosition{ value: ethAmount }(
             amount.toUint128(),
-            desiredLiqPrice,
-            userMaxPrice,
+            desiredLiqPrice.toUint128(),
+            userMaxPrice.toUint128(),
             userMaxLeverage,
             to,
             payable(validator),

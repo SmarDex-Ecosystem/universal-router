@@ -339,8 +339,8 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_OPEN) {
                         (
                             uint256 amount,
-                            uint128 desiredLiqPrice,
-                            uint128 userMaxPrice,
+                            uint256 desiredLiqPrice,
+                            uint256 userMaxPrice,
                             uint256 userMaxLeverage,
                             address to,
                             address validator,
@@ -352,8 +352,8 @@ abstract contract Dispatcher is
                             inputs,
                             (
                                 uint256,
-                                uint128,
-                                uint128,
+                                uint256,
+                                uint256,
                                 uint256,
                                 address,
                                 address,
