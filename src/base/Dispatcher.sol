@@ -9,7 +9,6 @@ import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { Permit2TokenBitfield } from "usdn-contracts/src/libraries/Permit2TokenBitfield.sol";
 
 import { Commands } from "../libraries/Commands.sol";
 import { Sweep } from "../modules/Sweep.sol";
@@ -274,9 +273,10 @@ abstract contract Dispatcher is
                     if (command == Commands.INITIATE_DEPOSIT) {
                         (
                             uint256 amount,
+                            uint256 sharesOutMin,
                             address to,
                             address validator,
-                            Permit2TokenBitfield.Bitfield permit2TokenBitfield,
+                            uint256 deadline,
                             bytes memory currentPriceData,
                             IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
@@ -284,9 +284,10 @@ abstract contract Dispatcher is
                             inputs,
                             (
                                 uint256,
+                                uint256,
                                 address,
                                 address,
-                                Permit2TokenBitfield.Bitfield,
+                                uint256,
                                 bytes,
                                 IUsdnProtocolTypes.PreviousActionsData,
                                 uint256
@@ -294,9 +295,10 @@ abstract contract Dispatcher is
                         );
                         _usdnInitiateDeposit(
                             amount,
+                            sharesOutMin,
                             map(to),
                             map(validator),
-                            permit2TokenBitfield,
+                            deadline,
                             currentPriceData,
                             previousActionsData,
                             ethAmount
@@ -304,24 +306,10 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_WITHDRAWAL) {
                         (
                             uint256 usdnShares,
+                            uint256 amountOutMin,
                             address to,
                             address validator,
-                            bytes memory currentPriceData,
-                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
-                            uint256 ethAmount
-                        ) = abi.decode(
-                            inputs, (uint256, address, address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256)
-                        );
-                        _usdnInitiateWithdrawal(
-                            usdnShares, map(to), map(validator), currentPriceData, previousActionsData, ethAmount
-                        );
-                    } else if (command == Commands.INITIATE_OPEN) {
-                        (
-                            uint256 amount,
-                            uint128 desiredLiqPrice,
-                            address to,
-                            address validator,
-                            Permit2TokenBitfield.Bitfield permit2TokenBitfield,
+                            uint256 deadline,
                             bytes memory currentPriceData,
                             IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
                             uint256 ethAmount
@@ -329,10 +317,47 @@ abstract contract Dispatcher is
                             inputs,
                             (
                                 uint256,
-                                uint128,
+                                uint256,
                                 address,
                                 address,
-                                Permit2TokenBitfield.Bitfield,
+                                uint256,
+                                bytes,
+                                IUsdnProtocolTypes.PreviousActionsData,
+                                uint256
+                            )
+                        );
+                        _usdnInitiateWithdrawal(
+                            usdnShares,
+                            amountOutMin,
+                            map(to),
+                            map(validator),
+                            deadline,
+                            currentPriceData,
+                            previousActionsData,
+                            ethAmount
+                        );
+                    } else if (command == Commands.INITIATE_OPEN) {
+                        (
+                            uint256 amount,
+                            uint256 desiredLiqPrice,
+                            uint256 userMaxPrice,
+                            uint256 userMaxLeverage,
+                            address to,
+                            address validator,
+                            uint256 deadline,
+                            bytes memory currentPriceData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
+                            uint256 ethAmount
+                        ) = abi.decode(
+                            inputs,
+                            (
+                                uint256,
+                                uint256,
+                                uint256,
+                                uint256,
+                                address,
+                                address,
+                                uint256,
                                 bytes,
                                 IUsdnProtocolTypes.PreviousActionsData,
                                 uint256
@@ -341,9 +366,11 @@ abstract contract Dispatcher is
                         _usdnInitiateOpenPosition(
                             amount,
                             desiredLiqPrice,
+                            userMaxPrice,
+                            userMaxLeverage,
                             map(to),
                             map(validator),
-                            permit2TokenBitfield,
+                            deadline,
                             currentPriceData,
                             previousActionsData,
                             ethAmount
@@ -390,7 +417,7 @@ abstract contract Dispatcher is
                             ethAmount := calldataload(add(inputs.offset, 0x40))
                         }
                         bytes memory currentPriceData = inputs.toBytes(0);
-                        _usdnLiquidate(currentPriceData, iterations, ethAmount);
+                        _usdnLiquidate(currentPriceData, ethAmount);
                     } else if (command == Commands.VALIDATE_PENDING) {
                         (
                             IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,

@@ -41,9 +41,11 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         inputs[1] = abi.encode(
             Constants.CONTRACT_BALANCE,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             USER_1,
             USER_1,
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA,
             _securityOpenPosition

@@ -29,9 +29,11 @@ contract TestForkUniversalRouterValidateOpenPosition is UniversalRouterBaseFixtu
         (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             OPEN_POSITION_AMOUNT.toUint128(),
             DESIRED_LIQUIDATION.toUint128(),
+            type(uint128).max,
+            maxLeverage,
             USER_2,
             USER_1,
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA
         );

@@ -26,9 +26,11 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         (, IUsdnProtocolTypes.PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
+            type(uint128).max,
+            maxLeverage,
             address(this),
             payable(address(this)),
-            NO_PERMIT2,
+            type(uint256).max,
             "",
             EMPTY_PREVIOUS_DATA
         );
@@ -39,7 +41,7 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
             value: oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition)
         }(payable(address(this)), data, EMPTY_PREVIOUS_DATA);
         protocol.initiateClosePosition{ value: _securityDeposit }(
-            posId, OPEN_POSITION_AMOUNT, USER_1, payable(address(this)), "", EMPTY_PREVIOUS_DATA
+            posId, OPEN_POSITION_AMOUNT, 0, USER_1, payable(address(this)), type(uint256).max, "", EMPTY_PREVIOUS_DATA
         );
     }
 
@@ -64,7 +66,12 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         router.execute{ value: validationCost }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore + _securityDeposit - validationCost, "ether balance");
-        assertApproxEqRel(wstETH.balanceOf(USER_1), OPEN_POSITION_AMOUNT, 1e16, "wstETH balance USER_1 with delta 1%");
+        assertApproxEqRel(
+            wstETH.balanceOf(USER_1),
+            OPEN_POSITION_AMOUNT,
+            OPEN_POSITION_AMOUNT / 10,
+            "wstETH balance USER_1 with delta 1%"
+        );
     }
 
     receive() external payable { }

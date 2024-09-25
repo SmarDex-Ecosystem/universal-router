@@ -55,15 +55,6 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         );
     }
 
-    /// @dev Calculate the amount of SDEX to burn
-    function _calcSdexToBurn(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
-        uint256 usdnSharesToMintEstimated = protocol.i_calcMintUsdnShares(
-            depositAmount, protocol.getBalanceVault(), usdn.totalShares(), params.initialPrice
-        );
-        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
-        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
-    }
-
     /// @dev Execute the deposit workflow
     function _workflowsDeposit(bytes memory command, bytes memory input) internal {
         bytes memory commands = abi.encodePacked(
@@ -82,7 +73,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         inputs[1] = input;
         inputs[2] = abi.encode(Constants.ETH, wstETH, DEPOSIT_AMOUNT);
         inputs[3] = abi.encode(
-            Constants.CONTRACT_BALANCE, USER_1, USER_1, NO_PERMIT2, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+            Constants.CONTRACT_BALANCE, 0, USER_1, USER_1, type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
         );
         inputs[4] = abi.encode(Constants.ETH, address(this), 0, 0);
         inputs[5] = abi.encode(wstETH, address(this), 0, 0);

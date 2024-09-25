@@ -28,9 +28,9 @@ integrity = "a8ea595a78be635fa11cce0fae0dee85cd8e7a0db754d0253cd2bfa8eb5b3fbf"
 
 [[dependencies]]
 name = "@smardex-usdn-contracts"
-version = "0.17.2"
+version = "0.19.1"
 source = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git"
-checksum = "6df17cabcb42d6d0f28e9066fa33b89405425cdc"
+checksum = "2f6ac03d2c350f1c2db3fef1e0317db7ac265ce3"
 
 [[dependencies]]
 name = "@uniswap-permit2"
