@@ -8,6 +8,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 
 /**
  * @custom:feature Initiating an open position through the router
@@ -42,16 +43,18 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         bytes[] memory inputs = new bytes[](1);
 
         inputs[0] = abi.encode(
-            OPEN_POSITION_AMOUNT,
-            DESIRED_LIQUIDATION,
-            type(uint128).max,
-            maxLeverage,
-            USER_1,
-            address(this),
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                OPEN_POSITION_AMOUNT,
+                DESIRED_LIQUIDATION,
+                type(uint128).max,
+                maxLeverage,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -75,16 +78,18 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
-            Constants.CONTRACT_BALANCE,
-            DESIRED_LIQUIDATION,
-            type(uint128).max,
-            maxLeverage,
-            USER_1,
-            address(this),
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                Constants.CONTRACT_BALANCE,
+                DESIRED_LIQUIDATION,
+                type(uint128).max,
+                maxLeverage,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -118,16 +123,18 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         inputs[1] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT);
 
         inputs[2] = abi.encode(
-            OPEN_POSITION_AMOUNT,
-            DESIRED_LIQUIDATION,
-            type(uint128).max,
-            maxLeverage,
-            USER_1,
-            address(this),
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                OPEN_POSITION_AMOUNT,
+                DESIRED_LIQUIDATION,
+                type(uint128).max,
+                maxLeverage,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
 
         vm.prank(vm.addr(1));
@@ -166,16 +173,18 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         inputs[1] = abi.encode(address(wstETH), address(router), OPEN_POSITION_AMOUNT);
 
         inputs[2] = abi.encode(
-            Constants.CONTRACT_BALANCE,
-            DESIRED_LIQUIDATION,
-            type(uint128).max,
-            maxLeverage,
-            USER_1,
-            address(this),
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                Constants.CONTRACT_BALANCE,
+                DESIRED_LIQUIDATION,
+                type(uint128).max,
+                maxLeverage,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
         vm.prank(vm.addr(1));
         router.execute{ value: _securityDeposit }(commands, inputs);
