@@ -464,13 +464,8 @@ abstract contract Dispatcher is
                         recipient := calldataload(inputs.offset)
                         sharesAmount := calldataload(add(inputs.offset, 0x20))
                     }
-                    (success_, output_) = address(UsdnProtocolImmutables.USDN).call(
-                        abi.encodeWithSelector(
-                            UsdnProtocolImmutables.USDN.transferSharesFrom.selector,
-                            lockedBy,
-                            map(recipient),
-                            sharesAmount
-                        )
+                    (success_, output_) = address(USDN).call(
+                        abi.encodeWithSelector(USDN.transferSharesFrom.selector, lockedBy, map(recipient), sharesAmount)
                     );
                 } else {
                     revert InvalidCommandType(command);
