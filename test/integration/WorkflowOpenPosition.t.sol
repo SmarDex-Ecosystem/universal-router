@@ -8,6 +8,7 @@ import { USER_1 } from "usdn-contracts/test/utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { PaymentLib } from "../../src/libraries/usdn/PaymentLib.sol";
 import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 
@@ -41,6 +42,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         inputs[0] = abi.encode(Constants.ETH, wstETH, OPEN_POSITION_AMOUNT * 2);
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                PaymentLib.TRANSFER_PAYMENT,
                 Constants.CONTRACT_BALANCE,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,

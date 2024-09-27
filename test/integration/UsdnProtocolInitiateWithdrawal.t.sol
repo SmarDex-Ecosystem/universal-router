@@ -8,6 +8,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { PaymentLib } from "../../src/libraries/usdn/PaymentLib.sol";
 
 /**
  * @custom:feature Initiating a withdrawal through the router
@@ -43,6 +44,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
+            PaymentLib.TRANSFER_PAYMENT,
             usdn.sharesOf(address(router)),
             0,
             USER_1,
@@ -74,6 +76,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
+            PaymentLib.TRANSFER_PAYMENT,
             Constants.CONTRACT_BALANCE,
             0,
             USER_1,
@@ -115,7 +118,15 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
 
         inputs[2] = abi.encode(
-            WITHDRAW_AMOUNT, 0, USER_1, address(this), type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+            PaymentLib.TRANSFER_FROM_PAYMENT,
+            WITHDRAW_AMOUNT,
+            0,
+            USER_1,
+            address(this),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            _securityDeposit
         );
 
         vm.prank(vm.addr(1));
@@ -153,6 +164,7 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
         inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
 
         inputs[2] = abi.encode(
+            PaymentLib.TRANSFER_FROM_PAYMENT,
             Constants.CONTRACT_BALANCE,
             0,
             USER_1,

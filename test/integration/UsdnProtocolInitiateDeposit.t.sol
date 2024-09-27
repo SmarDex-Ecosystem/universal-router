@@ -9,6 +9,8 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { PaymentLib } from "../../src/libraries/usdn/PaymentLib.sol";
+import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 
 /**
  * @custom:feature Initiating a deposit through the router
@@ -41,7 +43,17 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
-            DEPOSIT_AMOUNT, 0, USER_1, address(this), type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateDepositData(
+                PaymentLib.TRANSFER_PAYMENT,
+                DEPOSIT_AMOUNT,
+                0,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -70,14 +82,17 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         bytes[] memory inputs = new bytes[](1);
 
         inputs[0] = abi.encode(
-            Constants.CONTRACT_BALANCE,
-            0,
-            USER_1,
-            address(this),
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateDepositData(
+                PaymentLib.TRANSFER_PAYMENT,
+                Constants.CONTRACT_BALANCE,
+                0,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -94,10 +109,10 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
      */
     function test_ForkInitiateDepositWithPermit() public {
         // commands building
-        bytes memory commands = _getPermitCommand();
+        bytes memory commands = _getPermitDirectTransferFromCommand();
 
         // inputs building
-        bytes[] memory inputs = new bytes[](5);
+        bytes[] memory inputs = new bytes[](3);
         uint256 sdexAmount = _calcSdexToBurn(DEPOSIT_AMOUNT);
         // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
@@ -111,18 +126,22 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         inputs[0] =
             abi.encode(address(wstETH), vm.addr(1), address(router), DEPOSIT_AMOUNT, type(uint256).max, v0, r0, s0);
 
-        // TRANSFER_FROM wsteth
-        inputs[1] = abi.encode(address(wstETH), address(router), DEPOSIT_AMOUNT);
-
         // PERMIT sdex
-        inputs[2] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
-
-        // TRANSFER_FROM sdex
-        inputs[3] = abi.encode(address(sdex), address(router), sdexAmount);
+        inputs[1] = abi.encode(address(sdex), vm.addr(1), address(router), sdexAmount, type(uint256).max, v1, r1, s1);
 
         // deposit
-        inputs[4] = abi.encode(
-            DEPOSIT_AMOUNT, 0, USER_1, address(this), type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+        inputs[2] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateDepositData(
+                PaymentLib.TRANSFER_FROM_PAYMENT,
+                DEPOSIT_AMOUNT,
+                0,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
 
         // execute
@@ -179,14 +198,17 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
 
         // deposit
         inputs[4] = abi.encode(
-            Constants.CONTRACT_BALANCE,
-            0,
-            USER_1,
-            address(this),
-            type(uint256).max,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateDepositData(
+                PaymentLib.TRANSFER_PAYMENT,
+                Constants.CONTRACT_BALANCE,
+                0,
+                USER_1,
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
 
         // execute
@@ -215,5 +237,13 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
             commandTransferFromSdex,
             commandInitiateDeposit
         );
+    }
+
+    function _getPermitDirectTransferFromCommand() internal pure returns (bytes memory) {
+        bytes memory commandPermitWsteth = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandPermitSdex = abi.encodePacked(uint8(Commands.PERMIT) | uint8(Commands.FLAG_ALLOW_REVERT));
+        bytes memory commandInitiateDeposit = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
+
+        return abi.encodePacked(commandPermitWsteth, commandPermitSdex, commandInitiateDeposit);
     }
 }

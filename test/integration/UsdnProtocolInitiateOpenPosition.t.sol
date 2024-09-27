@@ -8,6 +8,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { PaymentLib } from "../../src/libraries/usdn/PaymentLib.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 
 /**
@@ -44,6 +45,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                PaymentLib.TRANSFER_PAYMENT,
                 OPEN_POSITION_AMOUNT,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,
@@ -79,6 +81,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                PaymentLib.TRANSFER_PAYMENT,
                 Constants.CONTRACT_BALANCE,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,
@@ -124,6 +127,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         inputs[2] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                PaymentLib.TRANSFER_PAYMENT,
                 OPEN_POSITION_AMOUNT,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,
@@ -174,6 +178,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         inputs[2] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                PaymentLib.TRANSFER_PAYMENT,
                 Constants.CONTRACT_BALANCE,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,

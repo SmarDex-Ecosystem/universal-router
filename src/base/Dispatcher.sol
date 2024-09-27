@@ -3,7 +3,6 @@ pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
@@ -12,11 +11,11 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { Commands } from "../libraries/Commands.sol";
-import { UsdnProtocolRouterLib } from "../libraries/UsdnProtocolRouterLib.sol";
+import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
 import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
-import { UsdnProtocolImmutables } from "../modules/usdn/UsdnProtocolImmutables.sol";
+import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { Sweep } from "../modules/Sweep.sol";
 
 /**
@@ -30,8 +29,7 @@ abstract contract Dispatcher is
     V3SwapRouter,
     LidoRouter,
     SmardexSwapRouter,
-    LockAndMsgSender,
-    UsdnProtocolImmutables
+    UsdnProtocolRouter
 {
     using BytesLib for bytes;
 
@@ -273,43 +271,12 @@ abstract contract Dispatcher is
                     // liquidations), so we ignore the success boolean. This is because it's important to perform
                     // liquidations if they are needed, and it would be a big waste of gas for the user to revert
                     if (command == Commands.INITIATE_DEPOSIT) {
-                        (
-                            uint256 amount,
-                            uint256 sharesOutMin,
-                            address to,
-                            address validator,
-                            uint256 deadline,
-                            bytes memory currentPriceData,
-                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
-                            uint256 ethAmount
-                        ) = abi.decode(
-                            inputs,
-                            (
-                                uint256,
-                                uint256,
-                                address,
-                                address,
-                                uint256,
-                                bytes,
-                                IUsdnProtocolTypes.PreviousActionsData,
-                                uint256
-                            )
-                        );
-                        UsdnProtocolRouterLib.usdnInitiateDeposit(
-                            PROTOCOL_ASSET,
-                            SDEX,
-                            USDN_PROTOCOL,
-                            amount,
-                            sharesOutMin,
-                            map(to),
-                            map(validator),
-                            deadline,
-                            currentPriceData,
-                            previousActionsData,
-                            ethAmount
-                        );
+                        IUsdnProtocolRouterTypes.InitiateDepositData memory data =
+                            abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateDepositData));
+                        UsdnProtocolRouterLib.usdnInitiateDeposit(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.INITIATE_WITHDRAWAL) {
                         (
+                            bytes1 payment,
                             uint256 usdnShares,
                             uint256 amountOutMin,
                             address to,
@@ -321,6 +288,7 @@ abstract contract Dispatcher is
                         ) = abi.decode(
                             inputs,
                             (
+                                bytes1,
                                 uint256,
                                 uint256,
                                 address,
@@ -334,6 +302,7 @@ abstract contract Dispatcher is
                         UsdnProtocolRouterLib.usdnInitiateWithdrawal(
                             USDN,
                             USDN_PROTOCOL,
+                            payment,
                             usdnShares,
                             amountOutMin,
                             map(to),
@@ -464,13 +433,8 @@ abstract contract Dispatcher is
                         recipient := calldataload(inputs.offset)
                         sharesAmount := calldataload(add(inputs.offset, 0x20))
                     }
-                    (success_, output_) = address(UsdnProtocolImmutables.USDN).call(
-                        abi.encodeWithSelector(
-                            UsdnProtocolImmutables.USDN.transferSharesFrom.selector,
-                            lockedBy,
-                            map(recipient),
-                            sharesAmount
-                        )
+                    (success_, output_) = address(USDN).call(
+                        abi.encodeWithSelector(USDN.transferSharesFrom.selector, lockedBy, map(recipient), sharesAmount)
                     );
                 } else {
                     revert InvalidCommandType(command);
