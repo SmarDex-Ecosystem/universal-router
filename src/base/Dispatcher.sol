@@ -359,13 +359,11 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL, map(validator), closePriceData, previousActionsData, ethAmount
                         );
                     } else if (command == Commands.LIQUIDATE) {
-                        // equivalent: abi.decode(inputs, (bytes, uint16, uint256))
-                        uint16 iterations;
+                        // equivalent: abi.decode(inputs, (bytes, uint256))
                         uint256 ethAmount;
                         assembly {
                             // 0x00 offset is the currentPriceData, decoded below
-                            iterations := calldataload(add(inputs.offset, 0x20))
-                            ethAmount := calldataload(add(inputs.offset, 0x40))
+                            ethAmount := calldataload(add(inputs.offset, 0x20))
                         }
                         bytes memory currentPriceData = inputs.toBytes(0);
                         UsdnProtocolRouterLib.usdnLiquidate(USDN_PROTOCOL, currentPriceData, ethAmount);
