@@ -6,13 +6,13 @@ import { TransientStorageLib } from "../TransientStorageLib.sol";
 
 library PaymentLib {
     /// @notice The no payment value
-    bytes1 public constant NO_PAYMENT = 0x01;
+    bytes1 public constant NO_PAYMENT = 0x00;
     /// @notice The transfer payment value
-    bytes1 public constant TRANSFER_PAYMENT = 0x02;
+    bytes1 public constant TRANSFER_PAYMENT = 0x01;
     /// @notice The transferFrom payment value
-    bytes1 public constant TRANSFER_FROM_PAYMENT = 0x03;
+    bytes1 public constant TRANSFER_FROM_PAYMENT = 0x02;
     /// @notice The permit2 payment value
-    bytes1 public constant PERMIT2_PAYMENT = 0x04;
+    bytes1 public constant PERMIT2_PAYMENT = 0x03;
 
     /**
      * @notice The transient payment storage slot
@@ -26,7 +26,7 @@ library PaymentLib {
      * @param payment The payment value
      */
     function setPayment(bytes1 payment) external {
-        if (payment <= NO_PAYMENT || payment > PERMIT2_PAYMENT) {
+        if (payment == NO_PAYMENT || payment > PERMIT2_PAYMENT) {
             revert IPaymentLibErrors.InvalidPayment();
         }
 
@@ -36,7 +36,6 @@ library PaymentLib {
     /**
      * @notice Delete the payment value
      * @dev Uses the transient storage
-     * The value will not be reset to its default to save some gas
      */
     function deletePayment() external {
         bytes1 payment = bytes1(TransientStorageLib.getTransientValue(TRANSIENT_PAYMENT_SLOT));
