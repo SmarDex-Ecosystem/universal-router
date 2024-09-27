@@ -48,6 +48,7 @@ library PaymentLib {
     /**
      * @notice Get the payment value
      * @dev Uses the transient storage
+     * @return payment_ The payment value
      */
     function getPayment() external view returns (bytes1 payment_) {
         payment_ = bytes1(TransientStorageLib.getTransientValue(TRANSIENT_PAYMENT_SLOT));

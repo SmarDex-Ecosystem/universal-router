@@ -22,7 +22,10 @@ library UsdnProtocolRouterLib {
     using SafeERC20 for IERC20Metadata;
     using SafeERC20 for IUsdn;
 
-    /// @notice The payment modifier
+    /**
+     * @notice The payment modifier
+     * @param payment The payment value
+     */
     modifier usePayment(bytes1 payment) {
         PaymentLib.setPayment(payment);
         _;
@@ -35,7 +38,7 @@ library UsdnProtocolRouterLib {
      * Note: the deposit can fail without reverting, in case there are some pending liquidations in the protocol
      * @param protocolAsset The USDN protocol asset
      * @param usdnProtocol The USDN protocol
-     *
+     * @param data The USDN initiateDeposit router data
      * @return success_ Whether the deposit was successful
      */
     function usdnInitiateDeposit(
@@ -160,7 +163,7 @@ library UsdnProtocolRouterLib {
      * Note: the open position can fail without reverting, in case there are some pending liquidations in the protocol
      * @param protocolAsset The USDN protocol asset
      * @param usdnProtocol The USDN protocol
-     * @param data The router initiateOpenPosition data struct
+     * @param data The initiateOpenPosition router data
      * @return success_ Whether the open position was successful
      * @return posId_ The position ID of the newly opened position
      */
@@ -341,6 +344,7 @@ library UsdnProtocolRouterLib {
      * @dev The implementation must ensure that the `msg.sender` is the protocol contract
      * @param usdnProtocol The USDN protocol contract address
      * @param lockedBy The router lockedBy address
+     * @param permit2 The permit2 contract
      * @param token The token to transfer
      * @param amount The amount to transfer
      * @param to The address of the recipient
