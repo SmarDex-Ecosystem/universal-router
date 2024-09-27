@@ -5,9 +5,6 @@ interface IUsdnProtocolRouterErrors {
     /// @notice Reverts when the sender is invalid
     error UsdnProtocolRouterInvalidSender();
 
-    /// @notice Reverts when the to is invalid
-    error UsdnProtocolRouterInvalidTo();
-
     /// @notice Reverts when the payment is invalid
     error UsdnProtocolRouterInvalidPayment();
 }
