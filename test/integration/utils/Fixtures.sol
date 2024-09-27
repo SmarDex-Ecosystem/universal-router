@@ -12,12 +12,13 @@ import { UsdnProtocolUtilsLibrary as Utils } from
 import { UniversalRouterHandler } from "./Handler.sol";
 import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
 import { ISmardexFactory } from "../../../src/interfaces/smardex/ISmardexFactory.sol";
+import { PermitSignature } from "./PermitSignature.sol";
 
 /**
  * @title UniversalRouterBaseFixture
  * @dev Utils for testing the Universal Router
  */
-contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
+contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, PermitSignature {
     UniversalRouterHandler public router;
     IAllowanceTransfer permit2;
     AggregatorV3Interface public priceFeed;
