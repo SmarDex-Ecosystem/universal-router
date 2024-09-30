@@ -363,16 +363,15 @@ library UsdnProtocolRouterLib {
 
         bytes1 payment = PaymentLib.getPayment();
 
-        if (payment <= PaymentLib.NO_PAYMENT || payment > PaymentLib.PERMIT2_PAYMENT) {
-            revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidPayment();
+        if (payment == PaymentLib.TRANSFER_PAYMENT) {
+            token.safeTransfer(to, amount);
+        } else if (payment == PaymentLib.TRANSFER_FROM_PAYMENT) {
+            token.safeTransferFrom(lockedBy, to, amount);
+        } else if (payment == PaymentLib.PERMIT2_PAYMENT) {
+            permit2.transferFrom(lockedBy, to, amount.toUint160(), address(token));
         } else {
-            if (payment == PaymentLib.TRANSFER_PAYMENT) {
-                token.safeTransfer(to, amount);
-            } else if (payment == PaymentLib.TRANSFER_FROM_PAYMENT) {
-                token.safeTransferFrom(lockedBy, to, amount);
-            } else if (payment == PaymentLib.PERMIT2_PAYMENT) {
-                permit2.transferFrom(lockedBy, to, amount.toUint160(), address(token));
-            }
+            // sanity check: this should never happen
+            revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidPayment();
         }
     }
 
