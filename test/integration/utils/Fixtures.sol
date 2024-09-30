@@ -12,7 +12,7 @@ import { UsdnProtocolUtilsLibrary as Utils } from
 import { UniversalRouterHandler } from "./Handler.sol";
 import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
 import { ISmardexFactory } from "../../../src/interfaces/smardex/ISmardexFactory.sol";
-import { PermitSignature } from "./PermitSignature.sol";
+import { PermitSignature } from "permit2/test/utils/PermitSignature.sol";
 
 /**
  * @title UniversalRouterBaseFixture

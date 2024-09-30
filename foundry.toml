@@ -22,6 +22,7 @@ remappings = [
     "permit2=dependencies/@uniswap-permit2-1.0.0",
     "@chainlink/=dependencies/@chainlink-1.2.0/",
     "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.0.2/",
+    "openzeppelin-contracts/=dependencies/openzeppelin-contracts-4.7.0/",
     "@uniswap/v2-core=dependencies/@uniswap-v2-core-1.0.1",
     "solmate=dependencies/solmate-6.7.0",
     "solady=dependencies/solady-0.0.228",
@@ -131,6 +132,7 @@ forge-std = "1.9.2"
 "@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
 "@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
 "@openzeppelin-contracts" = "5.0.2"
+"openzeppelin-contracts" = { version = "4.7.0", url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.7.0.zip" }
 "@uniswap-v2-core" = "1.0.1"
 solady = "0.0.228"
 solmate = "6.7.0"
