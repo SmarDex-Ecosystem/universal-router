@@ -26,6 +26,7 @@ library UsdnProtocolRouterLib {
     /**
      * @notice The payment modifier
      * @param payment The payment value
+     * @param action The USDN protocol action
      */
     modifier usePayment(IPaymentLibTypes.PaymentTypes payment, IPaymentLibTypes.PaymentAction action) {
         if (

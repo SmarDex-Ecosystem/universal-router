@@ -4,7 +4,6 @@ pragma solidity 0.8.26;
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
-import { PaymentLib } from "../../src/libraries/usdn/PaymentLib.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
@@ -12,10 +11,10 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { USER_1 } from "./utils/Constants.sol";
 
 /**
- * @custom:feature Test permit2 approval through the router for USDN actions
+ * @custom:feature Test the USDN initiate actions through the router using permit2
  * @custom:background A deployed router
  */
-contract TestForkUniversalRouterUsdnActionsPermit2 is UniversalRouterBaseFixture {
+contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBaseFixture {
     uint256 internal constant BASE_AMOUNT = 5 ether;
     uint256 internal _securityDeposit;
 

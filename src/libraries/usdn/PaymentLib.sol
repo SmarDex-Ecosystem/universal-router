@@ -5,11 +5,8 @@ import { IPaymentLibTypes } from "../../interfaces/usdn/IPaymentLibTypes.sol";
 import { TransientStorageLib } from "../TransientStorageLib.sol";
 
 library PaymentLib {
-    /**
-     * @notice The transient payment storage slot
-     * @dev This is equal to bytes32(uint256(keccak256("transient.payment")) - 1)
-     */
-    bytes32 private constant TRANSIENT_PAYMENT_SLOT = 0xed481feabce399bdb83741349758428352670f34b088aede021db151e359cc77;
+    /// @notice The transient payment storage slot
+    bytes32 private constant TRANSIENT_PAYMENT_SLOT = bytes32(uint256(keccak256("transient.payment")) - 1);
 
     /**
      * @notice Set the payment value
