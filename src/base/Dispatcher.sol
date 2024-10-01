@@ -11,6 +11,7 @@ import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.so
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
@@ -278,7 +279,7 @@ abstract contract Dispatcher is
                         UsdnProtocolRouterLib.usdnInitiateDeposit(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.INITIATE_WITHDRAWAL) {
                         (
-                            bytes1 payment,
+                            IPaymentLibTypes.PaymentTypes payment,
                             uint256 usdnShares,
                             uint256 amountOutMin,
                             address to,
@@ -290,7 +291,7 @@ abstract contract Dispatcher is
                         ) = abi.decode(
                             inputs,
                             (
-                                bytes1,
+                                IPaymentLibTypes.PaymentTypes,
                                 uint256,
                                 uint256,
                                 address,

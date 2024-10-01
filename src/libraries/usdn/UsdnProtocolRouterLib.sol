@@ -13,6 +13,7 @@ import { IRebalancer } from "usdn-contracts/src/interfaces/Rebalancer/IRebalance
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
 import { IUsdnProtocolRouterTypes } from "../../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { IPaymentLibTypes } from "../../interfaces/usdn/IPaymentLibTypes.sol";
 import { IUsdnProtocolRouterErrors } from "../../interfaces/usdn/IUsdnProtocolRouterErrors.sol";
 import { PaymentLib } from "./PaymentLib.sol";
 
@@ -26,10 +27,17 @@ library UsdnProtocolRouterLib {
      * @notice The payment modifier
      * @param payment The payment value
      */
-    modifier usePayment(bytes1 payment) {
+    modifier usePayment(IPaymentLibTypes.PaymentTypes payment, IPaymentLibTypes.PaymentAction action) {
+        if (
+            payment == IPaymentLibTypes.PaymentTypes.None
+                || (action == IPaymentLibTypes.PaymentAction.Withdrawal && payment == IPaymentLibTypes.PaymentTypes.Permit2)
+        ) {
+            revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidPayment();
+        }
+
         PaymentLib.setPayment(payment);
         _;
-        PaymentLib.deletePayment();
+        PaymentLib.setPayment(IPaymentLibTypes.PaymentTypes.None);
     }
 
     /**
@@ -45,7 +53,7 @@ library UsdnProtocolRouterLib {
         IERC20Metadata protocolAsset,
         IUsdnProtocol usdnProtocol,
         IUsdnProtocolRouterTypes.InitiateDepositData memory data
-    ) external usePayment(data.payment) returns (bool success_) {
+    ) external usePayment(data.payment, IPaymentLibTypes.PaymentAction.Deposit) returns (bool success_) {
         // use amount == Constants.CONTRACT_BALANCE as a flag to deposit the entire balance of the contract
         if (data.amount == Constants.CONTRACT_BALANCE) {
             data.amount = protocolAsset.balanceOf(address(this));
@@ -105,7 +113,7 @@ library UsdnProtocolRouterLib {
     function usdnInitiateWithdrawal(
         IUsdn usdn,
         IUsdnProtocol usdnProtocol,
-        bytes1 payment,
+        IPaymentLibTypes.PaymentTypes payment,
         uint256 sharesAmount,
         uint256 amountOutMin,
         address to,
@@ -114,13 +122,11 @@ library UsdnProtocolRouterLib {
         bytes memory currentPriceData,
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
-    ) external usePayment(payment) returns (bool success_) {
+    ) external usePayment(payment, IPaymentLibTypes.PaymentAction.Withdrawal) returns (bool success_) {
         // use amount == Constants.CONTRACT_BALANCE as a flag to withdraw the entire balance of the contract
         if (sharesAmount == Constants.CONTRACT_BALANCE) {
             sharesAmount = usdn.sharesOf(address(this));
         }
-        usdn.approve(address(usdnProtocol), usdn.convertToTokensRoundUp(sharesAmount));
-        // we send the full ETH balance, the protocol will refund any excess
         // slither-disable-next-line arbitrary-send-eth
         success_ = usdnProtocol.initiateWithdrawal{ value: ethAmount }(
             sharesAmount.toUint152(),
@@ -171,7 +177,11 @@ library UsdnProtocolRouterLib {
         IERC20Metadata protocolAsset,
         IUsdnProtocol usdnProtocol,
         IUsdnProtocolRouterTypes.InitiateOpenPositionData memory data
-    ) external usePayment(data.payment) returns (bool success_, IUsdnProtocolTypes.PositionId memory posId_) {
+    )
+        external
+        usePayment(data.payment, IPaymentLibTypes.PaymentAction.Open)
+        returns (bool success_, IUsdnProtocolTypes.PositionId memory posId_)
+    {
         // use amount == Constants.CONTRACT_BALANCE as a flag to deposit the entire balance of the contract
         if (data.amount == Constants.CONTRACT_BALANCE) {
             data.amount = protocolAsset.balanceOf(address(this));
@@ -220,7 +230,7 @@ library UsdnProtocolRouterLib {
      * @dev Check the protocol's documentation for information about how this function should be used
      * @param usdnProtocol The USDN protocol
      * @param validator The address of the validator
-     * @param closePriceData The price data corresponding to the position's close
+     * @param closePriceData The price d0ata corresponding to the position's close
      * @param previousActionsData The data needed to validate actionable pending actions
      * @param ethAmount The amount of Ether to send with the transaction
      * @return success_ Whether the close position was successful
@@ -361,13 +371,13 @@ library UsdnProtocolRouterLib {
             revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidSender();
         }
 
-        bytes1 payment = PaymentLib.getPayment();
+        IPaymentLibTypes.PaymentTypes payment = PaymentLib.getPayment();
 
-        if (payment == PaymentLib.TRANSFER_PAYMENT) {
+        if (payment == IPaymentLibTypes.PaymentTypes.Transfer) {
             token.safeTransfer(to, amount);
-        } else if (payment == PaymentLib.TRANSFER_FROM_PAYMENT) {
+        } else if (payment == IPaymentLibTypes.PaymentTypes.TransferFrom) {
             token.safeTransferFrom(lockedBy, to, amount);
-        } else if (payment == PaymentLib.PERMIT2_PAYMENT) {
+        } else if (payment == IPaymentLibTypes.PaymentTypes.Permit2) {
             permit2.transferFrom(lockedBy, to, amount.toUint160(), address(token));
         } else {
             // sanity check: this should never happen
@@ -380,13 +390,23 @@ library UsdnProtocolRouterLib {
      * @dev The implementation must ensure that the `msg.sender` is the protocol contract
      * @param usdnProtocol The USDN protocol contract address
      * @param usdn The USDN contract address
+     * @param lockedBy The router lockedBy address
      * @param shares The amount of USDN shares to transfer to the `msg.sender`
      */
-    function usdnTransferCallback(address usdnProtocol, IUsdn usdn, uint256 shares) external {
+    function usdnTransferCallback(address usdnProtocol, IUsdn usdn, address lockedBy, uint256 shares) external {
         if (msg.sender != usdnProtocol) {
             revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidSender();
         }
 
-        usdn.transferShares(msg.sender, shares);
+        IPaymentLibTypes.PaymentTypes payment = PaymentLib.getPayment();
+
+        if (payment == IPaymentLibTypes.PaymentTypes.Transfer) {
+            usdn.transferShares(msg.sender, shares);
+        } else if (payment == IPaymentLibTypes.PaymentTypes.TransferFrom) {
+            usdn.transferSharesFrom(lockedBy, msg.sender, shares);
+        } else {
+            // sanity check: this should never happen
+            revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidPayment();
+        }
     }
 }

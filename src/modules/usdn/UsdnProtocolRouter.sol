@@ -22,7 +22,7 @@ abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, IUsdnProtocolRou
 
     /// @inheritdoc IPaymentCallback
     function usdnTransferCallback(IUsdn usdn, uint256 shares) external {
-        UsdnProtocolRouterLib.usdnTransferCallback(address(USDN_PROTOCOL), usdn, shares);
+        UsdnProtocolRouterLib.usdnTransferCallback(address(USDN_PROTOCOL), usdn, lockedBy, shares);
     }
 
     /// @inheritdoc IERC165

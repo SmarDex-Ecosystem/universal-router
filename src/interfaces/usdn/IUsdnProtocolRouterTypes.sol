@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IPaymentLibTypes } from "../../interfaces/usdn/IPaymentLibTypes.sol";
 
 interface IUsdnProtocolRouterTypes {
     /**
@@ -19,7 +20,7 @@ interface IUsdnProtocolRouterTypes {
      * @param ethAmount The amount of Ether to send with the transaction
      */
     struct InitiateOpenPositionData {
-        bytes1 payment;
+        IPaymentLibTypes.PaymentTypes payment;
         uint256 amount;
         uint256 desiredLiqPrice;
         uint256 userMaxPrice;
@@ -45,7 +46,7 @@ interface IUsdnProtocolRouterTypes {
      * @param ethAmount The amount of Ether to send with the transaction
      */
     struct InitiateDepositData {
-        bytes1 payment;
+        IPaymentLibTypes.PaymentTypes payment;
         uint256 amount;
         uint256 sharesOutMin;
         address to;
