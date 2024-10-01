@@ -9,7 +9,7 @@ import { IUsdnProtocolRouterErrors } from "../../src/interfaces/usdn/IUsdnProtoc
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 /// @custom:feature Test the USDN protocol router callbacks
-contract TestUsdnProtocolRouterCallbacks is UniversalRouterBaseFixture {
+contract TestForkUsdnProtocolRouterCallbacks is UniversalRouterBaseFixture {
     function setUp() public {
         _setUp(DEFAULT_PARAMS);
     }

@@ -242,7 +242,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
      * @custom:when The user initiates a withdrawal through the router with an invalid payment
      * @custom:then The transactions should revert with `UsdnProtocolRouterInvalidPayment`
      */
-    function testFork_RevertWhen_initiateWithdrawInvalidPayment() public {
+    function test_RevertWhen_initiateWithdrawInvalidPayment() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
 
