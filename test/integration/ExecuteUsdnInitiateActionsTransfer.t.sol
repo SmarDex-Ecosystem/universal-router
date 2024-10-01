@@ -44,6 +44,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         sdex.transfer(address(router), _calcSdexToBurn(BASE_AMOUNT / 10));
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
+
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
@@ -58,11 +59,11 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
                 _securityDeposit
             )
         );
+
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         IUsdnProtocolTypes.DepositPendingAction memory action =
             protocol.i_toDepositPendingAction(protocol.getUserPendingAction(address(this)));
-
         assertEq(action.to, USER_1, "pending action to");
         assertEq(action.validator, address(this), "pending action validator");
         assertEq(action.amount, BASE_AMOUNT / 10, "pending action amount");
@@ -77,13 +78,12 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
      */
     function test_ForkInitiateDepositFullBalance() public {
         uint256 wstEthBalanceBefore = wstETH.balanceOf(address(this));
-
         wstETH.transfer(address(router), BASE_AMOUNT / 10);
         sdex.transfer(address(router), _calcSdexToBurn(BASE_AMOUNT / 10));
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
-        bytes[] memory inputs = new bytes[](1);
 
+        bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
                 IPaymentLibTypes.PaymentType.Transfer,
@@ -97,6 +97,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
                 _securityDeposit
             )
         );
+
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(wstETH.balanceOf(address(this)), wstEthBalanceBefore - BASE_AMOUNT / 10, "asset balance");
@@ -111,12 +112,11 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
     function test_ForkInitiateOpenPosition() public {
         uint256 ethBalanceBefore = address(this).balance;
         uint256 wstETHBefore = wstETH.balanceOf(address(this));
-
         wstETH.transfer(address(router), BASE_AMOUNT);
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
-        bytes[] memory inputs = new bytes[](1);
 
+        bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
                 IPaymentLibTypes.PaymentType.Transfer,
@@ -132,6 +132,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
                 _securityDeposit
             )
         );
+
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
@@ -148,10 +149,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
     function test_ForkInitiateOpenPositionFullBalance() public {
         uint256 ethBalanceBefore = address(this).balance;
         uint256 wstETHBefore = wstETH.balanceOf(address(this));
-
         wstETH.transfer(address(router), BASE_AMOUNT);
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
+
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
@@ -168,6 +169,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
                 _securityDeposit
             )
         );
+
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
@@ -183,10 +185,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
     function test_ForkInitiateWithdraw() public {
         uint256 ethBalanceBefore = address(this).balance;
         uint256 usdnSharesBefore = usdn.sharesOf(address(this));
-
         usdn.transferShares(address(router), _baseUsdnShares);
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
+
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IPaymentLibTypes.PaymentType.Transfer,
@@ -199,6 +201,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
             EMPTY_PREVIOUS_DATA,
             _securityDeposit
         );
+
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
@@ -215,10 +218,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
     function test_ForkInitiateWithdrawFullBalance() public {
         uint256 ethBalanceBefore = address(this).balance;
         uint256 usdnSharesBefore = usdn.sharesOf(address(this));
-
         usdn.transferShares(address(router), _baseUsdnShares);
 
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
+
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IPaymentLibTypes.PaymentType.Transfer,
@@ -231,6 +234,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
             EMPTY_PREVIOUS_DATA,
             _securityDeposit
         );
+
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
@@ -244,8 +248,8 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
      */
     function test_RevertWhen_initiateWithdrawInvalidPayment() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
-        bytes[] memory inputs = new bytes[](1);
 
+        bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IPaymentLibTypes.PaymentType.None,
             0,

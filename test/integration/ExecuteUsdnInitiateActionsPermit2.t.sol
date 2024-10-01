@@ -42,23 +42,17 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
     function test_ForkInitiateDepositPermit2BatchToUsdnProtocol() public prankUser(sigUser1) {
         uint256 sdexAmount = _calcSdexToBurn(BASE_AMOUNT / 10);
 
-        // commands
-        bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT2_PERMIT_BATCH), uint8(Commands.INITIATE_DEPOSIT));
-
-        // inputs
         IAllowanceTransfer.PermitDetails[] memory details = new IAllowanceTransfer.PermitDetails[](2);
         details[0] = IAllowanceTransfer.PermitDetails(address(wstETH), uint160(BASE_AMOUNT / 10), type(uint48).max, 0);
         details[1] = IAllowanceTransfer.PermitDetails(address(sdex), uint160(sdexAmount), type(uint48).max, 0);
-
         IAllowanceTransfer.PermitBatch memory permitBatch =
             IAllowanceTransfer.PermitBatch(details, address(router), type(uint256).max);
-
         bytes memory signature = getPermitBatchSignature(permitBatch, SIG_USER1_PK, permit2.DOMAIN_SEPARATOR());
+
+        bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT2_PERMIT_BATCH), uint8(Commands.INITIATE_DEPOSIT));
 
         bytes[] memory inputs = new bytes[](2);
         inputs[0] = abi.encode(permitBatch, signature);
-
-        // deposit
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
                 IPaymentLibTypes.PaymentType.Permit2,
@@ -77,7 +71,6 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
 
         DepositPendingAction memory action =
             protocol.i_toDepositPendingAction(protocol.getUserPendingAction(address(this)));
-
         assertEq(action.to, USER_1, "pending action to");
         assertEq(action.validator, address(this), "pending action validator");
         assertEq(action.amount, BASE_AMOUNT / 10, "pending action amount");
@@ -90,19 +83,16 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
      * @custom:then The deposit is initiated successfully
      */
     function test_ForkInitiateOpenPositionPermit2BatchToUsdnProtocol() public prankUser(sigUser1) {
-        bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT2_PERMIT_BATCH), uint8(Commands.INITIATE_OPEN));
-
         IAllowanceTransfer.PermitDetails[] memory details = new IAllowanceTransfer.PermitDetails[](1);
         details[0] = IAllowanceTransfer.PermitDetails(address(wstETH), uint160(BASE_AMOUNT), type(uint48).max, 0);
-
         IAllowanceTransfer.PermitBatch memory permitBatch =
             IAllowanceTransfer.PermitBatch(details, address(router), type(uint256).max);
-
         bytes memory signature = getPermitBatchSignature(permitBatch, SIG_USER1_PK, permit2.DOMAIN_SEPARATOR());
+
+        bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT2_PERMIT_BATCH), uint8(Commands.INITIATE_OPEN));
 
         bytes[] memory inputs = new bytes[](2);
         inputs[0] = abi.encode(permitBatch, signature);
-
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
                 IPaymentLibTypes.PaymentType.Permit2,

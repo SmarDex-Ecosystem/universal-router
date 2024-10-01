@@ -15,7 +15,7 @@ contract TestForkUsdnProtocolRouterCallbacks is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:scenario Calls the callbacks from an invalid sender
+     * @custom:scenario Calls the callbacks from invalid senders
      * @custom:when The callback functions are called
      * @custom:then The transaction should revert with `UsdnProtocolRouterInvalidSender`
      */

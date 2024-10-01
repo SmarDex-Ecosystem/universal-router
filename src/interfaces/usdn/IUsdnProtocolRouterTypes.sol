@@ -6,7 +6,7 @@ import { IPaymentLibTypes } from "../../interfaces/usdn/IPaymentLibTypes.sol";
 
 interface IUsdnProtocolRouterTypes {
     /**
-     * @notice The router usdnProtocol initiate open position data struct
+     * @notice The router USDN protocol initiate open position data struct
      * @param payment The USDN protocol payment method
      * @param amount The amount of assets used to open the position
      * @param desiredLiqPrice The desired liquidation price for the position
@@ -34,7 +34,7 @@ interface IUsdnProtocolRouterTypes {
     }
 
     /**
-     * @notice The router usdnProtocol deposit data struct
+     * @notice The router USDN protocol deposit data struct
      * @param payment The USDN protocol payment method
      * @param amount The amount of asset to deposit into the vault
      * @param sharesOutMin The minimum amount of shares to receive

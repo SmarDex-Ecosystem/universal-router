@@ -40,24 +40,9 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
      * @custom:then The deposit is initiated successfully
      */
     function test_ForkInitiateDepositPermitFromRouter() public {
-        // initial state
         uint256 wstEthBalanceBefore = wstETH.balanceOf(sigUser1);
-
         uint256 sdexAmount = _calcSdexToBurn(BASE_AMOUNT / 10);
 
-        // commands building
-        bytes memory commands = abi.encodePacked(
-            uint8(Commands.PERMIT),
-            uint8(Commands.TRANSFER_FROM),
-            uint8(Commands.PERMIT),
-            uint8(Commands.TRANSFER_FROM),
-            uint8(Commands.INITIATE_DEPOSIT)
-        );
-
-        // inputs building
-        bytes[] memory inputs = new bytes[](5);
-
-        // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
             SIG_USER1_PK,
             _getDigest(sigUser1, address(router), BASE_AMOUNT / 10, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
@@ -67,20 +52,20 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
             _getDigest(sigUser1, address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
 
-        // PERMIT wsteth
+        bytes memory commands = abi.encodePacked(
+            uint8(Commands.PERMIT),
+            uint8(Commands.TRANSFER_FROM),
+            uint8(Commands.PERMIT),
+            uint8(Commands.TRANSFER_FROM),
+            uint8(Commands.INITIATE_DEPOSIT)
+        );
+
+        bytes[] memory inputs = new bytes[](5);
         inputs[0] =
             abi.encode(address(wstETH), sigUser1, address(router), BASE_AMOUNT / 10, type(uint256).max, v0, r0, s0);
-
-        // TRANSFER_FROM wsteth
         inputs[1] = abi.encode(address(wstETH), address(router), BASE_AMOUNT / 10);
-
-        // PERMIT sdex
         inputs[2] = abi.encode(address(sdex), sigUser1, address(router), sdexAmount, type(uint256).max, v1, r1, s1);
-
-        // TRANSFER_FROM sdex
         inputs[3] = abi.encode(address(sdex), address(router), sdexAmount);
-
-        // deposit
         inputs[4] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
                 IPaymentLibTypes.PaymentType.Transfer,
@@ -95,7 +80,6 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
             )
         );
 
-        // execute
         vm.prank(sigUser1);
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -111,12 +95,6 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
     function test_ForkInitiateDepositPermitFromUser() public {
         uint256 sdexAmount = _calcSdexToBurn(BASE_AMOUNT / 10);
 
-        bytes memory commands =
-            abi.encodePacked(uint8(Commands.PERMIT), uint8(Commands.PERMIT), uint8(Commands.INITIATE_DEPOSIT));
-
-        bytes[] memory inputs = new bytes[](3);
-
-        // PERMIT signatures
         (uint8 v0, bytes32 r0, bytes32 s0) = vm.sign(
             SIG_USER1_PK,
             _getDigest(sigUser1, address(router), BASE_AMOUNT / 10, 0, type(uint256).max, wstETH.DOMAIN_SEPARATOR())
@@ -126,14 +104,14 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
             _getDigest(sigUser1, address(router), sdexAmount, 0, type(uint256).max, sdex.DOMAIN_SEPARATOR())
         );
 
-        // PERMIT wsteth
+        bytes memory commands =
+            abi.encodePacked(uint8(Commands.PERMIT), uint8(Commands.PERMIT), uint8(Commands.INITIATE_DEPOSIT));
+
+        bytes[] memory inputs = new bytes[](3);
+
         inputs[0] =
             abi.encode(address(wstETH), sigUser1, address(router), BASE_AMOUNT / 10, type(uint256).max, v0, r0, s0);
-
-        // PERMIT sdex
         inputs[1] = abi.encode(address(sdex), sigUser1, address(router), sdexAmount, type(uint256).max, v1, r1, s1);
-
-        // deposit
         inputs[2] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
                 IPaymentLibTypes.PaymentType.TransferFrom,
@@ -148,7 +126,6 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
             )
         );
 
-        // execute
         vm.prank(sigUser1);
         router.execute{ value: _securityDeposit }(commands, inputs);
 
@@ -179,11 +156,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         bytes memory commands =
             abi.encodePacked(uint8(Commands.PERMIT), uint8(Commands.TRANSFER_FROM), uint8(Commands.INITIATE_OPEN));
+
         bytes[] memory inputs = new bytes[](3);
         inputs[0] = abi.encode(address(wstETH), sigUser1, address(router), BASE_AMOUNT, type(uint256).max, v, r, s);
-
         inputs[1] = abi.encode(address(wstETH), address(router), BASE_AMOUNT);
-
         inputs[2] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
                 IPaymentLibTypes.PaymentType.Transfer,
@@ -224,9 +200,9 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         );
 
         bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT), uint8(Commands.INITIATE_OPEN));
+
         bytes[] memory inputs = new bytes[](2);
         inputs[0] = abi.encode(address(wstETH), sigUser1, address(router), BASE_AMOUNT, type(uint256).max, v, r, s);
-
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
                 IPaymentLibTypes.PaymentType.TransferFrom,
@@ -260,7 +236,6 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
     function test_ForkInitiateWithdrawWithPermitFromRouter() public {
         uint256 ethBalanceBefore = sigUser1.balance;
         uint256 usdnSharesBefore = usdn.sharesOf(sigUser1);
-
         uint256 usdnTokensToTransfer = usdn.convertToTokens(_baseUsdnShares);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -274,9 +249,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         bytes[] memory inputs = new bytes[](3);
         inputs[0] =
             abi.encode(address(usdn), sigUser1, address(router), usdnTokensToTransfer, type(uint256).max, v, r, s);
-
         inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
-
         inputs[2] = abi.encode(
             IPaymentLibTypes.PaymentType.Transfer,
             _baseUsdnShares,
@@ -305,7 +278,6 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
     function test_ForkInitiateWithdrawWithPermitFromUser() public {
         uint256 ethBalanceBefore = sigUser1.balance;
         uint256 usdnSharesBefore = usdn.sharesOf(sigUser1);
-
         uint256 usdnTokensToTransfer = usdn.convertToTokens(_baseUsdnShares);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
@@ -314,10 +286,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         );
 
         bytes memory commands = abi.encodePacked(uint8(Commands.PERMIT), uint8(Commands.INITIATE_WITHDRAWAL));
+
         bytes[] memory inputs = new bytes[](2);
         inputs[0] =
             abi.encode(address(usdn), sigUser1, address(router), usdnTokensToTransfer, type(uint256).max, v, r, s);
-
         inputs[1] = abi.encode(
             IPaymentLibTypes.PaymentType.TransferFrom,
             _baseUsdnShares,
