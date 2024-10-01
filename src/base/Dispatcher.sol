@@ -279,7 +279,7 @@ abstract contract Dispatcher is
                         UsdnProtocolRouterLib.usdnInitiateDeposit(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.INITIATE_WITHDRAWAL) {
                         (
-                            IPaymentLibTypes.PaymentTypes payment,
+                            IPaymentLibTypes.PaymentType payment,
                             uint256 usdnShares,
                             uint256 amountOutMin,
                             address to,
@@ -291,7 +291,7 @@ abstract contract Dispatcher is
                         ) = abi.decode(
                             inputs,
                             (
-                                IPaymentLibTypes.PaymentTypes,
+                                IPaymentLibTypes.PaymentType,
                                 uint256,
                                 uint256,
                                 address,

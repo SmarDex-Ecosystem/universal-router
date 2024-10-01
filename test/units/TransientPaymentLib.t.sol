@@ -14,9 +14,9 @@ contract TestPaymentLib is Test {
      * @custom:then The payment value should be updated
      */
     function test_setPayment() public {
-        PaymentLib.setPayment(type(IPaymentLibTypes.PaymentTypes).max);
+        PaymentLib.setPayment(type(IPaymentLibTypes.PaymentType).max);
         assertTrue(
-            PaymentLib.getPayment() == type(IPaymentLibTypes.PaymentTypes).max, "The payment value should be updated"
+            PaymentLib.getPayment() == type(IPaymentLibTypes.PaymentType).max, "The payment value should be updated"
         );
     }
 }

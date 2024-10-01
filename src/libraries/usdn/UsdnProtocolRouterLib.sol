@@ -28,17 +28,17 @@ library UsdnProtocolRouterLib {
      * @param payment The payment value
      * @param action The USDN protocol action
      */
-    modifier usePayment(IPaymentLibTypes.PaymentTypes payment, IPaymentLibTypes.PaymentAction action) {
+    modifier usePayment(IPaymentLibTypes.PaymentType payment, IPaymentLibTypes.PaymentAction action) {
         if (
-            payment == IPaymentLibTypes.PaymentTypes.None
-                || (action == IPaymentLibTypes.PaymentAction.Withdrawal && payment == IPaymentLibTypes.PaymentTypes.Permit2)
+            payment == IPaymentLibTypes.PaymentType.None
+                || (action == IPaymentLibTypes.PaymentAction.Withdrawal && payment == IPaymentLibTypes.PaymentType.Permit2)
         ) {
             revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidPayment();
         }
 
         PaymentLib.setPayment(payment);
         _;
-        PaymentLib.setPayment(IPaymentLibTypes.PaymentTypes.None);
+        PaymentLib.setPayment(IPaymentLibTypes.PaymentType.None);
     }
 
     /**
@@ -114,7 +114,7 @@ library UsdnProtocolRouterLib {
     function usdnInitiateWithdrawal(
         IUsdn usdn,
         IUsdnProtocol usdnProtocol,
-        IPaymentLibTypes.PaymentTypes payment,
+        IPaymentLibTypes.PaymentType payment,
         uint256 sharesAmount,
         uint256 amountOutMin,
         address to,
@@ -372,13 +372,13 @@ library UsdnProtocolRouterLib {
             revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidSender();
         }
 
-        IPaymentLibTypes.PaymentTypes payment = PaymentLib.getPayment();
+        IPaymentLibTypes.PaymentType payment = PaymentLib.getPayment();
 
-        if (payment == IPaymentLibTypes.PaymentTypes.Transfer) {
+        if (payment == IPaymentLibTypes.PaymentType.Transfer) {
             token.safeTransfer(to, amount);
-        } else if (payment == IPaymentLibTypes.PaymentTypes.TransferFrom) {
+        } else if (payment == IPaymentLibTypes.PaymentType.TransferFrom) {
             token.safeTransferFrom(lockedBy, to, amount);
-        } else if (payment == IPaymentLibTypes.PaymentTypes.Permit2) {
+        } else if (payment == IPaymentLibTypes.PaymentType.Permit2) {
             permit2.transferFrom(lockedBy, to, amount.toUint160(), address(token));
         } else {
             // sanity check: this should never happen
@@ -399,11 +399,11 @@ library UsdnProtocolRouterLib {
             revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidSender();
         }
 
-        IPaymentLibTypes.PaymentTypes payment = PaymentLib.getPayment();
+        IPaymentLibTypes.PaymentType payment = PaymentLib.getPayment();
 
-        if (payment == IPaymentLibTypes.PaymentTypes.Transfer) {
+        if (payment == IPaymentLibTypes.PaymentType.Transfer) {
             usdn.transferShares(msg.sender, shares);
-        } else if (payment == IPaymentLibTypes.PaymentTypes.TransferFrom) {
+        } else if (payment == IPaymentLibTypes.PaymentType.TransferFrom) {
             usdn.transferSharesFrom(lockedBy, msg.sender, shares);
         } else {
             // sanity check: this should never happen

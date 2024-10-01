@@ -9,7 +9,7 @@ interface IPaymentLibTypes {
      * @param TransferFrom The transferFrom payment value to use standard approval or permit
      * @param Permit2 The permit2 payment value to use permit2
      */
-    enum PaymentTypes {
+    enum PaymentType {
         None,
         Transfer,
         TransferFrom,

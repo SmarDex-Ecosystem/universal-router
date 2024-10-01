@@ -20,7 +20,7 @@ interface IUsdnProtocolRouterTypes {
      * @param ethAmount The amount of Ether to send with the transaction
      */
     struct InitiateOpenPositionData {
-        IPaymentLibTypes.PaymentTypes payment;
+        IPaymentLibTypes.PaymentType payment;
         uint256 amount;
         uint256 desiredLiqPrice;
         uint256 userMaxPrice;
@@ -46,7 +46,7 @@ interface IUsdnProtocolRouterTypes {
      * @param ethAmount The amount of Ether to send with the transaction
      */
     struct InitiateDepositData {
-        IPaymentLibTypes.PaymentTypes payment;
+        IPaymentLibTypes.PaymentType payment;
         uint256 amount;
         uint256 sharesOutMin;
         address to;

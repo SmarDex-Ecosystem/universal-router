@@ -61,7 +61,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
         // deposit
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
-                IPaymentLibTypes.PaymentTypes.Permit2,
+                IPaymentLibTypes.PaymentType.Permit2,
                 BASE_AMOUNT / 10,
                 0,
                 USER_1,
@@ -105,7 +105,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
 
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
-                IPaymentLibTypes.PaymentTypes.Permit2,
+                IPaymentLibTypes.PaymentType.Permit2,
                 BASE_AMOUNT,
                 params.initialPrice / 2,
                 type(uint128).max,

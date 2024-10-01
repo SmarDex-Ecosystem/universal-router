@@ -12,7 +12,7 @@ library PaymentLib {
      * @notice Set the payment value
      * @param payment The payment value
      */
-    function setPayment(IPaymentLibTypes.PaymentTypes payment) external {
+    function setPayment(IPaymentLibTypes.PaymentType payment) external {
         TransientStorageLib.setTransientValue(TRANSIENT_PAYMENT_SLOT, bytes32(uint256(payment)));
     }
 
@@ -20,7 +20,7 @@ library PaymentLib {
      * @notice Get the payment value
      * @return payment_ The payment value
      */
-    function getPayment() external view returns (IPaymentLibTypes.PaymentTypes payment_) {
-        payment_ = IPaymentLibTypes.PaymentTypes(uint256(TransientStorageLib.getTransientValue(TRANSIENT_PAYMENT_SLOT)));
+    function getPayment() external view returns (IPaymentLibTypes.PaymentType payment_) {
+        payment_ = IPaymentLibTypes.PaymentType(uint256(TransientStorageLib.getTransientValue(TRANSIENT_PAYMENT_SLOT)));
     }
 }

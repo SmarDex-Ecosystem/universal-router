@@ -47,7 +47,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 BASE_AMOUNT / 10,
                 0,
                 USER_1,
@@ -86,7 +86,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
 
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
                 0,
                 USER_1,
@@ -119,7 +119,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
 
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 BASE_AMOUNT,
                 params.initialLiqPrice,
                 type(uint128).max,
@@ -155,7 +155,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
                 params.initialLiqPrice,
                 type(uint128).max,
@@ -189,7 +189,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
-            IPaymentLibTypes.PaymentTypes.Transfer,
+            IPaymentLibTypes.PaymentType.Transfer,
             usdn.sharesOf(address(router)),
             0,
             USER_1,
@@ -221,7 +221,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(
-            IPaymentLibTypes.PaymentTypes.Transfer,
+            IPaymentLibTypes.PaymentType.Transfer,
             Constants.CONTRACT_BALANCE,
             0,
             USER_1,
@@ -247,7 +247,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         bytes[] memory inputs = new bytes[](1);
 
         inputs[0] = abi.encode(
-            IPaymentLibTypes.PaymentTypes.None,
+            IPaymentLibTypes.PaymentType.None,
             0,
             0,
             address(0),
@@ -262,7 +262,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         router.execute(commands, inputs);
 
         inputs[0] = abi.encode(
-            IPaymentLibTypes.PaymentTypes.Permit2,
+            IPaymentLibTypes.PaymentType.Permit2,
             0,
             0,
             address(0),

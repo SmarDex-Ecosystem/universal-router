@@ -83,7 +83,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         // deposit
         inputs[4] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 BASE_AMOUNT / 10,
                 0,
                 USER_1,
@@ -136,7 +136,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         // deposit
         inputs[2] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
-                IPaymentLibTypes.PaymentTypes.TransferFrom,
+                IPaymentLibTypes.PaymentType.TransferFrom,
                 BASE_AMOUNT / 10,
                 0,
                 USER_1,
@@ -186,7 +186,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         inputs[2] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 BASE_AMOUNT,
                 params.initialLiqPrice,
                 type(uint128).max,
@@ -229,7 +229,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
-                IPaymentLibTypes.PaymentTypes.TransferFrom,
+                IPaymentLibTypes.PaymentType.TransferFrom,
                 BASE_AMOUNT,
                 params.initialLiqPrice,
                 type(uint128).max,
@@ -278,7 +278,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         inputs[1] = abi.encode(address(usdn), address(router), usdnTokensToTransfer);
 
         inputs[2] = abi.encode(
-            IPaymentLibTypes.PaymentTypes.Transfer,
+            IPaymentLibTypes.PaymentType.Transfer,
             _baseUsdnShares,
             0,
             USER_1,
@@ -319,7 +319,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
             abi.encode(address(usdn), sigUser1, address(router), usdnTokensToTransfer, type(uint256).max, v, r, s);
 
         inputs[1] = abi.encode(
-            IPaymentLibTypes.PaymentTypes.TransferFrom,
+            IPaymentLibTypes.PaymentType.TransferFrom,
             _baseUsdnShares,
             0,
             USER_1,

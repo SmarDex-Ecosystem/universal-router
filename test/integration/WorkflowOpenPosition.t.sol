@@ -43,7 +43,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         inputs[0] = abi.encode(Constants.ETH, wstETH, OPEN_POSITION_AMOUNT * 2);
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,

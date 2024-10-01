@@ -76,7 +76,7 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         inputs[2] = abi.encode(Constants.ETH, wstETH, DEPOSIT_AMOUNT);
         inputs[3] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateDepositData(
-                IPaymentLibTypes.PaymentTypes.Transfer,
+                IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
                 0,
                 USER_1,
