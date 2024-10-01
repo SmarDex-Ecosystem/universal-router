@@ -377,6 +377,7 @@ library UsdnProtocolRouterLib {
         if (payment == IPaymentLibTypes.PaymentType.Transfer) {
             token.safeTransfer(to, amount);
         } else if (payment == IPaymentLibTypes.PaymentType.TransferFrom) {
+            // slither-disable-next-line arbitrary-send-erc20
             token.safeTransferFrom(lockedBy, to, amount);
         } else if (payment == IPaymentLibTypes.PaymentType.Permit2) {
             permit2.transferFrom(lockedBy, to, amount.toUint160(), address(token));
