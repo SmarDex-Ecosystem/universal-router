@@ -13,6 +13,7 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/UsdnProtocolRouterLib.sol";
+import { Map } from "../libraries/Map.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
 import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
@@ -34,6 +35,7 @@ abstract contract Dispatcher is
     UsdnProtocolImmutables
 {
     using BytesLib for bytes;
+    using Map for address;
 
     /**
      * @notice Indicates that the command type is invalid
@@ -301,8 +303,8 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL,
                             amount,
                             sharesOutMin,
-                            map(to),
-                            map(validator),
+                            lockedBy._map(to),
+                            lockedBy._map(validator),
                             deadline,
                             currentPriceData,
                             previousActionsData,
@@ -336,8 +338,8 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL,
                             usdnShares,
                             amountOutMin,
-                            map(to),
-                            map(validator),
+                            lockedBy._map(to),
+                            lockedBy._map(validator),
                             deadline,
                             currentPriceData,
                             previousActionsData,
@@ -346,8 +348,8 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_OPEN) {
                         IUsdnProtocolRouterTypes.InitiateOpenPositionData memory data =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateOpenPositionData));
-                        data.to = map(data.to);
-                        data.validator = map(data.validator);
+                        data.to = lockedBy._map(data.to);
+                        data.validator = lockedBy._map(data.validator);
                         UsdnProtocolRouterLib.usdnInitiateOpenPosition(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (
@@ -357,7 +359,7 @@ abstract contract Dispatcher is
                             uint256 ethAmount
                         ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         UsdnProtocolRouterLib.usdnValidateDeposit(
-                            USDN_PROTOCOL, map(validator), depositPriceData, previousActionsData, ethAmount
+                            USDN_PROTOCOL, lockedBy._map(validator), depositPriceData, previousActionsData, ethAmount
                         );
                     } else if (command == Commands.VALIDATE_WITHDRAWAL) {
                         (
@@ -377,7 +379,7 @@ abstract contract Dispatcher is
                             uint256 ethAmount
                         ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         UsdnProtocolRouterLib.usdnValidateOpenPosition(
-                            USDN_PROTOCOL, map(validator), depositPriceData, previousActionsData, ethAmount
+                            USDN_PROTOCOL, lockedBy._map(validator), depositPriceData, previousActionsData, ethAmount
                         );
                     } else if (command == Commands.VALIDATE_CLOSE) {
                         (
