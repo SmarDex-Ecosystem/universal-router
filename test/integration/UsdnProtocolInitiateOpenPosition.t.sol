@@ -9,6 +9,7 @@ import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { IMapErrors } from "../../src/interfaces/IMapErrors.sol";
 
 /**
  * @custom:feature Initiating an open position through the router
@@ -191,6 +192,48 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
 
         assertEq(vm.addr(1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(wstETH.balanceOf(vm.addr(1)), wstETHBefore - OPEN_POSITION_AMOUNT, "wstETH balance");
+    }
+
+    /**
+     * @custom:scenario Initiating an open position through the router with an invalid recipient
+     * @custom:when The user calls the `INITIATE_OPEN` command
+     * @custom:then The call reverts with `InvalidRecipient`
+     */
+    function test_RevertWhen_initiateOpenPositionInvalidRecipient() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_OPEN));
+        bytes[] memory inputs = new bytes[](1);
+
+        inputs[0] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                0, 0, 0, 0, address(router), address(0), 0, "", EMPTY_PREVIOUS_DATA, 0
+            )
+        );
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                0, 0, 0, 0, Constants.ADDRESS_THIS, address(0), 0, "", EMPTY_PREVIOUS_DATA, 0
+            )
+        );
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                0, 0, 0, 0, address(0), address(router), 0, "", EMPTY_PREVIOUS_DATA, 0
+            )
+        );
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                0, 0, 0, 0, address(0), Constants.ADDRESS_THIS, 0, "", EMPTY_PREVIOUS_DATA, 0
+            )
+        );
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
     }
 
     function _getPermitCommand() internal pure returns (bytes memory) {

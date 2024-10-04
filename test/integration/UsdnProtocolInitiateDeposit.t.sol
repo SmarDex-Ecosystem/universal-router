@@ -9,6 +9,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { IMapErrors } from "../../src/interfaces/IMapErrors.sol";
 
 /**
  * @custom:feature Initiating a deposit through the router
@@ -194,6 +195,32 @@ contract TestForkUniversalRouterInitiateDeposit is UniversalRouterBaseFixture, S
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(wstETH.balanceOf(vm.addr(1)), wstEthBalanceBefore - DEPOSIT_AMOUNT, "asset balance");
+    }
+
+    /**
+     * @custom:scenario Initiating a deposit through the router with an invalid recipient
+     * @custom:when The user calls the `INITIATE_DEPOSIT` command
+     * @custom:then The call reverts with `InvalidRecipient`
+     */
+    function test_RevertWhen_initiateDepositInvalidRecipient() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_DEPOSIT));
+        bytes[] memory inputs = new bytes[](1);
+
+        inputs[0] = abi.encode(0, 0, address(router), address(0), 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(0, 0, Constants.ADDRESS_THIS, address(0), 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(0, 0, address(0), address(router), 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(0, 0, address(0), Constants.ADDRESS_THIS, 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
     }
 
     receive() external payable { }

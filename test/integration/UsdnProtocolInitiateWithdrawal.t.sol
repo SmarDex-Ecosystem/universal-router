@@ -8,6 +8,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { IMapErrors } from "../../src/interfaces/IMapErrors.sol";
 
 /**
  * @custom:feature Initiating a withdrawal through the router
@@ -168,6 +169,32 @@ contract TestForkUniversalRouterInitiateWithdrawal is UniversalRouterBaseFixture
 
         assertEq(vm.addr(1).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(usdn.sharesOf(vm.addr(1)), usdnSharesBefore - WITHDRAW_AMOUNT, "usdn shares");
+    }
+
+    /**
+     * @custom:scenario Initiating a withdrawal through the router with an invalid recipient
+     * @custom:when The user calls the `INITIATE_WITHDRAWAL` command
+     * @custom:then The call reverts with `InvalidRecipient`
+     */
+    function test_RevertWhen_initiateWithdrawalInvalidRecipient() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_WITHDRAWAL));
+        bytes[] memory inputs = new bytes[](1);
+
+        inputs[0] = abi.encode(0, 0, address(router), address(0), 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(0, 0, Constants.ADDRESS_THIS, address(0), 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(0, 0, address(0), address(router), 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
+
+        inputs[0] = abi.encode(0, 0, address(0), Constants.ADDRESS_THIS, 0, "", EMPTY_PREVIOUS_DATA, 0);
+        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        router.execute(commands, inputs);
     }
 
     function _getPermitCommand() internal pure returns (bytes memory) {
