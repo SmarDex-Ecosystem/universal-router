@@ -359,7 +359,7 @@ abstract contract Dispatcher is
                             uint256 ethAmount
                         ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         UsdnProtocolRouterLib.usdnValidateDeposit(
-                            USDN_PROTOCOL, lockedBy._map(validator), depositPriceData, previousActionsData, ethAmount
+                            USDN_PROTOCOL, map(validator), depositPriceData, previousActionsData, ethAmount
                         );
                     } else if (command == Commands.VALIDATE_WITHDRAWAL) {
                         (
@@ -379,7 +379,7 @@ abstract contract Dispatcher is
                             uint256 ethAmount
                         ) = abi.decode(inputs, (address, bytes, IUsdnProtocolTypes.PreviousActionsData, uint256));
                         UsdnProtocolRouterLib.usdnValidateOpenPosition(
-                            USDN_PROTOCOL, lockedBy._map(validator), depositPriceData, previousActionsData, ethAmount
+                            USDN_PROTOCOL, map(validator), depositPriceData, previousActionsData, ethAmount
                         );
                     } else if (command == Commands.VALIDATE_CLOSE) {
                         (
