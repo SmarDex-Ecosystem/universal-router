@@ -3,7 +3,6 @@ pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
@@ -13,12 +12,12 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/UsdnProtocolRouterLib.sol";
-import { Map } from "../libraries/Map.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { LidoRouter } from "../modules/lido/LidoRouter.sol";
 import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
 import { UsdnProtocolImmutables } from "../modules/usdn/UsdnProtocolImmutables.sol";
 import { Sweep } from "../modules/Sweep.sol";
+import { Map } from "../modules/usdn/Map.sol";
 
 /**
  * @title Decodes and Executes Commands
@@ -31,11 +30,10 @@ abstract contract Dispatcher is
     V3SwapRouter,
     LidoRouter,
     SmardexSwapRouter,
-    LockAndMsgSender,
+    Map,
     UsdnProtocolImmutables
 {
     using BytesLib for bytes;
-    using Map for address;
 
     /**
      * @notice Indicates that the command type is invalid
@@ -303,8 +301,8 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL,
                             amount,
                             sharesOutMin,
-                            lockedBy._map(to),
-                            lockedBy._map(validator),
+                            _mapSafe(to),
+                            _mapSafe(validator),
                             deadline,
                             currentPriceData,
                             previousActionsData,
@@ -338,8 +336,8 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL,
                             usdnShares,
                             amountOutMin,
-                            lockedBy._map(to),
-                            lockedBy._map(validator),
+                            _mapSafe(to),
+                            _mapSafe(validator),
                             deadline,
                             currentPriceData,
                             previousActionsData,
@@ -348,8 +346,8 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_OPEN) {
                         IUsdnProtocolRouterTypes.InitiateOpenPositionData memory data =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateOpenPositionData));
-                        data.to = lockedBy._map(data.to);
-                        data.validator = lockedBy._map(data.validator);
+                        data.to = _mapSafe(data.to);
+                        data.validator = _mapSafe(data.validator);
                         UsdnProtocolRouterLib.usdnInitiateOpenPosition(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (
