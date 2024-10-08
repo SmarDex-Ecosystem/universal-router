@@ -5,6 +5,7 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 
 import { UniversalRouterBaseFixture } from "../integration/utils/Fixtures.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
+import { ISweepErrors } from "../../src/interfaces/ISweepErrors.sol";
 
 /**
  * @custom:feature Sweep ETH or token to an address
@@ -121,6 +122,20 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
 
         assertEq(wstETH.balanceOf(address(this)), 0);
         assertEq(wstETH.balanceOf(address(router)), balanceRouterBefore);
+    }
+
+    /**
+     * @custom:scenario The user calls `SWEEP` command with an invalid recipient
+     * @custom:when The `execute` function is called for `SWEEP` command
+     * @custom:then The `SWEEP` command should reverts with `SweepInvalidRecipient`
+     */
+    function test_RevertWhen_invalidRecipient() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(Constants.ETH, address(0), 0, 0);
+
+        vm.expectRevert(ISweepErrors.SweepInvalidRecipient.selector);
+        router.execute(commands, inputs);
     }
 
     receive() external payable { }
