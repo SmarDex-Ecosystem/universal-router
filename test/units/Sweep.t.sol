@@ -126,8 +126,8 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
 
     /**
      * @custom:scenario The user calls `SWEEP` command with an invalid recipient
-     * @custom:when The `execute` function is called for `SWEEP` command
-     * @custom:then The `SWEEP` command should reverts with `SweepInvalidRecipient`
+     * @custom:when The {execute} function is called for `SWEEP` command
+     * @custom:then The `SWEEP` command should reverts with {SweepInvalidRecipient}
      */
     function test_RevertWhen_invalidRecipient() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SWEEP));
