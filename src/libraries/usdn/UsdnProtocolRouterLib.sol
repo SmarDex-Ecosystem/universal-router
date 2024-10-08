@@ -346,7 +346,7 @@ library UsdnProtocolRouterLib {
         asset.forceApprove(rebalancerAddress, amount);
 
         (success_, data_) = rebalancerAddress.call(
-            abi.encodeWithSelector(IRebalancer.initiateDepositAssets.selector, uint80(amount), to)
+            abi.encodeWithSelector(IRebalancer.initiateDepositAssets.selector, amount.toUint88(), to)
         );
     }
 
