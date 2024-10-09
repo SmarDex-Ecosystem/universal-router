@@ -9,7 +9,7 @@ import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
-import { IMapErrors } from "../../src/interfaces/IMapErrors.sol";
+import { LockAndMap } from "../../src/modules/usdn/LockAndMap.sol";
 
 /**
  * @custom:feature Initiating an open position through the router
@@ -208,7 +208,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
                 0, 0, 0, 0, address(router), address(0), 0, "", EMPTY_PREVIOUS_DATA, 0
             )
         );
-        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
         router.execute(commands, inputs);
 
         inputs[0] = abi.encode(
@@ -216,7 +216,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
                 0, 0, 0, 0, Constants.ADDRESS_THIS, address(0), 0, "", EMPTY_PREVIOUS_DATA, 0
             )
         );
-        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
         router.execute(commands, inputs);
 
         inputs[0] = abi.encode(
@@ -224,7 +224,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
                 0, 0, 0, 0, address(0), address(router), 0, "", EMPTY_PREVIOUS_DATA, 0
             )
         );
-        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
         router.execute(commands, inputs);
 
         inputs[0] = abi.encode(
@@ -232,7 +232,7 @@ contract TestForkUniversalRouterInitiateOpenPosition is UniversalRouterBaseFixtu
                 0, 0, 0, 0, address(0), Constants.ADDRESS_THIS, 0, "", EMPTY_PREVIOUS_DATA, 0
             )
         );
-        vm.expectRevert(IMapErrors.InvalidRecipient.selector);
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
         router.execute(commands, inputs);
     }
 

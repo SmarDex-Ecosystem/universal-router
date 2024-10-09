@@ -17,7 +17,7 @@ import { LidoRouter } from "../modules/lido/LidoRouter.sol";
 import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
 import { UsdnProtocolImmutables } from "../modules/usdn/UsdnProtocolImmutables.sol";
 import { Sweep } from "../modules/Sweep.sol";
-import { Map } from "../modules/usdn/Map.sol";
+import { LockAndMap } from "../modules/usdn/LockAndMap.sol";
 
 /**
  * @title Decodes and Executes Commands
@@ -30,7 +30,7 @@ abstract contract Dispatcher is
     V3SwapRouter,
     LidoRouter,
     SmardexSwapRouter,
-    Map,
+    LockAndMap,
     UsdnProtocolImmutables
 {
     using BytesLib for bytes;
