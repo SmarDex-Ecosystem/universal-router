@@ -41,7 +41,15 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
             value: oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition)
         }(payable(address(this)), data, EMPTY_PREVIOUS_DATA);
         protocol.initiateClosePosition{ value: _securityDeposit }(
-            posId, OPEN_POSITION_AMOUNT, 0, USER_1, payable(address(this)), type(uint256).max, "", EMPTY_PREVIOUS_DATA
+            posId,
+            OPEN_POSITION_AMOUNT,
+            0,
+            USER_1,
+            payable(address(this)),
+            type(uint256).max,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            ""
         );
     }
 

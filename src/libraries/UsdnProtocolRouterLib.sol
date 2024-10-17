@@ -214,6 +214,51 @@ library UsdnProtocolRouterLib {
     }
 
     /**
+     * @notice Initiate a close position into the USDN protocol vault
+     * @dev Check the protocol's documentation for information about how this function should be used
+     * Note: This is only allowed by using close delegation signature. The deposit can fail without reverting, in case
+     * there are some pending liquidations in the protocol
+     * @param usdnProtocol The USDN protocol
+     * @param posId The unique identifier of the position to close
+     * @param amountToClose The amount of collateral to remove from the position's amount
+     * @param userMinPrice The minimum price at which the position can be closed (with _priceFeedDecimals)
+     * @param to The address that will receive the assets
+     * @param validator The address that will validate the close action
+     * @param deadline The deadline of the close position to be initiated
+     * @param currentPriceData The current price data
+     * @param previousActionsData The data needed to validate actionable pending actions
+     * @param delegationSignature The eip712 initiateClosePosition delegation signature
+     * @param ethAmount The amount of Ether to send with the transaction
+     * @return success_ Whether the deposit was successful
+     */
+    function usdnInitiateClose(
+        IUsdnProtocol usdnProtocol,
+        IUsdnProtocolTypes.PositionId calldata posId,
+        uint128 amountToClose,
+        uint256 userMinPrice,
+        address to,
+        address payable validator,
+        uint256 deadline,
+        bytes calldata currentPriceData,
+        IUsdnProtocolTypes.PreviousActionsData calldata previousActionsData,
+        bytes memory delegationSignature,
+        uint256 ethAmount
+    ) external returns (bool success_) {
+        // slither-disable-next-line arbitrary-send-eth
+        success_ = usdnProtocol.initiateClosePosition{ value: ethAmount }(
+            posId,
+            amountToClose,
+            userMinPrice,
+            to,
+            validator,
+            deadline,
+            currentPriceData,
+            previousActionsData,
+            delegationSignature
+        );
+    }
+
+    /**
      * @notice Validate a close position in the USDN protocol
      * @dev Check the protocol's documentation for information about how this function should be used
      * @param usdnProtocol The USDN protocol
