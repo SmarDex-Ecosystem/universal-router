@@ -350,45 +350,9 @@ abstract contract Dispatcher is
                         data.validator = map(data.validator);
                         UsdnProtocolRouterLib.usdnInitiateOpenPosition(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.INITIATE_CLOSE) {
-                        (
-                            IUsdnProtocolTypes.PositionId memory posId,
-                            uint128 amountToClose,
-                            uint256 userMinPrice,
-                            address to,
-                            address payable validator,
-                            uint256 deadline,
-                            bytes memory currentPriceData,
-                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
-                            bytes memory delegationSignature,
-                            uint256 ethAmount
-                        ) = abi.decode(
-                            inputs,
-                            (
-                                IUsdnProtocolTypes.PositionId,
-                                uint128,
-                                uint256,
-                                address,
-                                address,
-                                uint256,
-                                bytes,
-                                IUsdnProtocolTypes.PreviousActionsData,
-                                bytes,
-                                uint256
-                            )
-                        );
-                        UsdnProtocolRouterLib.usdnInitiateClose(
-                            USDN_PROTOCOL,
-                            posId,
-                            amountToClose,
-                            userMinPrice,
-                            map(to),
-                            payable(map(validator)),
-                            deadline,
-                            currentPriceData,
-                            previousActionsData,
-                            delegationSignature,
-                            ethAmount
-                        );
+                        (IUsdnProtocolRouterTypes.InitiateClosePositionData memory data) =
+                            abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateClosePositionData));
+                        UsdnProtocolRouterLib.usdnInitiateClose(USDN_PROTOCOL, data);
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (
                             address validator,
