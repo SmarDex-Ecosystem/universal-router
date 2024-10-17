@@ -216,9 +216,9 @@ library UsdnProtocolRouterLib {
     /**
      * @notice Initiate a close position into the USDN protocol vault
      * @dev Check the protocol's documentation for information about how this function should be used
-     * Note: This is only allowed by using close delegation signature. The deposit can fail without reverting, in case
-     * there are some pending liquidations in the protocol
+     * Note: It's only allowed by using initiate close delegation signature
      * @param data The initiateClosePosition data
+     * @return success_ Whether the close position was successful
      */
     function usdnInitiateClose(
         IUsdnProtocol usdnProtocol,
