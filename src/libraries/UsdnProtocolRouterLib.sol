@@ -217,6 +217,7 @@ library UsdnProtocolRouterLib {
      * @notice Initiate a close position into the USDN protocol vault
      * @dev Check the protocol's documentation for information about how this function should be used
      * Note: It's only allowed by using initiate close delegation signature
+     * @param usdnProtocol The USDN protocol
      * @param data The initiateClosePosition data
      * @return success_ Whether the close position was successful
      */
