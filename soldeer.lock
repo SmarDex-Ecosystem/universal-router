@@ -30,7 +30,7 @@ integrity = "a8ea595a78be635fa11cce0fae0dee85cd8e7a0db754d0253cd2bfa8eb5b3fbf"
 name = "@smardex-usdn-contracts"
 version = "delegation"
 git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git"
-rev = "d70904054b86d1a992cef4d531495ee4d12c129e"
+rev = "77e240c205085b9bf72a92dea4cfa9603ade37ab"
 
 [[dependencies]]
 name = "@uniswap-permit2"
