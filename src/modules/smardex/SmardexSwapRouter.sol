@@ -40,7 +40,12 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         bytes calldata path,
         address payer
     ) internal {
-        SmardexSwapRouterLib.smardexSwapExactInput(SMARDEX_FACTORY, recipient, amountIn, amountOutMinimum, path, payer);
+        uint256 amountOut =
+            SmardexSwapRouterLib.smardexSwapExactInput(SMARDEX_FACTORY, recipient, amountIn, path, payer);
+
+        if (amountOut < amountOutMinimum) {
+            revert ISmardexSwapRouterErrors.TooLittleReceived();
+        }
     }
 
     /**
