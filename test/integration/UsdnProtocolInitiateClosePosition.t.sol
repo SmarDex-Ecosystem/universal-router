@@ -16,30 +16,29 @@ import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtoco
  * @custom:background Given a forked ethereum mainnet chain
  */
 contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, SigUtils {
-    uint256 constant USER_PK = 1;
+    uint256 internal constant USER_PK = 1;
     address internal user = vm.addr(USER_PK);
 
-    uint128 constant BASE_AMOUNT = 2 ether;
+    uint128 internal constant BASE_AMOUNT = 2 ether;
     uint256 internal _securityDeposit;
-    IUsdnProtocolTypes.PositionId internal posId;
-    bytes32 internal domainSeparatorV4;
-    InitiateClosePositionDelegation internal delegation;
-    bytes internal delegationSignature;
+    IUsdnProtocolTypes.PositionId internal _posId;
+    InitiateClosePositionDelegation internal _delegation;
+    bytes internal _delegationSignature;
 
     function setUp() public {
         _setUp(DEFAULT_PARAMS);
 
-        domainSeparatorV4 = protocol.domainSeparatorV4();
-
         deal(address(wstETH), user, BASE_AMOUNT * 2);
         deal(user, 1e6 ether);
+
         _securityDeposit = protocol.getSecurityDepositValue();
+
         vm.startPrank(user);
         wstETH.approve(address(protocol), type(uint256).max);
 
         uint256 ts1 = block.timestamp;
         bool success;
-        (success, posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
+        (success, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             BASE_AMOUNT,
             params.initialLiqPrice,
             type(uint128).max,
@@ -63,8 +62,8 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
 
         vm.stopPrank();
 
-        delegation = InitiateClosePositionDelegation(
-            keccak256(abi.encode(posId)),
+        _delegation = InitiateClosePositionDelegation(
+            keccak256(abi.encode(_posId)),
             BASE_AMOUNT,
             0,
             address(this),
@@ -74,7 +73,7 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
             protocol.getNonce(user)
         );
 
-        delegationSignature = _getInitiateCloseDelegationSignature(USER_PK, protocol.domainSeparatorV4(), delegation);
+        _delegationSignature = _getInitiateCloseDelegationSignature(USER_PK, protocol.domainSeparatorV4(), _delegation);
     }
 
     /**
@@ -90,15 +89,15 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
 
         inputs[0] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateClosePositionData(
-                posId,
-                delegation.amountToClose,
-                delegation.userMinPrice,
-                delegation.to,
+                _posId,
+                _delegation.amountToClose,
+                _delegation.userMinPrice,
+                _delegation.to,
                 address(this),
-                delegation.deadline,
+                _delegation.deadline,
                 "",
                 EMPTY_PREVIOUS_DATA,
-                delegationSignature,
+                _delegationSignature,
                 _securityDeposit
             )
         );
@@ -109,36 +108,36 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
             protocol.i_toLongPendingAction(protocol.getUserPendingAction(address(this)));
 
         assertTrue(action.action == ProtocolAction.ValidateClosePosition, "The action type is wrong");
-        assertEq(action.to, delegation.to, "pending action to");
+        assertEq(action.to, _delegation.to, "pending action to");
         assertEq(action.validator, address(this), "pending action validator");
         assertEq(action.tickVersion, 0, "pending action tick version");
         assertEq(action.securityDepositValue, _securityDeposit, "pending action security deposit value");
     }
 
     /**
-     * @custom:scenario Initiating a close position through the router by using a delegation signature front-running
+     * @custom:scenario A delegation signature front-running of a initiate close position through the router
      * @custom:given A validated open position
-     * @custom:and A valid position owner signature
-     * @custom:and A already initiated close position front-run through the router
-     * @custom:when The user initiates a close position through the router
+     * @custom:and A valid close position owner signature
+     * @custom:and A delegation front-run as initiated the close position through the router
+     * @custom:when The user initiates the same close position through the router
      * @custom:then The execution doesn't revert
-     * @custom:and The close is initiated successfully
+     * @custom:and The initiated close position is still valid
      */
-    function test_ForkInitiateCloseFrontRun() public {
+    function test_ForkInitiateCloseFrontRunning() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE));
         bytes[] memory inputs = new bytes[](1);
 
         IUsdnProtocolRouterTypes.InitiateClosePositionData memory closeData = IUsdnProtocolRouterTypes
             .InitiateClosePositionData(
-            posId,
-            delegation.amountToClose,
-            delegation.userMinPrice,
-            delegation.to,
+            _posId,
+            _delegation.amountToClose,
+            _delegation.userMinPrice,
+            _delegation.to,
             USER_1,
-            delegation.deadline,
+            _delegation.deadline,
             "",
             EMPTY_PREVIOUS_DATA,
-            delegationSignature,
+            _delegationSignature,
             _securityDeposit
         );
 
@@ -157,7 +156,7 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
             protocol.i_toLongPendingAction(protocol.getUserPendingAction(USER_1));
 
         assertTrue(action.action == ProtocolAction.ValidateClosePosition, "The action type is wrong");
-        assertEq(action.to, delegation.to, "pending action to");
+        assertEq(action.to, _delegation.to, "pending action to");
         assertEq(action.validator, USER_1, "pending action validator");
         assertEq(action.tickVersion, 0, "pending action tick version");
         assertEq(action.securityDepositValue, _securityDeposit, "pending action security deposit value");
