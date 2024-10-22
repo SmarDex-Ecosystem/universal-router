@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.26;
 
-import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-
 import { IWstETH } from "../../interfaces/IWstETH.sol";
+import { IStETH } from "../../interfaces/IStETH.sol";
 import { ILidoImmutables } from "../../interfaces/ILidoImmutables.sol";
 
 contract LidoImmutables is ILidoImmutables {
     /// @inheritdoc ILidoImmutables
-    IERC20Metadata public immutable STETH;
+    IStETH public immutable STETH;
 
     /// @dev The address of the wrapped steth
     IWstETH internal immutable WSTETH;
@@ -16,6 +15,6 @@ contract LidoImmutables is ILidoImmutables {
     /// @param wsteth The address of wrapped steth
     constructor(address wsteth) {
         WSTETH = IWstETH(wsteth);
-        STETH = IERC20Metadata(WSTETH.stETH());
+        STETH = IStETH(WSTETH.stETH());
     }
 }

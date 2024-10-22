@@ -7,11 +7,13 @@ import { Permit2Payments } from "@uniswap/universal-router/contracts/modules/Per
 
 import { LidoImmutables } from "./LidoImmutables.sol";
 import { IWstETH } from "../../interfaces/IWstETH.sol";
+import { IStETH } from "../../interfaces/IStETH.sol";
 
 /// @title Router for StEth
 abstract contract LidoRouter is LidoImmutables, Permit2Payments {
     using SafeERC20 for IERC20Metadata;
     using SafeERC20 for IWstETH;
+    using SafeERC20 for IStETH;
 
     /**
      * @notice Wrap all of the contract's stETH into wstETH
@@ -42,10 +44,12 @@ abstract contract LidoRouter is LidoImmutables, Permit2Payments {
         if (amount == 0) {
             return false;
         }
-        amount = WSTETH.unwrap(amount);
+        uint256 sharesBefore = STETH.sharesOf(address(this));
+        WSTETH.unwrap(amount);
+        uint256 sharesAfter = STETH.sharesOf(address(this));
 
         if (recipient != address(this)) {
-            STETH.safeTransfer(recipient, amount);
+            STETH.transferShares(recipient, sharesAfter - sharesBefore);
         }
 
         return true;
