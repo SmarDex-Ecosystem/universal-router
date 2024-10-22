@@ -40,7 +40,7 @@ interface IUsdnProtocolRouterTypes {
      * @param deadline The deadline of the close position to be initiated
      * @param currentPriceData The current price data
      * @param previousActionsData The data needed to validate actionable pending actions
-     * @param delegationSignature The eip712 initiateClosePosition delegation signature
+     * @param delegationSignature The EIP712 initiateClosePosition delegation signature
      * @param ethAmount The amount of Ether to send with the transaction
      */
     struct InitiateClosePositionData {

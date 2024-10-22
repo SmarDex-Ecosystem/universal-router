@@ -3,8 +3,8 @@ pragma solidity 0.8.26;
 
 import { Test } from "forge-std/Test.sol";
 
-import { UsdnProtocolActionsUtilsLibrary as ActionUtils } from
-    "usdn-contracts/src/UsdnProtocol/libraries/UsdnProtocolActionsUtilsLibrary.sol";
+import { UsdnProtocolConstantsLibrary as Constants } from
+    "usdn-contracts/src/UsdnProtocol/libraries/UsdnProtocolConstantsLibrary.sol";
 import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 contract SigUtils is Test {
@@ -105,7 +105,7 @@ contract SigUtils is Test {
             domainSeparator,
             keccak256(
                 abi.encode(
-                    ActionUtils.INITIATE_CLOSE_TYPEHASH,
+                    Constants.INITIATE_CLOSE_TYPEHASH,
                     delegationToSign.posIdHash,
                     delegationToSign.amountToClose,
                     delegationToSign.userMinPrice,

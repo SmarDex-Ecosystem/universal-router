@@ -214,32 +214,6 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Initiate a close position into the USDN protocol vault
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * Note: It's only allowed by using initiate close delegation signature
-     * @param usdnProtocol The USDN protocol
-     * @param data The initiateClosePosition data
-     * @return success_ Whether the close position was successful
-     */
-    function usdnInitiateClose(
-        IUsdnProtocol usdnProtocol,
-        IUsdnProtocolRouterTypes.InitiateClosePositionData memory data
-    ) external returns (bool success_) {
-        // slither-disable-next-line arbitrary-send-eth
-        success_ = usdnProtocol.initiateClosePosition{ value: data.ethAmount }(
-            data.posId,
-            data.amountToClose,
-            data.userMinPrice,
-            data.to,
-            payable(data.validator),
-            data.deadline,
-            data.currentPriceData,
-            data.previousActionsData,
-            data.delegationSignature
-        );
-    }
-
-    /**
      * @notice Validate a close position in the USDN protocol
      * @dev Check the protocol's documentation for information about how this function should be used
      * @param usdnProtocol The USDN protocol

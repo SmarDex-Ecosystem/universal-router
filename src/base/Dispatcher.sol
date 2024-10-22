@@ -352,7 +352,20 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_CLOSE) {
                         (IUsdnProtocolRouterTypes.InitiateClosePositionData memory data) =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateClosePositionData));
-                        UsdnProtocolRouterLib.usdnInitiateClose(USDN_PROTOCOL, data);
+                        (success_, output_) = address(USDN_PROTOCOL).call{ value: data.ethAmount }(
+                            abi.encodeWithSelector(
+                                USDN_PROTOCOL.initiateClosePosition.selector,
+                                data.posId,
+                                data.amountToClose,
+                                data.userMinPrice,
+                                data.to,
+                                payable(data.validator),
+                                data.deadline,
+                                data.currentPriceData,
+                                data.previousActionsData,
+                                data.delegationSignature
+                            )
+                        );
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (
                             address validator,
