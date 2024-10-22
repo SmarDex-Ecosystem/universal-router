@@ -4,7 +4,7 @@ pragma solidity 0.8.26;
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
-import { PYTH_ETH_USD } from "./utils/Constants.sol";
+import { PYTH_ETH_USD, USER_1 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
@@ -23,6 +23,8 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
     uint256 internal _securityDeposit;
     IUsdnProtocolTypes.PositionId internal posId;
     bytes32 internal domainSeparatorV4;
+    InitiateClosePositionDelegation internal delegation;
+    bytes internal delegationSignature;
 
     function setUp() public {
         _setUp(DEFAULT_PARAMS);
@@ -60,17 +62,8 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
         }(payable(user), data, EMPTY_PREVIOUS_DATA);
 
         vm.stopPrank();
-    }
 
-    /**
-     * @custom:scenario Initiating a close position through the router using the delegation signature
-     * @custom:given A validated open position
-     * @custom:and A valid position owner signature
-     * @custom:when The user initiates a deposit through the router
-     * @custom:then The deposit is initiated successfully
-     */
-    function test_ForkInitiateClose() public {
-        InitiateClosePositionDelegation memory delegation = InitiateClosePositionDelegation(
+        delegation = InitiateClosePositionDelegation(
             keccak256(abi.encode(posId)),
             BASE_AMOUNT,
             0,
@@ -81,9 +74,17 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
             protocol.getNonce(user)
         );
 
-        bytes memory delegationSignature =
-            _getInitiateCloseDelegationSignature(USER_PK, protocol.domainSeparatorV4(), delegation);
+        delegationSignature = _getInitiateCloseDelegationSignature(USER_PK, protocol.domainSeparatorV4(), delegation);
+    }
 
+    /**
+     * @custom:scenario Initiating a close position through the router using the delegation signature
+     * @custom:given A validated open position
+     * @custom:and A valid position owner signature
+     * @custom:when The user initiates a close position through the router
+     * @custom:then The close position is initiated successfully
+     */
+    function test_ForkInitiateClose() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE));
         bytes[] memory inputs = new bytes[](1);
 
@@ -110,6 +111,54 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
         assertTrue(action.action == ProtocolAction.ValidateClosePosition, "The action type is wrong");
         assertEq(action.to, delegation.to, "pending action to");
         assertEq(action.validator, address(this), "pending action validator");
+        assertEq(action.tickVersion, 0, "pending action tick version");
+        assertEq(action.securityDepositValue, _securityDeposit, "pending action security deposit value");
+    }
+
+    /**
+     * @custom:scenario Initiating a close position through the router by using a delegation signature front-running
+     * @custom:given A validated open position
+     * @custom:and A valid position owner signature
+     * @custom:and A already initiated close position front-run through the router
+     * @custom:when The user initiates a close position through the router
+     * @custom:then The execution doesn't revert
+     * @custom:and The close is initiated successfully
+     */
+    function test_ForkInitiateCloseFrontRun() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE));
+        bytes[] memory inputs = new bytes[](1);
+
+        IUsdnProtocolRouterTypes.InitiateClosePositionData memory closeData = IUsdnProtocolRouterTypes
+            .InitiateClosePositionData(
+            posId,
+            delegation.amountToClose,
+            delegation.userMinPrice,
+            delegation.to,
+            USER_1,
+            delegation.deadline,
+            "",
+            EMPTY_PREVIOUS_DATA,
+            delegationSignature,
+            _securityDeposit
+        );
+
+        inputs[0] = abi.encode(closeData);
+
+        vm.prank(USER_1);
+        router.execute{ value: _securityDeposit }(commands, inputs);
+
+        closeData.validator = address(this);
+        inputs[0] = abi.encode(closeData);
+
+        commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE) | uint8(Commands.FLAG_ALLOW_REVERT));
+        router.execute{ value: _securityDeposit }(commands, inputs);
+
+        IUsdnProtocolTypes.LongPendingAction memory action =
+            protocol.i_toLongPendingAction(protocol.getUserPendingAction(USER_1));
+
+        assertTrue(action.action == ProtocolAction.ValidateClosePosition, "The action type is wrong");
+        assertEq(action.to, delegation.to, "pending action to");
+        assertEq(action.validator, USER_1, "pending action validator");
         assertEq(action.tickVersion, 0, "pending action tick version");
         assertEq(action.securityDepositValue, _securityDeposit, "pending action security deposit value");
     }
