@@ -3,7 +3,6 @@ pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
-import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.sol";
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
@@ -19,6 +18,7 @@ import { LidoRouter } from "../modules/lido/LidoRouter.sol";
 import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { Sweep } from "../modules/Sweep.sol";
+import { LockAndMap } from "../modules/usdn/LockAndMap.sol";
 
 /**
  * @title Decodes and Executes Commands
@@ -31,8 +31,8 @@ abstract contract Dispatcher is
     V3SwapRouter,
     LidoRouter,
     SmardexSwapRouter,
-    LockAndMsgSender,
-    UsdnProtocolRouter
+    UsdnProtocolRouter,
+    LockAndMap
 {
     using BytesLib for bytes;
 
@@ -308,8 +308,8 @@ abstract contract Dispatcher is
                             payment,
                             usdnShares,
                             amountOutMin,
-                            map(to),
-                            map(validator),
+                            _mapSafe(to),
+                            _mapSafe(validator),
                             deadline,
                             currentPriceData,
                             previousActionsData,
@@ -318,8 +318,8 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_OPEN) {
                         IUsdnProtocolRouterTypes.InitiateOpenPositionData memory data =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateOpenPositionData));
-                        data.to = map(data.to);
-                        data.validator = map(data.validator);
+                        data.to = _mapSafe(data.to);
+                        data.validator = _mapSafe(data.validator);
                         UsdnProtocolRouterLib.usdnInitiateOpenPosition(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (

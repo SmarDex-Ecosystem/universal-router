@@ -231,7 +231,7 @@ library UsdnProtocolRouterLib {
      * @dev Check the protocol's documentation for information about how this function should be used
      * @param usdnProtocol The USDN protocol
      * @param validator The address of the validator
-     * @param closePriceData The price d0ata corresponding to the position's close
+     * @param closePriceData The price data corresponding to the position's close
      * @param previousActionsData The data needed to validate actionable pending actions
      * @param ethAmount The amount of Ether to send with the transaction
      * @return success_ Whether the close position was successful
