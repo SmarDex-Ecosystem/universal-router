@@ -17,7 +17,6 @@ import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouter
 library UsdnProtocolRouterLib {
     using SafeCast for uint256;
     using SafeERC20 for IERC20Metadata;
-    using SafeERC20 for IERC20Metadata;
     using SafeERC20 for IUsdn;
 
     /**
