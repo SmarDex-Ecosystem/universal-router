@@ -44,12 +44,13 @@ abstract contract LidoRouter is LidoImmutables, Permit2Payments {
         if (amount == 0) {
             return false;
         }
-        uint256 sharesBefore = STETH.sharesOf(address(this));
+
+        uint256 stEthSharesBefore = STETH.sharesOf(address(this));
         WSTETH.unwrap(amount);
-        uint256 sharesAfter = STETH.sharesOf(address(this));
+        uint256 stEthSharesAfter = STETH.sharesOf(address(this));
 
         if (recipient != address(this)) {
-            STETH.transferShares(recipient, sharesAfter - sharesBefore);
+            STETH.transferShares(recipient, stEthSharesAfter - stEthSharesBefore);
         }
 
         return true;
