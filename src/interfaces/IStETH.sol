@@ -13,7 +13,7 @@ interface IStETH is IERC20Metadata, IERC20Permit {
 
     /**
      * @notice Service event for initialization
-     * @param eip712StETH The EIP712 helper contract for StETH
+     * @param eip712StETH The EIP712 helper contract for stETH
      */
     event EIP712StETHInitialized(address eip712StETH);
 
@@ -97,7 +97,7 @@ interface IStETH is IERC20Metadata, IERC20Permit {
     function getTotalShares() external view returns (uint256);
 
     /**
-     * @notice Get the stEth shares of an address
+     * @notice Get the stETH shares of an address
      * @param _account The _account address
      * @return The amount of shares owned by `_account`
      */
@@ -105,12 +105,14 @@ interface IStETH is IERC20Metadata, IERC20Permit {
 
     /**
      * @notice Get the amount of shares by protocol-controlled Ether
+     * @param _ethAmount The eth amount
      * @return The amount of shares that corresponds to `_ethAmount` protocol-controlled Ether
      */
     function getSharesByPooledEth(uint256 _ethAmount) external view returns (uint256);
 
     /**
      * @notice Get the amount of protocol-controlled Ether by shares
+     * @param _sharesAmount The stETH shares amount
      * @return The amount of Ether that corresponds to `_sharesAmount` token shares
      */
     function getPooledEthByShares(uint256 _sharesAmount) external view returns (uint256);
