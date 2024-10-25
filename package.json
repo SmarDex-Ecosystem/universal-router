@@ -8,7 +8,6 @@
     "url": "https://ra2.tech"
   },
   "license": "GPL-3.0-or-later",
-  "private": true,
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && rm -rf dependencies && forge clean && npm i && forge soldeer install",
     "coverage": "npm run cov -- --report lcov",
