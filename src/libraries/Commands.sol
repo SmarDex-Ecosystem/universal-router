@@ -45,17 +45,17 @@ library Commands {
     uint256 constant LIQUIDATE = 0x17;
     uint256 constant VALIDATE_PENDING = 0x18;
     uint256 constant REBALANCER_INITIATE_DEPOSIT = 0x19;
+    uint256 constant REBALANCER_INITIATE_CLOSE = 0x1a;
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
-    uint256 constant THIRD_IF_BOUNDARY = 0x1a;
+    uint256 constant THIRD_IF_BOUNDARY = 0x1b;
 
-    uint256 constant WRAP_USDN = 0x1a;
-    uint256 constant UNWRAP_WUSDN = 0x1b;
-    uint256 constant WRAP_STETH = 0x1c;
-    uint256 constant UNWRAP_WSTETH = 0x1d;
-    uint256 constant USDN_TRANSFER_SHARES_FROM = 0x1e;
-    // COMMAND_PLACEHOLDER = 0x1f;
+    uint256 constant WRAP_USDN = 0x1b;
+    uint256 constant UNWRAP_WUSDN = 0x1c;
+    uint256 constant WRAP_STETH = 0x1d;
+    uint256 constant UNWRAP_WSTETH = 0x1e;
+    uint256 constant USDN_TRANSFER_SHARES_FROM = 0x1f;
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
