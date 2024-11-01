@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
-import { DEPLOYER, WETH, WSTETH, PYTH_ETH_USD } from "usdn-contracts/test/utils/Constants.sol";
+import { DEPLOYER, WETH, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
 import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
 import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integration/UsdnProtocol/utils/Fixtures.sol";
 import { UsdnProtocolUtilsLibrary as Utils } from
