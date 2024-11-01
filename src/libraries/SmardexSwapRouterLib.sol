@@ -72,25 +72,23 @@ library SmardexSwapRouterLib {
      * @param smardexFactory The Smardex factory contract
      * @param recipient The recipient of the output tokens
      * @param amountIn The amount of input tokens for the trade
-     * @param amountOutMinimum The minimum desired amount of output tokens
      * @param path The path of the trade as a bytes string
      * @param payer The address that will be paying the input
+     * @return amountOut_ The amount out
      */
     function smardexSwapExactInput(
         ISmardexFactory smardexFactory,
         address recipient,
         uint256 amountIn,
-        uint256 amountOutMinimum,
         bytes memory path,
         address payer
-    ) external {
+    ) external returns (uint256 amountOut_) {
         // use amountIn == Constants.CONTRACT_BALANCE as a flag to swap the entire balance of the contract
         if (amountIn == Constants.CONTRACT_BALANCE && payer == address(this)) {
             address tokenIn = path.decodeFirstToken();
             amountIn = IERC20(tokenIn).balanceOf(address(this));
         }
 
-        uint256 amountOut;
         while (true) {
             bool hasMultiplePools = path.hasMultiplePools();
             amountIn = _swapExactIn(
@@ -105,13 +103,9 @@ library SmardexSwapRouterLib {
                 payer = address(this);
                 path = path.skipToken();
             } else {
-                amountOut = amountIn;
+                amountOut_ = amountIn;
                 break;
             }
-        }
-
-        if (amountOut < amountOutMinimum) {
-            revert ISmardexSwapRouterErrors.TooLittleReceived();
         }
     }
 
