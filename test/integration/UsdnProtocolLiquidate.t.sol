@@ -29,7 +29,11 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
         wstETH.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
 
-        (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
+        (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
+
+        (, _posId) = protocol.initiateOpenPosition{
+            value: _securityDeposit + oracleMiddleware.validationCost(data, ProtocolAction.InitiateOpenPosition)
+        }(
             OPEN_POSITION_AMOUNT,
             DESIRED_LIQUIDATION,
             type(uint128).max,
@@ -37,15 +41,17 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
             address(this),
             payable(address(this)),
             type(uint256).max,
-            "",
+            data,
             EMPTY_PREVIOUS_DATA
         );
         _waitDelay();
         uint256 ts1 = protocol.getUserPendingAction(address(this)).timestamp;
-        (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
+        (,,,, bytes memory actionData) =
+            getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
+
         protocol.validateOpenPosition{
-            value: oracleMiddleware.validationCost(data, ProtocolAction.ValidateOpenPosition)
-        }(payable(address(this)), data, EMPTY_PREVIOUS_DATA);
+            value: oracleMiddleware.validationCost(actionData, ProtocolAction.ValidateOpenPosition)
+        }(payable(address(this)), actionData, EMPTY_PREVIOUS_DATA);
     }
 
     /**

@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.2](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.1.1...v0.1.2) (2024-10-23)
+
+
+### Features
+
+* avoid `to` or `validator` to be the router address ([#50](https://github.com/SmarDex-Ecosystem/universal-router/issues/50)) ([69108d1](https://github.com/SmarDex-Ecosystem/universal-router/commit/69108d12e3d1a422793ef2eca0db25d3947686dd))
+* sepolia deployment ([#48](https://github.com/SmarDex-Ecosystem/universal-router/issues/48)) ([681ad5b](https://github.com/SmarDex-Ecosystem/universal-router/commit/681ad5b95e91e75445bb1a7b8555a0e15003b92f))
+* transferfrom command ([#40](https://github.com/SmarDex-Ecosystem/universal-router/issues/40)) ([49bbbdf](https://github.com/SmarDex-Ecosystem/universal-router/commit/49bbbdf7f3f7e6cf4a954e5568b0b8aa3b9f80c2))
+* usdn router lib ([#46](https://github.com/SmarDex-Ecosystem/universal-router/issues/46)) ([2167548](https://github.com/SmarDex-Ecosystem/universal-router/commit/2167548283b3851cbc36fd12aed9dd713c8e65e0))
+* usdn transferSharesFrom ([#41](https://github.com/SmarDex-Ecosystem/universal-router/issues/41)) ([411d0b2](https://github.com/SmarDex-Ecosystem/universal-router/commit/411d0b2625f1c22253b4e0dedf4e50672357f731))
+* usdn-0.19.1 ([#44](https://github.com/SmarDex-Ecosystem/universal-router/issues/44)) ([d5c25e9](https://github.com/SmarDex-Ecosystem/universal-router/commit/d5c25e9261842ceec4fb750173d3a806e42874d6))
+* usdn-0.20.0 ([#54](https://github.com/SmarDex-Ecosystem/universal-router/issues/54)) ([82d828d](https://github.com/SmarDex-Ecosystem/universal-router/commit/82d828d1b7bb837bac1a19c0348927c6054215f1))
+
+
+### Bug Fixes
+
+* cast ([#51](https://github.com/SmarDex-Ecosystem/universal-router/issues/51)) ([92502d9](https://github.com/SmarDex-Ecosystem/universal-router/commit/92502d9aea55838befb525ddb097f3cfc54f41ae))
+* check address zero sweep ([#52](https://github.com/SmarDex-Ecosystem/universal-router/issues/52)) ([d3267e7](https://github.com/SmarDex-Ecosystem/universal-router/commit/d3267e797f819c507f29be9bbb74d2968e2bf682))
+* liquidate ([#47](https://github.com/SmarDex-Ecosystem/universal-router/issues/47)) ([75beec2](https://github.com/SmarDex-Ecosystem/universal-router/commit/75beec27953a0ac86d032df9652fd2bf2f691e8b))
+
 ## [0.1.1](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.1.0...v0.1.1) (2024-07-17)
 
 
