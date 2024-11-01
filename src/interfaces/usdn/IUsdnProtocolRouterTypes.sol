@@ -29,4 +29,30 @@ interface IUsdnProtocolRouterTypes {
         IUsdnProtocolTypes.PreviousActionsData previousActionsData;
         uint256 ethAmount;
     }
+
+    /**
+     * @notice The router usdnProtocol initiate close position data struct
+     * @param posId The unique identifier of the position to close
+     * @param amountToClose The amount of collateral to remove from the position's amount
+     * @param userMinPrice The minimum price at which the position can be closed (with _priceFeedDecimals). Note that
+     * @param to The address that will receive the assets
+     * @param validator The address that will validate the close action
+     * @param deadline The deadline of the close position to be initiated
+     * @param currentPriceData The current price data
+     * @param previousActionsData The data needed to validate actionable pending actions
+     * @param delegationSignature The EIP712 initiateClosePosition delegation signature
+     * @param ethAmount The amount of Ether to send with the transaction
+     */
+    struct InitiateClosePositionData {
+        IUsdnProtocolTypes.PositionId posId;
+        uint128 amountToClose;
+        uint256 userMinPrice;
+        address to;
+        address validator;
+        uint256 deadline;
+        bytes currentPriceData;
+        IUsdnProtocolTypes.PreviousActionsData previousActionsData;
+        bytes delegationSignature;
+        uint256 ethAmount;
+    }
 }
