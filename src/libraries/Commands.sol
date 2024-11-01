@@ -20,24 +20,25 @@ library Commands {
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
-    uint256 constant FIRST_IF_BOUNDARY = 0x08;
+    uint256 constant FIRST_IF_BOUNDARY = 0x07;
 
-    uint256 constant V2_SWAP_EXACT_IN = 0x08;
-    uint256 constant V2_SWAP_EXACT_OUT = 0x09;
-    uint256 constant PERMIT2_PERMIT = 0x0a;
-    uint256 constant WRAP_ETH = 0x0b;
-    uint256 constant UNWRAP_WETH = 0x0c;
-    uint256 constant PERMIT2_TRANSFER_FROM_BATCH = 0x0d;
-    uint256 constant PERMIT = 0x0e;
-    uint256 constant TRANSFER_FROM = 0x0f;
+    uint256 constant V2_SWAP_EXACT_IN = 0x07;
+    uint256 constant V2_SWAP_EXACT_OUT = 0x08;
+    uint256 constant PERMIT2_PERMIT = 0x09;
+    uint256 constant WRAP_ETH = 0x0a;
+    uint256 constant UNWRAP_WETH = 0x0b;
+    uint256 constant PERMIT2_TRANSFER_FROM_BATCH = 0x0c;
+    uint256 constant PERMIT = 0x0d;
+    uint256 constant TRANSFER_FROM = 0x0e;
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
-    uint256 constant SECOND_IF_BOUNDARY = 0x10;
+    uint256 constant SECOND_IF_BOUNDARY = 0x0f;
 
-    uint256 constant INITIATE_DEPOSIT = 0x10;
-    uint256 constant INITIATE_WITHDRAWAL = 0x11;
-    uint256 constant INITIATE_OPEN = 0x12;
+    uint256 constant INITIATE_DEPOSIT = 0x0f;
+    uint256 constant INITIATE_WITHDRAWAL = 0x10;
+    uint256 constant INITIATE_OPEN = 0x11;
+    uint256 constant INITIATE_CLOSE = 0x12;
     uint256 constant VALIDATE_DEPOSIT = 0x13;
     uint256 constant VALIDATE_WITHDRAWAL = 0x14;
     uint256 constant VALIDATE_OPEN = 0x15;
@@ -55,13 +56,12 @@ library Commands {
     uint256 constant WRAP_STETH = 0x1c;
     uint256 constant UNWRAP_WSTETH = 0x1d;
     uint256 constant USDN_TRANSFER_SHARES_FROM = 0x1e;
-    // COMMAND_PLACEHOLDER = 0x1f;
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
-    uint256 constant FOURTH_IF_BOUNDARY = 0x20;
+    uint256 constant FOURTH_IF_BOUNDARY = 0x1f;
 
-    uint256 constant SMARDEX_SWAP_EXACT_IN = 0x20;
-    uint256 constant SMARDEX_SWAP_EXACT_OUT = 0x21;
-    // COMMAND_PLACEHOLDER for 0x22 to 0x3f (all unused)
+    uint256 constant SMARDEX_SWAP_EXACT_IN = 0x1f;
+    uint256 constant SMARDEX_SWAP_EXACT_OUT = 0x20;
+    // COMMAND_PLACEHOLDER from 0x21 to 0x3f (all unused)
 }

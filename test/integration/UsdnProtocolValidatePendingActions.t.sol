@@ -69,7 +69,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
             oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition);
         protocol.validateOpenPosition{ value: validationCost }(payable(this), data, EMPTY_PREVIOUS_DATA);
         protocol.initiateClosePosition{ value: _securityDeposit }(
-            posId, uint128(openPositionAmount), 0, USER_1, USER_4, type(uint256).max, "", EMPTY_PREVIOUS_DATA
+            posId, uint128(openPositionAmount), 0, USER_1, USER_4, type(uint256).max, "", EMPTY_PREVIOUS_DATA, ""
         );
     }
 

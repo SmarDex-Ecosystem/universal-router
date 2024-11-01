@@ -321,6 +321,23 @@ abstract contract Dispatcher is
                         data.to = _mapSafe(data.to);
                         data.validator = _mapSafe(data.validator);
                         UsdnProtocolRouterLib.usdnInitiateOpenPosition(PROTOCOL_ASSET, USDN_PROTOCOL, data);
+                    } else if (command == Commands.INITIATE_CLOSE) {
+                        (IUsdnProtocolRouterTypes.InitiateClosePositionData memory data) =
+                            abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateClosePositionData));
+                        (success_, output_) = address(USDN_PROTOCOL).call{ value: data.ethAmount }(
+                            abi.encodeWithSelector(
+                                USDN_PROTOCOL.initiateClosePosition.selector,
+                                data.posId,
+                                data.amountToClose,
+                                data.userMinPrice,
+                                data.to,
+                                payable(data.validator),
+                                data.deadline,
+                                data.currentPriceData,
+                                data.previousActionsData,
+                                data.delegationSignature
+                            )
+                        );
                     } else if (command == Commands.VALIDATE_DEPOSIT) {
                         (
                             address validator,

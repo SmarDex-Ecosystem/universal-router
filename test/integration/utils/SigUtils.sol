@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-contract SigUtils {
+import { Test } from "forge-std/Test.sol";
+
+import { UsdnProtocolConstantsLibrary as Constants } from
+    "usdn-contracts/src/UsdnProtocol/libraries/UsdnProtocolConstantsLibrary.sol";
+import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+
+contract SigUtils is Test {
     /**
      * @notice A struct that represents a permit
      * @param owner The owner of the tokens
@@ -16,6 +22,28 @@ contract SigUtils {
         uint256 value;
         uint256 nonce;
         uint256 deadline;
+    }
+
+    /**
+     * @notice A struct to use with `_getInitiateCloseDelegationSignature`
+     * @param posIdHash The position id hash
+     * @param amountToClose The position amountToClose
+     * @param userMinPrice The position userMinPrice
+     * @param to The position to
+     * @param deadline The position deadline
+     * @param positionOwner The position owner
+     * @param positionCloser The position closer
+     * @param nonce The position owner nonce
+     */
+    struct InitiateClosePositionDelegation {
+        bytes32 posIdHash;
+        uint128 amountToClose;
+        uint256 userMinPrice;
+        address to;
+        uint256 deadline;
+        address positionOwner;
+        address positionCloser;
+        uint256 nonce;
     }
 
     /// @dev EIP712 domain separator
@@ -59,5 +87,39 @@ contract SigUtils {
         return keccak256(
             abi.encode(PERMIT_TYPEHASH, permit.owner, permit.spender, permit.value, permit.nonce, permit.deadline)
         );
+    }
+
+    /**
+     * @notice Get the signature to perform a delegated initiate close position
+     * @param privateKey The signer private key
+     * @param domainSeparator The domain separator v4
+     * @param delegationToSign The delegation struct to sign
+     * @return delegationSignature_ The initiateClosePosition eip712 delegation signature
+     */
+    function _getInitiateCloseDelegationSignature(
+        uint256 privateKey,
+        bytes32 domainSeparator,
+        InitiateClosePositionDelegation memory delegationToSign
+    ) internal pure returns (bytes memory delegationSignature_) {
+        bytes32 digest = MessageHashUtils.toTypedDataHash(
+            domainSeparator,
+            keccak256(
+                abi.encode(
+                    Constants.INITIATE_CLOSE_TYPEHASH,
+                    delegationToSign.posIdHash,
+                    delegationToSign.amountToClose,
+                    delegationToSign.userMinPrice,
+                    delegationToSign.to,
+                    delegationToSign.deadline,
+                    delegationToSign.positionOwner,
+                    delegationToSign.positionCloser,
+                    delegationToSign.nonce
+                )
+            )
+        );
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, digest);
+
+        delegationSignature_ = abi.encodePacked(r, s, v);
     }
 }
