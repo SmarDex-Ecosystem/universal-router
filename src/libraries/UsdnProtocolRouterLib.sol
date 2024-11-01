@@ -342,6 +342,7 @@ library UsdnProtocolRouterLib {
      * @param usdnProtocol The USDN protocol
      * @param amount The amount to close
      * @param to The address for which the close will be initiated
+     * @param validator The address that will receive the security deposit
      * @param userMinPrice The minimum price of the close position
      * @param deadline The initiate close position deadline
      * @param currentPriceData The current price data
@@ -355,6 +356,7 @@ library UsdnProtocolRouterLib {
         IUsdnProtocol usdnProtocol,
         uint256 amount,
         address to,
+        address payable validator,
         uint256 userMinPrice,
         uint256 deadline,
         bytes memory currentPriceData,
@@ -373,6 +375,7 @@ library UsdnProtocolRouterLib {
                 IRebalancer.initiateClosePosition.selector,
                 amount.toUint88(),
                 to,
+                validator,
                 userMinPrice,
                 deadline,
                 currentPriceData,

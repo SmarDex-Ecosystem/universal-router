@@ -421,6 +421,7 @@ abstract contract Dispatcher is
                         (
                             uint88 amount,
                             address to,
+                            address validator,
                             uint256 userMinPrice,
                             uint256 deadline,
                             bytes memory currentPriceData,
@@ -431,6 +432,7 @@ abstract contract Dispatcher is
                             inputs,
                             (
                                 uint88,
+                                address,
                                 address,
                                 uint256,
                                 uint256,
@@ -444,6 +446,7 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL,
                             amount,
                             _mapSafe(to),
+                            payable(_mapSafe(validator)),
                             userMinPrice,
                             deadline,
                             currentPriceData,
