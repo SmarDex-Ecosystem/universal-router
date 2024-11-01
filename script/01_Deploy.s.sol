@@ -35,7 +35,7 @@ contract Deploy is Script {
     ChainId _chainId;
 
     function run() external returns (UniversalRouter UniversalRouter_) {
-        if (block.chainid == 1) {
+        if (block.chainid == 1 || block.chainid == 983_659_430_532) {
             _chainId = ChainId.Mainnet;
         } else if (block.chainid == 11_155_111) {
             _chainId = ChainId.Sepolia;
