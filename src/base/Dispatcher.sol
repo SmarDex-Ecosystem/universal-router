@@ -424,6 +424,14 @@ abstract contract Dispatcher is
                         UsdnProtocolRouterLib.usdnValidateActionablePendingActions(
                             USDN_PROTOCOL, previousActionsData, maxValidations, ethAmount
                         );
+                    } else if (command == Commands.TRANSFER_POSITION_OWNERSHIP) {
+                        (IUsdnProtocolTypes.PositionId memory posId, bytes memory delegationSignature, address newOwner)
+                        = abi.decode(inputs, (IUsdnProtocolTypes.PositionId, bytes, address));
+                        (success_, output_) = address(USDN_PROTOCOL).call(
+                            abi.encodeWithSelector(
+                                USDN_PROTOCOL.transferPositionOwnership.selector, posId, delegationSignature, newOwner
+                            )
+                        );
                     } else if (command == Commands.REBALANCER_INITIATE_DEPOSIT) {
                         // equivalent: abi.decode(inputs, (uint256, address))
                         uint256 amount;
