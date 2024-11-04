@@ -137,7 +137,7 @@ solmate = "6.7.0"
 openzeppelin-foundry-upgrades = "0.3.1"
 "@pythnetwork-pyth-sdk-solidity" = "3.1.0"
 "@openzeppelin-contracts-upgradeable" = "5.0.2"
-"@smardex-usdn-contracts" = { version = "delegation", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", branch = "feature/rebalancer-delegated-initiate-close" }
+"@smardex-usdn-contracts" = { version = "delegation", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", branch = "feature/delegated-transfer-position-ownership" }
 
 [soldeer]
 # whether soldeer manages remappings
