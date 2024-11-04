@@ -62,7 +62,7 @@ library Commands {
     // the following constant defines one of the boundaries where the if blocks split commands
     uint256 constant FOURTH_IF_BOUNDARY = 0x20;
 
-    uint256 constant SMARDEX_SWAP_EXACT_IN = 0x21;
-    uint256 constant SMARDEX_SWAP_EXACT_OUT = 0x22;
+    uint256 constant SMARDEX_SWAP_EXACT_IN = 0x20;
+    uint256 constant SMARDEX_SWAP_EXACT_OUT = 0x21;
     // COMMAND_PLACEHOLDER from 0x22 to 0x3f (all unused)
 }

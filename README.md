@@ -89,25 +89,27 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x17 │  LIQUIDATE                    │
    ├──────┼───────────────────────────────┤
-   │ 0x18 │  VALIDATE_PENDING             │
+   │ 0x18 │  TRANSFER_POSITION_OWNERSHIP  │
    ├──────┼───────────────────────────────┤
-   │ 0x19 │  REBALANCER_INITIATE_DEPOSIT  │
+   │ 0x19 │  VALIDATE_PENDING             │
    ├──────┼───────────────────────────────┤
-   │ 0x1a │  WRAP_USDN                    │
+   │ 0x1a │  REBALANCER_INITIATE_DEPOSIT  │
    ├──────┼───────────────────────────────┤
-   │ 0x1b │  UNWRAP_WUSDN                 │
+   │ 0x1b │  WRAP_USDN                    │
    ├──────┼───────────────────────────────┤
-   │ 0x1c │  WRAP_STETH                   │
+   │ 0x1c │  UNWRAP_WUSDN                 │
    ├──────┼───────────────────────────────┤
-   │ 0x1d │  UNWRAP_WSTETH                │
+   │ 0x1d │  WRAP_STETH                   │
    ├──────┼───────────────────────────────┤
-   │ 0x1e │  USDN_TRANSFER_SHARES_FROM    │
+   │ 0x1e │  UNWRAP_WSTETH                │
    ├──────┼───────────────────────────────┤
-   │ 0x1f │  SMARDEX_SWAP_EXACT_IN        │
+   │ 0x1f │  USDN_TRANSFER_SHARES_FROM    │
    ├──────┼───────────────────────────────┤
-   │ 0x20 │  SMARDEX_SWAP_EXACT_OUT       │
+   │ 0x20 │  SMARDEX_SWAP_EXACT_IN        │
    ├──────┼───────────────────────────────┤
-   │ 0x21-│  -------                      │
+   │ 0x21 │  SMARDEX_SWAP_EXACT_OUT       │
+   ├──────┼───────────────────────────────┤
+   │ 0x22-│  -------                      │
    │ 0x3f │                               │
    └──────┴───────────────────────────────┘
 ```

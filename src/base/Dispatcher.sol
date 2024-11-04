@@ -429,7 +429,10 @@ abstract contract Dispatcher is
                         = abi.decode(inputs, (IUsdnProtocolTypes.PositionId, bytes, address));
                         (success_, output_) = address(USDN_PROTOCOL).call(
                             abi.encodeWithSelector(
-                                USDN_PROTOCOL.transferPositionOwnership.selector, posId, delegationSignature, newOwner
+                                USDN_PROTOCOL.transferPositionOwnership.selector,
+                                posId,
+                                delegationSignature,
+                                map(newOwner)
                             )
                         );
                     } else if (command == Commands.REBALANCER_INITIATE_DEPOSIT) {
