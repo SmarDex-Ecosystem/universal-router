@@ -91,7 +91,7 @@ contract TestForkUniversalRouterTransferPositionOwnership is UniversalRouterBase
      * @custom:given A validated user open position
      * @custom:and A valid {transferPositionOwnership} delegation signature
      * @custom:and A delegation front-running through the router
-     * @custom:when The user transfer the position ownership through the router
+     * @custom:when The user try to transfer the position ownership through the router
      * @custom:then The execution doesn't revert
      * @custom:and The transfer position ownership is still valid
      */
