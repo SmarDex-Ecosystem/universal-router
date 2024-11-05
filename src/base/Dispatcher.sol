@@ -352,6 +352,7 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_CLOSE) {
                         (IUsdnProtocolRouterTypes.InitiateClosePositionData memory data) =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateClosePositionData));
+                        // slither-disable-next-line arbitrary-send-eth
                         (success_, output_) = address(USDN_PROTOCOL).call{ value: data.ethAmount }(
                             abi.encodeWithSelector(
                                 USDN_PROTOCOL.initiateClosePosition.selector,
@@ -470,7 +471,7 @@ abstract contract Dispatcher is
                     assembly {
                         recipient := calldataload(inputs.offset)
                     }
-                    success_ = LidoRouter._unwrapSTETH(map(recipient));
+                    success_ = LidoRouter._unwrapWSTETH(map(recipient));
                 } else if (command == Commands.USDN_TRANSFER_SHARES_FROM) {
                     // equivalent:  abi.decode(inputs, (address, uint256))
                     address recipient;
