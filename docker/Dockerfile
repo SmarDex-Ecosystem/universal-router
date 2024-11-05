@@ -36,11 +36,10 @@ COPY --from=node:20-alpine /usr/local/include /usr/local/include
 COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
 
 # Add bash and jq to foundry image
-RUN apk add bash jq openssh
+RUN apk add bash jq
 
 # Install forge, soldeer, and npm
-RUN export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" && \
-    forge soldeer install && \
+RUN forge soldeer install && \
     npm install
 
 # Precompile contracts

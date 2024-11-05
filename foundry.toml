@@ -127,7 +127,7 @@ mainnet = { key = "${ETHERSCAN_API_KEY}" }
 [dependencies]
 "@uniswap-universal-router" = "1.6.0"
 forge-std = "1.9.2"
-# "@smardex-usdn-contracts" = { version = "0.20.0", url = "https://github.com/SmarDex-Ecosystem/usdn-contracts.git" }
+"@smardex-usdn-contracts" = { version = "0.20.0", url = "https://github.com/SmarDex-Ecosystem/usdn-contracts.git" }
 "@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
 "@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
 "@openzeppelin-contracts" = "5.0.2"
