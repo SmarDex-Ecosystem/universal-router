@@ -45,3 +45,5 @@ jobs:
         with:
           working-directory: ./
           force-target-repository: "usdn-backend"
+          build-args: |
+            APP_TOKEN=${{ steps.app-token.outputs.token }}

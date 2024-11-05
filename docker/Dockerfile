@@ -36,15 +36,23 @@ COPY --from=node:20-alpine /usr/local/include /usr/local/include
 COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
 
 # Add bash and jq to foundry image
-RUN apk add bash jq openssh
+RUN apk add bash jq
 
-# Install forge, soldeer, and npm
-RUN export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" && \
-    forge soldeer install && \
+# Define the base image with a build arg for the version
+ARG USDN_CONTRACTS="https://x-access-token:$APP_TOKEN@github.com/SmarDex-Ecosystem/usdn-contracts.git"
+
+# Replace the dependency with the one from the build arg
+RUN sed -i '/source = "git@github.com:SmarDex-Ecosystem\/usdn-contracts.git"/c\'"source = \"$USDN_CONTRACTS\"" soldeer.lock
+
+# Install dependencies
+RUN forge soldeer install && \
     npm install
 
 # Precompile contracts
 RUN forge build src script
+
+# Remove trace from app token
+RUN sed -i '/x-access-token/d' soldeer.lock
 
 # # Remove any trace of the ssh key
 # RUN rm -f /root/.ssh/github_key
