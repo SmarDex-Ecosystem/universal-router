@@ -39,10 +39,13 @@ COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
 RUN apk add bash jq
 
 # Define the base image with a build arg for the version
-ARG USDN_CONTRACTS="https://x-access-token:$APP_TOKEN@github.com/SmarDex-Ecosystem/usdn-contracts.git"
+ARG APP_TOKEN
+ENV USDN_CONTRACTS="https://x-access-token:$APP_TOKEN@github.com/SmarDex-Ecosystem/usdn-contracts.git"
 
 # Replace the dependency with the one from the build arg
 RUN sed -i '/source = "git@github.com:SmarDex-Ecosystem\/usdn-contracts.git"/c\'"source = \"$USDN_CONTRACTS\"" soldeer.lock
+
+ENV USDN_CONTRACTS=""
 
 # Install dependencies
 RUN forge soldeer install && \
