@@ -470,7 +470,7 @@ abstract contract Dispatcher is
                     assembly {
                         recipient := calldataload(inputs.offset)
                     }
-                    success_ = LidoRouter._unwrapSTETH(map(recipient));
+                    success_ = LidoRouter._unwrapWSTETH(map(recipient));
                 } else if (command == Commands.USDN_TRANSFER_SHARES_FROM) {
                     // equivalent:  abi.decode(inputs, (address, uint256))
                     address recipient;

@@ -39,7 +39,7 @@ abstract contract LidoRouter is LidoImmutables, Permit2Payments {
      * @param recipient The recipient of the stETH
      * @return Whether the unwrapping was successful
      */
-    function _unwrapSTETH(address recipient) internal returns (bool) {
+    function _unwrapWSTETH(address recipient) internal returns (bool) {
         uint256 amount = WSTETH.balanceOf(address(this));
         if (amount == 0) {
             return false;
@@ -47,10 +47,14 @@ abstract contract LidoRouter is LidoImmutables, Permit2Payments {
 
         uint256 stEthSharesBefore = STETH.sharesOf(address(this));
         WSTETH.unwrap(amount);
-        uint256 stEthSharesAfter = STETH.sharesOf(address(this));
+        uint256 stEthSharesAmount = STETH.sharesOf(address(this)) - stEthSharesBefore;
+
+        if (stEthSharesAmount == 0) {
+            return false;
+        }
 
         if (recipient != address(this)) {
-            STETH.transferShares(recipient, stEthSharesAfter - stEthSharesBefore);
+            STETH.transferShares(recipient, stEthSharesAmount);
         }
 
         return true;
