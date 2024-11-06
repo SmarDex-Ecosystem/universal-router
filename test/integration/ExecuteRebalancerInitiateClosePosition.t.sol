@@ -44,7 +44,6 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
         (bool successUser,) = address(wstETH).call{ value: 100 ether }("");
         assertTrue(successUser, "user ETH should be transferred");
         wstETH.approve(address(rebalancer), type(uint256).max);
-        wstETH.transfer(address(rebalancer), BASE_AMOUNT);
         rebalancer.initiateDepositAssets(BASE_AMOUNT, _user);
         skip(rebalancer.getTimeLimits().validationDelay);
         rebalancer.validateDepositAssets();
