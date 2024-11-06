@@ -4,8 +4,8 @@ pragma solidity 0.8.26;
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
-import { IStETH } from "./interfaces/IStETH.sol";
 
+import { IStETH } from "../../src/interfaces/IStETH.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
