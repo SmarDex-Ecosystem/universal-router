@@ -55,59 +55,71 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x06 │  PAY_PORTION                  │
    ├──────┼───────────────────────────────┤
-   │ 0x07 │  V2_SWAP_EXACT_IN             │
+   │ 0x07-│  -------                      │
+   │ 0x0f │                               │
    ├──────┼───────────────────────────────┤
-   │ 0x08 │  V2_SWAP_EXACT_OUT            │
+   │ 0x10 │  V2_SWAP_EXACT_IN             │
    ├──────┼───────────────────────────────┤
-   │ 0x09 │  PERMIT2_PERMIT               │
+   │ 0x11 │  V2_SWAP_EXACT_OUT            │
    ├──────┼───────────────────────────────┤
-   │ 0x0a │  WRAP_ETH                     │
+   │ 0x12 │  PERMIT2_PERMIT               │
    ├──────┼───────────────────────────────┤
-   │ 0x0b │  UNWRAP_WETH                  │
+   │ 0x13 │  WRAP_ETH                     │
    ├──────┼───────────────────────────────┤
-   │ 0x0c │  PERMIT2_TRANSFER_FROM_BATCH  │
+   │ 0x14 │  UNWRAP_WETH                  │
    ├──────┼───────────────────────────────┤
-   │ 0x0d │  PERMIT                       │
+   │ 0x15 │  PERMIT2_TRANSFER_FROM_BATCH  │
    ├──────┼───────────────────────────────┤
-   │ 0x0e │  TRANSFER_FROM                │
+   │ 0x16 │  PERMIT                       │
    ├──────┼───────────────────────────────┤
-   │ 0x0f │  INITIATE_DEPOSIT             │
+   │ 0x17 │  TRANSFER_FROM                │
    ├──────┼───────────────────────────────┤
-   │ 0x10 │  INITIATE_WITHDRAWAL          │
+   │ 0x18-│  -------                      │
+   │ 0x1f │                               │
    ├──────┼───────────────────────────────┤
-   │ 0x11 │  INITIATE_OPEN                │
+   │ 0x20 │  INITIATE_DEPOSIT             │
    ├──────┼───────────────────────────────┤
-   | 0x12 |  INITIATE_CLOSE               |
+   │ 0x21 │  INITIATE_WITHDRAWAL          │
    ├──────┼───────────────────────────────┤
-   │ 0x13 │  VALIDATE_DEPOSIT             │
+   │ 0x22 │  INITIATE_OPEN                │
    ├──────┼───────────────────────────────┤
-   │ 0x14 │  VALIDATE_WITHDRAWAL          │
+   | 0x23 |  INITIATE_CLOSE               |
    ├──────┼───────────────────────────────┤
-   │ 0x15 │  VALIDATE_OPEN                │
+   │ 0x24 │  VALIDATE_DEPOSIT             │
    ├──────┼───────────────────────────────┤
-   │ 0x16 │  VALIDATE_CLOSE               │
+   │ 0x25 │  VALIDATE_WITHDRAWAL          │
    ├──────┼───────────────────────────────┤
-   │ 0x17 │  LIQUIDATE                    │
+   │ 0x26 │  VALIDATE_OPEN                │
    ├──────┼───────────────────────────────┤
-   │ 0x18 │  VALIDATE_PENDING             │
+   │ 0x27 │  VALIDATE_CLOSE               │
    ├──────┼───────────────────────────────┤
-   │ 0x19 │  REBALANCER_INITIATE_DEPOSIT  │
+   │ 0x28 │  LIQUIDATE                    │
    ├──────┼───────────────────────────────┤
-   │ 0x1a │  WRAP_USDN                    │
+   │ 0x29 │  VALIDATE_PENDING             │
    ├──────┼───────────────────────────────┤
-   │ 0x1b │  UNWRAP_WUSDN                 │
+   │ 0x2a │  REBALANCER_INITIATE_DEPOSIT  │
    ├──────┼───────────────────────────────┤
-   │ 0x1c │  WRAP_STETH                   │
+   │ 0x2b-│  -------                      │
+   │ 0x2f │                               │
    ├──────┼───────────────────────────────┤
-   │ 0x1d │  UNWRAP_WSTETH                │
+   │ 0x30 │  WRAP_USDN                    │
    ├──────┼───────────────────────────────┤
-   │ 0x1e │  USDN_TRANSFER_SHARES_FROM    │
+   │ 0x31 │  UNWRAP_WUSDN                 │
    ├──────┼───────────────────────────────┤
-   │ 0x1f │  SMARDEX_SWAP_EXACT_IN        │
+   │ 0x32 │  WRAP_STETH                   │
    ├──────┼───────────────────────────────┤
-   │ 0x20 │  SMARDEX_SWAP_EXACT_OUT       │
+   │ 0x33 │  UNWRAP_WSTETH                │
    ├──────┼───────────────────────────────┤
-   │ 0x21-│  -------                      │
+   │ 0x34 │  USDN_TRANSFER_SHARES_FROM    │
+   ├──────┼───────────────────────────────┤
+   │ 0x35-│  -------                      │
+   │ 0x37 │                               │
+   ├──────┼───────────────────────────────┤   
+   │ 0x38 │  SMARDEX_SWAP_EXACT_IN        │
+   ├──────┼───────────────────────────────┤
+   │ 0x39 │  SMARDEX_SWAP_EXACT_OUT       │
+   ├──────┼───────────────────────────────┤
+   │ 0x3a-│  -------                      │
    │ 0x3f │                               │
    └──────┴───────────────────────────────┘
 ```
