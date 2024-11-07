@@ -42,15 +42,14 @@ RUN apk add bash jq
 ARG APP_TOKEN
 # ENV USDN_CONTRACTS="https://x-access-token:$APP_TOKEN@github.com/SmarDex-Ecosystem/usdn-contracts.git"
 
-RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:"
-
 # Replace the dependency with the one from the build arg
 # RUN sed -i '/source = "git@github.com:SmarDex-Ecosystem\/usdn-contracts.git"/c\'"source = \"$USDN_CONTRACTS\"" soldeer.lock
 
 # ENV USDN_CONTRACTS=""
 
 # Install dependencies
-RUN forge soldeer install && \
+RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
+    forge soldeer install && \
     npm install
 
 # Precompile contracts
