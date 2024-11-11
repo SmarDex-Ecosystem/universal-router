@@ -5,14 +5,13 @@ import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/I
 import { ERC165, IERC165 } from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import { IPaymentCallback } from "usdn-contracts/src/interfaces/UsdnProtocol/IPaymentCallback.sol";
 import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
-import { LockAndMsgSender } from "@uniswap/universal-router/contracts/base/LockAndMsgSender.sol";
 
 import { UsdnProtocolImmutables } from "./UsdnProtocolImmutables.sol";
-import { IUsdnProtocolRouter } from "../../interfaces/usdn/IUsdnProtocolRouter.sol";
 import { UsdnProtocolRouterLib } from "../../libraries/usdn/UsdnProtocolRouterLib.sol";
+import { LockAndMap } from "./LockAndMap.sol";
 
 /// @title Router for UsdnProtocol
-abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, IUsdnProtocolRouter, ERC165, LockAndMsgSender {
+abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, IPaymentCallback, ERC165, LockAndMap {
     /// @inheritdoc IPaymentCallback
     function transferCallback(IERC20Metadata token, uint256 amount, address to) external {
         UsdnProtocolRouterLib.transferCallback(

@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.26;
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.8.20;
 
 import { IPaymentLibTypes } from "../../interfaces/usdn/IPaymentLibTypes.sol";
 import { TransientStorageLib } from "../TransientStorageLib.sol";
@@ -12,7 +12,7 @@ library PaymentLib {
      * @notice Set the payment value
      * @param payment The payment value
      */
-    function setPayment(IPaymentLibTypes.PaymentType payment) external {
+    function setPayment(IPaymentLibTypes.PaymentType payment) internal {
         TransientStorageLib.setTransientValue(TRANSIENT_PAYMENT_SLOT, bytes32(uint256(payment)));
     }
 
@@ -20,7 +20,7 @@ library PaymentLib {
      * @notice Get the payment value
      * @return payment_ The payment value
      */
-    function getPayment() external view returns (IPaymentLibTypes.PaymentType payment_) {
+    function getPayment() internal view returns (IPaymentLibTypes.PaymentType payment_) {
         payment_ = IPaymentLibTypes.PaymentType(uint256(TransientStorageLib.getTransientValue(TRANSIENT_PAYMENT_SLOT)));
     }
 }

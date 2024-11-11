@@ -234,7 +234,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
     function test_ForkInitiateWithdrawWithPermitFromRouter() public {
         uint256 ethBalanceBefore = sigUser1.balance;
         uint256 usdnSharesBefore = usdn.sharesOf(sigUser1);
-        uint256 usdnTokensToTransfer = usdn.convertToTokens(_baseUsdnShares);
+        uint256 usdnTokensToTransfer = usdn.convertToTokensRoundUp(_baseUsdnShares);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             SIG_USER1_PK,
@@ -276,7 +276,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
     function test_ForkInitiateWithdrawWithPermitFromUser() public {
         uint256 ethBalanceBefore = sigUser1.balance;
         uint256 usdnSharesBefore = usdn.sharesOf(sigUser1);
-        uint256 usdnTokensToTransfer = usdn.convertToTokens(_baseUsdnShares);
+        uint256 usdnTokensToTransfer = usdn.convertToTokensRoundUp(_baseUsdnShares);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
             SIG_USER1_PK,

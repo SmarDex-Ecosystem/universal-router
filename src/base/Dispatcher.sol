@@ -31,8 +31,8 @@ abstract contract Dispatcher is
     V3SwapRouter,
     LidoRouter,
     SmardexSwapRouter,
-    UsdnProtocolRouter,
-    LockAndMap
+    LockAndMap,
+    UsdnProtocolRouter
 {
     using BytesLib for bytes;
 
@@ -276,6 +276,8 @@ abstract contract Dispatcher is
                     if (command == Commands.INITIATE_DEPOSIT) {
                         IUsdnProtocolRouterTypes.InitiateDepositData memory data =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateDepositData));
+                        data.to = _mapSafe(data.to);
+                        data.validator = _mapSafe(data.validator);
                         UsdnProtocolRouterLib.usdnInitiateDeposit(PROTOCOL_ASSET, USDN_PROTOCOL, data);
                     } else if (command == Commands.INITIATE_WITHDRAWAL) {
                         (

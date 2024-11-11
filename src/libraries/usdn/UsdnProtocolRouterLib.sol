@@ -59,9 +59,9 @@ library UsdnProtocolRouterLib {
         if (data.amount == Constants.CONTRACT_BALANCE) {
             data.amount = protocolAsset.balanceOf(address(this));
         }
-        // we send the full ETH balance, the protocol will refund any excess
         // slither-disable-next-line arbitrary-send-eth
         success_ = usdnProtocol.initiateDeposit{ value: data.ethAmount }(
+            // cast is made here to allow the {CONTRACT_BALANCE} value
             data.amount.toUint128(),
             data.sharesOutMin,
             data.to,
@@ -351,7 +351,7 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Callback function to be called during initiate functions to transfer asset tokens
+     * @notice Callback function to be called during initiate functions to transfer tokens to the protocol contract
      * @dev The implementation must ensure that the `msg.sender` is the protocol contract
      * @param usdnProtocol The USDN protocol contract address
      * @param lockedBy The router lockedBy address
