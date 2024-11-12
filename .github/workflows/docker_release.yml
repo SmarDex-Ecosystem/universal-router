@@ -34,15 +34,9 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: "universal-router,usdn-contracts"
 
-      - name: Add app token to git config for Dockerfile to use
-        env:
-          APP_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:"
-
       - name: Release Docker image
         uses: Backend-RA2-Tech/composite-workflows/lerna-template/docker-build-publish@main
         with:
           working-directory: ./
           force-target-repository: "usdn-backend"
-          build-args: "APP_TOKEN=${{ steps.app-token.outputs.token }}"
+          build-args: "APP_TOKEN=\"${{ steps.app-token.outputs.token }}\""
