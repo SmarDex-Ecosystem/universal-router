@@ -409,6 +409,43 @@ abstract contract Dispatcher is
                         }
                         (success_, output_) =
                             UsdnProtocolRouterLib.rebalancerInitiateDeposit(USDN_PROTOCOL, amount, map(to));
+                    } else if (command == Commands.REBALANCER_INITIATE_CLOSE) {
+                        (
+                            uint88 amount,
+                            address to,
+                            address validator,
+                            uint256 userMinPrice,
+                            uint256 deadline,
+                            bytes memory currentPriceData,
+                            IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
+                            bytes memory delegationData,
+                            uint256 ethAmount
+                        ) = abi.decode(
+                            inputs,
+                            (
+                                uint88,
+                                address,
+                                address,
+                                uint256,
+                                uint256,
+                                bytes,
+                                IUsdnProtocolTypes.PreviousActionsData,
+                                bytes,
+                                uint256
+                            )
+                        );
+                        (success_, output_) = UsdnProtocolRouterLib.rebalancerInitiateClosePosition(
+                            USDN_PROTOCOL,
+                            amount,
+                            _mapSafe(to),
+                            payable(_mapSafe(validator)),
+                            userMinPrice,
+                            deadline,
+                            currentPriceData,
+                            previousActionsData,
+                            delegationData,
+                            ethAmount
+                        );
                     } else {
                         revert InvalidCommandType(command);
                     }

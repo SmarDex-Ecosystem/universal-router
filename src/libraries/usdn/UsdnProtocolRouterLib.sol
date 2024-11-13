@@ -351,6 +351,54 @@ library UsdnProtocolRouterLib {
     }
 
     /**
+     * @notice Performs a rebalancer initiate close position
+     * @param usdnProtocol The USDN protocol
+     * @param amount The amount to close
+     * @param to The address for which the close will be initiated
+     * @param validator The address that will receive the security deposit
+     * @param userMinPrice The minimum price of the close position
+     * @param deadline The initiate close position deadline
+     * @param currentPriceData The current price data
+     * @param previousActionsData The previous action price data
+     * @param delegationData The delegation data
+     * @param ethAmount The amount of Ether to send with the transaction
+     * @return success_ Whether the initiate deposit is successful
+     * @return data_ The transaction data
+     */
+    function rebalancerInitiateClosePosition(
+        IUsdnProtocol usdnProtocol,
+        uint256 amount,
+        address to,
+        address payable validator,
+        uint256 userMinPrice,
+        uint256 deadline,
+        bytes memory currentPriceData,
+        IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
+        bytes memory delegationData,
+        uint256 ethAmount
+    ) external returns (bool success_, bytes memory data_) {
+        address rebalancerAddress = address(usdnProtocol.getRebalancer());
+
+        if (rebalancerAddress == address(0)) {
+            return (false, "");
+        }
+
+        (success_, data_) = rebalancerAddress.call{ value: ethAmount }(
+            abi.encodeWithSelector(
+                IRebalancer.initiateClosePosition.selector,
+                amount.toUint88(),
+                to,
+                validator,
+                userMinPrice,
+                deadline,
+                currentPriceData,
+                previousActionsData,
+                delegationData
+            )
+        );
+    }
+
+    /**
      * @notice Callback function to be called during initiate functions to transfer tokens to the protocol contract
      * @dev The implementation must ensure that the `msg.sender` is the protocol contract
      * @param usdnProtocol The USDN protocol contract address
