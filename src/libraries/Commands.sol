@@ -49,7 +49,8 @@ library Commands {
     uint256 constant TRANSFER_POSITION_OWNERSHIP = 0x29;
     uint256 constant VALIDATE_PENDING = 0x2a;
     uint256 constant REBALANCER_INITIATE_DEPOSIT = 0x2b;
-    // COMMAND_PLACEHOLDER for 0x2c to 0x2f (all unused)
+    uint256 constant REBALANCER_INITIATE_CLOSE = 0x2c;
+    // COMMAND_PLACEHOLDER for 0x2d to 0x2f (all unused)
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands

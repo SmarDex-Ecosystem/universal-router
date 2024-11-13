@@ -101,7 +101,9 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x2b │  REBALANCER_INITIATE_DEPOSIT  │
    ├──────┼───────────────────────────────┤
-   │ 0x2c-│  -------                      │
+   │ 0x2c │  REBALANCER_INITIATE_CLOSE    │
+   ├──────┼───────────────────────────────┤
+   │ 0x2d-│  -------                      │
    │ 0x2f │                               │
    ├──────┼───────────────────────────────┤
    │ 0x30 │  WRAP_USDN                    │
