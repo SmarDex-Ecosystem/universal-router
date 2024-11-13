@@ -48,7 +48,8 @@ library Commands {
     uint256 constant LIQUIDATE = 0x28;
     uint256 constant VALIDATE_PENDING = 0x29;
     uint256 constant REBALANCER_INITIATE_DEPOSIT = 0x2a;
-    // COMMAND_PLACEHOLDER for 0x2b to 0x2f (all unused)
+    uint256 constant REBALANCER_INITIATE_CLOSE = 0x2b;
+    // COMMAND_PLACEHOLDER for 0x2c to 0x2f (all unused)
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
