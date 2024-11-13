@@ -53,8 +53,8 @@ done
 popd  > /dev/null
 
 # Deploy Router
-npm ci
-forge soldeer install
+# npm ci
+# forge soldeer install
 
 forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
 
