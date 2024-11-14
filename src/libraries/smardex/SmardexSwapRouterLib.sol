@@ -7,11 +7,11 @@ import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
-import { ISmardexFactory } from "../interfaces/smardex/ISmardexFactory.sol";
-import { ISmardexPair } from "../interfaces/smardex/ISmardexPair.sol";
-import { ISmardexSwapRouter } from "../interfaces/smardex/ISmardexSwapRouter.sol";
-import { Path } from "../libraries/Path.sol";
-import { ISmardexSwapRouterErrors } from "../interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
+import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
+import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
+import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { Path } from "./Path.sol";
 
 /// @title Router library for Smardex
 library SmardexSwapRouterLib {

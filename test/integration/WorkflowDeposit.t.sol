@@ -8,7 +8,9 @@ import { WETH, SDEX, USER_1 } from "usdn-contracts/test/utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
 
 /**
  * @custom:feature Entire workflow of deposit through the router
@@ -73,7 +75,17 @@ contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRout
         inputs[1] = input;
         inputs[2] = abi.encode(Constants.ETH, wstETH, DEPOSIT_AMOUNT);
         inputs[3] = abi.encode(
-            Constants.CONTRACT_BALANCE, 0, USER_1, USER_1, type(uint256).max, "", EMPTY_PREVIOUS_DATA, _securityDeposit
+            IUsdnProtocolRouterTypes.InitiateDepositData(
+                IPaymentLibTypes.PaymentType.Transfer,
+                Constants.CONTRACT_BALANCE,
+                0,
+                USER_1,
+                USER_1,
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _securityDeposit
+            )
         );
         inputs[4] = abi.encode(Constants.ETH, address(this), 0, 0);
         inputs[5] = abi.encode(wstETH, address(this), 0, 0);

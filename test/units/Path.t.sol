@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 import { Test } from "forge-std/Test.sol";
 
-import { Path } from "../../src/libraries/Path.sol";
+import { Path } from "../../src/libraries/smardex/Path.sol";
 
 /// @custom:feature Test the universal-router `Path` library
 contract PathTest is Test {

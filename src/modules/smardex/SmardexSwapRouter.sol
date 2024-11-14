@@ -3,8 +3,8 @@ pragma solidity 0.8.26;
 
 import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
 import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
-import { Path } from "../../libraries/Path.sol";
-import { SmardexSwapRouterLib } from "../../libraries/SmardexSwapRouterLib.sol";
+import { Path } from "../../libraries/smardex/Path.sol";
+import { SmardexSwapRouterLib } from "../../libraries/smardex/SmardexSwapRouterLib.sol";
 import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex

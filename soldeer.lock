@@ -68,6 +68,13 @@ checksum = "20fd008c7c69b6c737cc0284469d1c76497107bc3e004d8381f6d8781cb27980"
 integrity = "f49457fb6591f0dfd8b59e02e6eb4508a115ef08a86b0803feb0a3939d82d783"
 
 [[dependencies]]
+name = "openzeppelin-contracts"
+version = "4.7.0"
+url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.7.0.zip"
+checksum = "7a88a52b70872f3e428e595a03aed77c3323b118338d7256ce57dfc99eeab9e9"
+integrity = "e47aca6d7bf9d4e13aba827a315bac2ab10708d1a2d219bff645a20e5d78ff85"
+
+[[dependencies]]
 name = "openzeppelin-foundry-upgrades"
 version = "0.3.1"
 url = "https://soldeer-revisions.s3.amazonaws.com/openzeppelin-foundry-upgrades/0_3_1_25-06-2024_18:12:33_openzeppelin-foundry-upgrades.zip"

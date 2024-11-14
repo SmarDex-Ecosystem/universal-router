@@ -10,6 +10,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
 
 /**
  * @custom:feature Entire workflow of open position through the router
@@ -41,6 +42,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwa
         inputs[0] = abi.encode(Constants.ETH, wstETH, OPEN_POSITION_AMOUNT * 2);
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
+                IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
                 DESIRED_LIQUIDATION,
                 type(uint128).max,
