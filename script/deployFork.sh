@@ -60,7 +60,7 @@ popd  > /dev/null
 forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
 
 # Check logs
-DEPLOYMENT_LOG=$(cat "./broadcast/01_DeployProtocol.s.sol/31337/run-latest.json")
+DEPLOYMENT_LOG=$(cat "/usr/app/broadcast/01_DeployProtocol.s.sol/31337/run-latest.json")
 FORK_ENV_DUMP=$(
     cat <<EOF
 UNIVERSAL_ROUTER=$(echo "$DEPLOYMENT_LOG" | jq '.returns.UniversalRouter_.value' | xargs printf "%s\n")
