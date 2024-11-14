@@ -17,7 +17,7 @@ library Commands {
     uint256 constant SWEEP = 0x04;
     uint256 constant TRANSFER = 0x05;
     uint256 constant PAY_PORTION = 0x06;
-    // COMMAND_PLACEHOLDER for 0x07 to 0x0f (all unused)
+    // COMMAND_PLACEHOLDER from 0x07 to 0x0f (all unused)
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
@@ -31,7 +31,7 @@ library Commands {
     uint256 constant PERMIT2_TRANSFER_FROM_BATCH = 0x15;
     uint256 constant PERMIT = 0x16;
     uint256 constant TRANSFER_FROM = 0x17;
-    // COMMAND_PLACEHOLDER for 0x18 to 0x1f (all unused)
+    // COMMAND_PLACEHOLDER from 0x18 to 0x1f (all unused)
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
@@ -46,10 +46,11 @@ library Commands {
     uint256 constant VALIDATE_OPEN = 0x26;
     uint256 constant VALIDATE_CLOSE = 0x27;
     uint256 constant LIQUIDATE = 0x28;
-    uint256 constant VALIDATE_PENDING = 0x29;
-    uint256 constant REBALANCER_INITIATE_DEPOSIT = 0x2a;
-    uint256 constant REBALANCER_INITIATE_CLOSE = 0x2b;
-    // COMMAND_PLACEHOLDER for 0x2c to 0x2f (all unused)
+    uint256 constant TRANSFER_POSITION_OWNERSHIP = 0x29;
+    uint256 constant VALIDATE_PENDING = 0x2a;
+    uint256 constant REBALANCER_INITIATE_DEPOSIT = 0x2b;
+    uint256 constant REBALANCER_INITIATE_CLOSE = 0x2c;
+    // COMMAND_PLACEHOLDER from 0x2d to 0x2f (all unused)
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
@@ -60,7 +61,7 @@ library Commands {
     uint256 constant WRAP_STETH = 0x32;
     uint256 constant UNWRAP_WSTETH = 0x33;
     uint256 constant USDN_TRANSFER_SHARES_FROM = 0x34;
-    // COMMAND_PLACEHOLDER for 0x35 to 0x37 (all unused)
+    // COMMAND_PLACEHOLDER from 0x35 to 0x37 (all unused)
 
     // the commands are executed in nested if blocks to minimize gas consumption
     // the following constant defines one of the boundaries where the if blocks split commands
