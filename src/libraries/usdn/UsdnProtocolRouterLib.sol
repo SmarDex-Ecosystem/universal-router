@@ -383,6 +383,7 @@ library UsdnProtocolRouterLib {
             return (false, "");
         }
 
+        // slither-disable-next-line arbitrary-send-eth
         (success_, data_) = rebalancerAddress.call{ value: ethAmount }(
             abi.encodeWithSelector(
                 IRebalancer.initiateClosePosition.selector,
