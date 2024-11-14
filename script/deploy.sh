@@ -2,7 +2,7 @@
 # Path of the script folder (so that the script can be invoked from somewhere else than the project's root)
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
-pushd $SCRIPT_DIR/.. > /dev/null
+pushd $SCRIPT_DIR/.. >/dev/null
 
 red='\033[0;31m'
 green='\033[0;32m'
@@ -59,9 +59,9 @@ while true; do
 done
 
 if [ $ledger = true ]; then
-    forge script --via-ir -l -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
+    forge script -l -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast --slow
 else
-    forge script --via-ir --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
+    forge script --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast --slow
 fi
 
-popd  > /dev/null
+popd >/dev/null
