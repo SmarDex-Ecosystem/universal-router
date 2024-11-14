@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.2.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.1.2...v0.2.0) (2024-11-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* usdn transfer callbacks ([#49](https://github.com/SmarDex-Ecosystem/universal-router/issues/49))
+* usdn transfer position ownership ([#64](https://github.com/SmarDex-Ecosystem/universal-router/issues/64))
+* initiate close ([#53](https://github.com/SmarDex-Ecosystem/universal-router/issues/53))
+
+### Features
+
+* add broadcast of latest tenderly deployment ([#71](https://github.com/SmarDex-Ecosystem/universal-router/issues/71)) ([dc17a1d](https://github.com/SmarDex-Ecosystem/universal-router/commit/dc17a1d2b74de01d61ad2f89694b085047c67380))
+* boundary spaces ([#67](https://github.com/SmarDex-Ecosystem/universal-router/issues/67)) ([1842dca](https://github.com/SmarDex-Ecosystem/universal-router/commit/1842dcad7f79d93e0213756c3eaa2c966d899a00))
+* contract exactOut check ([#55](https://github.com/SmarDex-Ecosystem/universal-router/issues/55)) ([b23452c](https://github.com/SmarDex-Ecosystem/universal-router/commit/b23452cd05075e9a53592c2a7413f18a63a18928))
+* initiate close ([#53](https://github.com/SmarDex-Ecosystem/universal-router/issues/53)) ([4f255be](https://github.com/SmarDex-Ecosystem/universal-router/commit/4f255beb600b823b8b1880bdbcf7d9f32252fce4))
+* lido lib ([#69](https://github.com/SmarDex-Ecosystem/universal-router/issues/69)) ([66c90e1](https://github.com/SmarDex-Ecosystem/universal-router/commit/66c90e1b7a7a447be7916c60aa7fe3f13d94c158))
+* rebalancer initiate close position delegation ([#63](https://github.com/SmarDex-Ecosystem/universal-router/issues/63)) ([6882ce8](https://github.com/SmarDex-Ecosystem/universal-router/commit/6882ce8a93f276c4da093b31c4300fc6e1f932d2))
+* sepolia v0.20 ([#57](https://github.com/SmarDex-Ecosystem/universal-router/issues/57)) ([aa7735c](https://github.com/SmarDex-Ecosystem/universal-router/commit/aa7735c2ba97cb7fd54d63a4aa26ea0d54b064e9))
+* tenderly deployment ([#61](https://github.com/SmarDex-Ecosystem/universal-router/issues/61)) ([07c4af8](https://github.com/SmarDex-Ecosystem/universal-router/commit/07c4af8a644c8932fb808af990765bfb23404caa))
+* transferShares ([#56](https://github.com/SmarDex-Ecosystem/universal-router/issues/56)) ([c6cbf29](https://github.com/SmarDex-Ecosystem/universal-router/commit/c6cbf2972ee6bfc7a919109475ca63a10e66ec44))
+* usdn transfer callbacks ([#49](https://github.com/SmarDex-Ecosystem/universal-router/issues/49)) ([618eff2](https://github.com/SmarDex-Ecosystem/universal-router/commit/618eff2d915f2f816c5abd7a491f6ab36edbbdc9))
+* usdn transfer position ownership ([#64](https://github.com/SmarDex-Ecosystem/universal-router/issues/64)) ([532bd8e](https://github.com/SmarDex-Ecosystem/universal-router/commit/532bd8eff0b7bcab0a321130ea236610170c7a8a))
+
+
+### Bug Fixes
+
+* liquidate ([#59](https://github.com/SmarDex-Ecosystem/universal-router/issues/59)) ([0b7f470](https://github.com/SmarDex-Ecosystem/universal-router/commit/0b7f47097c38278feaf63e617a4869fc983c3c2c))
+* **script:** add --slow to the deployment ([#70](https://github.com/SmarDex-Ecosystem/universal-router/issues/70)) ([9d990b9](https://github.com/SmarDex-Ecosystem/universal-router/commit/9d990b959f059401bfb18029a6e76ed93b695e49))
+
 ## [0.1.2](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.1.1...v0.1.2) (2024-10-23)
 
 
