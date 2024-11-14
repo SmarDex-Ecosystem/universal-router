@@ -38,7 +38,7 @@ for i in {1..15}; do
         printf "\n$green WUSDN contract found on blockchain$nc\n\n"
         export WUSDN_ADDRESS=$WUSDN_ADDRESS
         export USDN_PROTOCOL_ADDRESS=$(cat "$broadcastUsdn" | jq -r '.returns.UsdnProtocol_.value')
-        cat "$usdnFolder/.env.fork" > .env.fork
+        # cat "$usdnFolder/.env.fork" > .env.fork
         break
     fi
 
