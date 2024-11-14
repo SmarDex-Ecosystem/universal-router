@@ -16,7 +16,7 @@ import { DEPLOYER, USER_1 } from "./utils/Constants.sol";
  * @custom:feature Test the USDN initiate actions through the router using transfer
  * @custom:background A deployed router
  */
-contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBaseFixture {
+contract TestForkUniversalRouterUsdnProtocolInitiateActionsTransfer is UniversalRouterBaseFixture {
     uint256 internal constant BASE_AMOUNT = 5 ether;
     uint256 internal _baseUsdnShares;
     uint256 internal _securityDeposit;
@@ -101,6 +101,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(wstETH.balanceOf(address(this)), wstEthBalanceBefore - BASE_AMOUNT / 10, "asset balance");
+
+        IUsdnProtocolTypes.DepositPendingAction memory action =
+            protocol.i_toDepositPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -137,6 +141,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(wstETH.balanceOf(address(this)), wstETHBefore - BASE_AMOUNT, "wstETH balance");
+
+        IUsdnProtocolTypes.LongPendingAction memory action =
+            protocol.i_toLongPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -174,6 +182,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(wstETH.balanceOf(address(this)), wstETHBefore - BASE_AMOUNT, "wstETH balance");
+
+        IUsdnProtocolTypes.LongPendingAction memory action =
+            protocol.i_toLongPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -206,6 +218,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(usdn.sharesOf(address(this)), usdnSharesBefore - _baseUsdnShares, "usdn shares");
+
+        IUsdnProtocolTypes.WithdrawalPendingAction memory action =
+            protocol.i_toWithdrawalPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -239,6 +255,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsTransfer is UniversalRouterBa
 
         assertEq(address(this).balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(usdn.sharesOf(address(this)), usdnSharesBefore - _baseUsdnShares, "usdn shares");
+
+        IUsdnProtocolTypes.WithdrawalPendingAction memory action =
+            protocol.i_toWithdrawalPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**

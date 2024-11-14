@@ -6,7 +6,8 @@ import { TransientStorageLib } from "../TransientStorageLib.sol";
 
 library PaymentLib {
     /// @notice The transient payment storage slot
-    bytes32 private constant TRANSIENT_PAYMENT_SLOT = bytes32(uint256(keccak256("transient.payment")) - 1);
+    bytes32 private constant TRANSIENT_PAYMENT_SLOT =
+        keccak256(abi.encode(uint256(keccak256("transient.payment")) - 1)) & ~bytes32(uint256(0xff));
 
     /**
      * @notice Set the payment value

@@ -111,7 +111,9 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
 
         router.execute{ value: _securityDeposit }(commands, inputs);
 
-        IUsdnProtocolTypes.PendingAction memory action = protocol.getUserPendingAction(address(this));
+        IUsdnProtocolTypes.LongPendingAction memory action =
+            protocol.i_toLongPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
         assertEq(action.to, USER_1, "pending action to");
         assertEq(action.validator, address(this), "pending action validator");
         assertTrue(

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.26;
 
+import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+
 import { Commands } from "../../src/libraries/Commands.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
@@ -82,6 +84,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
         router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(wstETH.balanceOf(sigUser1), wstEthBalanceBefore - BASE_AMOUNT / 10, "asset balance");
+
+        IUsdnProtocolTypes.DepositPendingAction memory action =
+            protocol.i_toDepositPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -179,6 +185,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         assertEq(sigUser1.balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(wstETH.balanceOf(sigUser1), wstETHBefore - BASE_AMOUNT, "wstETH balance");
+
+        IUsdnProtocolTypes.LongPendingAction memory action =
+            protocol.i_toLongPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -222,6 +232,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         assertEq(sigUser1.balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(wstETH.balanceOf(sigUser1), wstETHBefore - BASE_AMOUNT, "wstETH balance");
+
+        IUsdnProtocolTypes.LongPendingAction memory action =
+            protocol.i_toLongPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -265,6 +279,10 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         assertEq(sigUser1.balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(usdn.sharesOf(sigUser1), usdnSharesBefore - _baseUsdnShares, "usdn shares");
+
+        IUsdnProtocolTypes.WithdrawalPendingAction memory action =
+            protocol.i_toWithdrawalPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 
     /**
@@ -305,5 +323,9 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
 
         assertEq(sigUser1.balance, ethBalanceBefore - _securityDeposit, "ether balance");
         assertEq(usdn.sharesOf(sigUser1), usdnSharesBefore - _baseUsdnShares, "usdn shares");
+
+        IUsdnProtocolTypes.WithdrawalPendingAction memory action =
+            protocol.i_toWithdrawalPendingAction(protocol.getUserPendingAction(address(this)));
+        assertEq(action.to, USER_1, "pending action to");
     }
 }
