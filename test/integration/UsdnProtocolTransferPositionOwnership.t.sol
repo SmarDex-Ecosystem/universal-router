@@ -111,7 +111,7 @@ contract TestForkUniversalRouterTransferPositionOwnership is UniversalRouterBase
         router.execute(commands, inputs);
 
         (_pos,) = protocol.getLongPosition(_posId);
-        assertEq(_pos.user, USER_1, "position ownership should still be transferred to `USER_1`");
+        assertEq(_pos.user, USER_1, "position owner should still be the `USER_1`");
     }
 
     receive() external payable { }
