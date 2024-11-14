@@ -29,6 +29,8 @@ export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 printf "$green USDN protocol has been deployed !\n"
 sleep 1s
 
+echo "ls"
+ls
 for i in {1..15}; do
     printf "$green Trying to fetch WUSDN address... (attempt $i/15)$nc\n"
     WUSDN_ADDRESS=$(cat "$broadcastUsdn" | jq -r '.returns.Wusdn_.value')
