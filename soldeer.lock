@@ -28,9 +28,9 @@ integrity = "5e72b15def9c574e04abef4318facb4edb2215108554df12fe5e5ba753b501cb"
 
 [[dependencies]]
 name = "@smardex-usdn-contracts"
-version = "0.20.0"
+version = "0.22.0"
 source = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git"
-checksum = "474d37350aefaa3eba439add5d18c62de0bf2620"
+checksum = "09e1d5cacf0c2067195511bb08aedea31f831369"
 
 [[dependencies]]
 name = "@uniswap-permit2"
@@ -66,6 +66,13 @@ version = "1.9.2"
 source = "https://soldeer-revisions.s3.amazonaws.com/forge-std/1_9_2_06-08-2024_17:31:25_forge-std-1.9.2.zip"
 checksum = "20fd008c7c69b6c737cc0284469d1c76497107bc3e004d8381f6d8781cb27980"
 integrity = "5ac32b7c811ad6739656a77ac207fa440f8a5728765a9d4db244df7d89c39806"
+
+[[dependencies]]
+name = "openzeppelin-contracts"
+version = "4.7.0"
+source = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.7.0.zip"
+checksum = "7a88a52b70872f3e428e595a03aed77c3323b118338d7256ce57dfc99eeab9e9"
+integrity = "54ae677ae6331fbd15df7ecb1fcc68763d0d1e703377ae6e47b774450f5b7a81"
 
 [[dependencies]]
 name = "openzeppelin-foundry-upgrades"
