@@ -8,6 +8,7 @@ import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
 import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integration/UsdnProtocol/utils/Fixtures.sol";
 import { UsdnProtocolUtilsLibrary as Utils } from
     "usdn-contracts/src/UsdnProtocol/libraries/UsdnProtocolUtilsLibrary.sol";
+import { PermitSignature } from "permit2/test/utils/PermitSignature.sol";
 
 import { UniversalRouterHandler } from "./Handler.sol";
 import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
@@ -17,7 +18,15 @@ import { ISmardexFactory } from "../../../src/interfaces/smardex/ISmardexFactory
  * @title UniversalRouterBaseFixture
  * @dev Utils for testing the Universal Router
  */
-contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture {
+contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, PermitSignature {
+    modifier prankUser(address user) {
+        vm.startPrank(user);
+        _;
+        vm.stopPrank();
+    }
+
+    uint256 internal constant SIG_USER1_PK = 1;
+    address internal sigUser1 = vm.addr(SIG_USER1_PK);
     UniversalRouterHandler public router;
     IAllowanceTransfer permit2;
     AggregatorV3Interface public priceFeed;

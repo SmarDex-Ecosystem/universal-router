@@ -16,8 +16,8 @@ import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
 contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
     function setUp() public {
         _setUp(DEFAULT_PARAMS);
-        deal(address(wstETH), vm.addr(1), 1 ether);
-        deal(vm.addr(1), 1e6 ether);
+        deal(address(wstETH), sigUser1, 1 ether);
+        deal(sigUser1, 1e6 ether);
     }
 
     /**
@@ -35,22 +35,22 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         bytes[] memory inputs = new bytes[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            1,
+            SIG_USER1_PK,
             _getDigest(
-                vm.addr(1),
+                sigUser1,
                 address(this),
                 1 ether,
-                IERC20Permit(wstETH).nonces(vm.addr(1)),
+                IERC20Permit(wstETH).nonces(sigUser1),
                 type(uint256).max,
                 wstETH.DOMAIN_SEPARATOR()
             )
         );
-        inputs[0] = abi.encode(address(wstETH), address(vm.addr(1)), address(this), 1 ether, type(uint256).max, v, r, s);
+        inputs[0] = abi.encode(address(wstETH), address(sigUser1), address(this), 1 ether, type(uint256).max, v, r, s);
 
-        vm.prank(vm.addr(1));
+        vm.prank(sigUser1);
         router.execute(commands, inputs);
 
-        wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
+        wstETH.transferFrom(sigUser1, address(this), 1 ether);
 
         assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
     }
@@ -72,27 +72,27 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         bytes[] memory inputs = new bytes[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            1,
+            SIG_USER1_PK,
             _getDigest(
-                vm.addr(1),
+                sigUser1,
                 address(this),
                 1 ether,
-                IERC20Permit(wstETH).nonces(vm.addr(1)),
+                IERC20Permit(wstETH).nonces(sigUser1),
                 type(uint256).max,
                 wstETH.DOMAIN_SEPARATOR()
             )
         );
-        inputs[0] = abi.encode(address(wstETH), vm.addr(1), address(this), 1 ether, type(uint256).max, v, r, s);
+        inputs[0] = abi.encode(address(wstETH), sigUser1, address(this), 1 ether, type(uint256).max, v, r, s);
 
         // griefing executed by an attacker
         vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
         // executed by the victim (the griefed user)
-        vm.prank(vm.addr(1));
+        vm.prank(sigUser1);
         router.execute(commands, inputs);
 
-        wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
+        wstETH.transferFrom(sigUser1, address(this), 1 ether);
 
         assertEq(wstETH.balanceOf(address(this)), wstETHBalanceBefore + 1 ether, "wstETH balance after transfer");
     }
@@ -115,24 +115,24 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         bytes[] memory inputs = new bytes[](1);
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            1,
+            SIG_USER1_PK,
             _getDigest(
-                vm.addr(1), // victim
+                sigUser1, // victim
                 address(this),
                 1 ether,
-                IERC20Permit(wstETH).nonces(vm.addr(1)),
+                IERC20Permit(wstETH).nonces(sigUser1),
                 type(uint256).max,
                 wstETH.DOMAIN_SEPARATOR()
             )
         );
-        inputs[0] = abi.encode(address(wstETH), vm.addr(1), address(this), 1 ether, type(uint256).max, v, r, s);
+        inputs[0] = abi.encode(address(wstETH), sigUser1, address(this), 1 ether, type(uint256).max, v, r, s);
 
         // griefing executed by an attacker
         vm.prank(vm.addr(2));
         router.execute(commands, inputs);
 
         // executed by the victim (the griefed user)
-        vm.prank(vm.addr(1));
+        vm.prank(sigUser1);
         vm.expectRevert(
             abi.encodeWithSelector(
                 IUniversalRouter.ExecutionFailed.selector,
@@ -142,7 +142,7 @@ contract TestForkUniversalRouterPermit is UniversalRouterBaseFixture, SigUtils {
         );
         router.execute(commands, inputs);
 
-        wstETH.transferFrom(vm.addr(1), address(this), 1 ether);
+        wstETH.transferFrom(sigUser1, address(this), 1 ether);
 
         assertEq(
             wstETH.balanceOf(address(this)),
