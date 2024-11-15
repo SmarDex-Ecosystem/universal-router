@@ -54,7 +54,7 @@ done
 
 
 # Add USDN protocol address to .env.fork of universal-router
-cat ".env.fork" > "../.env.fork"
+cat ".env.fork" > "../../.env.fork"
 
 # Enter universal-router folder
 popd  > /dev/null
