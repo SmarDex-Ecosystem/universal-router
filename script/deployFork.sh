@@ -66,10 +66,11 @@ forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "
 DEPLOYMENT_LOG=$(cat "broadcast/01_Deploy.s.sol/31337/run-latest.json")
 FORK_ENV_DUMP=$(
     cat <<EOF
+$(cat .env.fork)
 UNIVERSAL_ROUTER=$(echo "$DEPLOYMENT_LOG" | jq '.returns.UniversalRouter_.value' | xargs printf "%s\n")
 EOF
 )
-chmod +w .env.fork
-echo "$FORK_ENV_DUMP" >> .env.fork
+
+echo "$FORK_ENV_DUMP" > .env.fork
 
 popd  > /dev/null
