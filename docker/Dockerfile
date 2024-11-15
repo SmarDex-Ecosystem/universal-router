@@ -24,8 +24,11 @@ ARG APP_TOKEN
 
 # Install dependencies
 RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
-    forge soldeer install && \
-    npm install
+    forge soldeer install
+
+WORKDIR /usr/app/dependencies/@smardex-usdn-contracts-0.22.0
+RUN forge soldeer install && npm ci
+WORKDIR /usr/app/
 
 # Precompile contracts
 RUN forge build src script
