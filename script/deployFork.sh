@@ -20,7 +20,7 @@ script/deployFork.sh
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
-broadcastUsdn="broadcast/01_Deploy.s.sol/$chainId/run-latest.json"
+broadcastUsdn="./broadcast/01_DeployProtocol.s.sol/$chainId/run-latest.json"
 export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
 printf "$green USDN protocol has been deployed !\n"
@@ -52,11 +52,12 @@ for i in {1..15}; do
     sleep 2s
 done
 
-# Enter universal-router folder
-popd  > /dev/null
 
 # Add USDN protocol address to .env.fork of universal-router
-cat "dependencies/@smardex-usdn-contracts-0.22.0/.env.fork" > .env.fork
+cat ".env.fork" > "../.env.fork"
+
+# Enter universal-router folder
+popd  > /dev/null
 
 # Deploy Router
 forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
