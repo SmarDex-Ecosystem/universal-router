@@ -69,6 +69,7 @@ FORK_ENV_DUMP=$(
 UNIVERSAL_ROUTER=$(echo "$DEPLOYMENT_LOG" | jq '.returns.UniversalRouter_.value' | xargs printf "%s\n")
 EOF
 )
+chmod +w .env.fork
 echo "$FORK_ENV_DUMP" >> .env.fork
 
 popd  > /dev/null
