@@ -4,7 +4,6 @@ green='\033[0;32m'
 blue='\033[0;34m'
 nc='\033[0m'
 
-
 # Path of the script folder (so that the script can be invoked from somewhere else than the project's root)
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
@@ -45,7 +44,6 @@ for i in {1..15}; do
 
     sleep 2s
 done
-
 
 # Add USDN protocol address to .env.fork of universal-router
 cat ".env.fork" > "../../.env.fork"
