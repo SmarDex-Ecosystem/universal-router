@@ -23,7 +23,7 @@ script/deployFork.sh
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
-broadcastUsdn="$usdnFolder/broadcast/01_Deploy.s.sol/$chainId/run-latest.json"
+broadcastUsdn="./broadcast/01_Deploy.s.sol/$chainId/run-latest.json"
 export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
 printf "$green USDN protocol has been deployed !\n"
@@ -44,7 +44,6 @@ for i in {1..15}; do
         printf "\n$green WUSDN contract found on blockchain$nc\n\n"
         export WUSDN_ADDRESS=$WUSDN_ADDRESS
         export USDN_PROTOCOL_ADDRESS=$(cat "$broadcastUsdn" | jq -r '.returns.UsdnProtocol_.value')
-        cat "$usdnFolder/.env.fork" > .env.fork
         break
     fi
 
@@ -59,10 +58,10 @@ done
 # Enter universal-router folder
 popd  > /dev/null
 
-# Deploy Router
-# npm ci
-# forge soldeer install
+# Add USDN protocol address to .env.fork of universal-router
+cat "./dependencies/@smardex-usdn-contracts-0.22.0/.env.fork" > .env.fork
 
+# Deploy Router
 forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
 
 # Check logs
