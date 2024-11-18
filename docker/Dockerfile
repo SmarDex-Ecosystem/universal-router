@@ -33,8 +33,19 @@ WORKDIR /usr/app/
 # Precompile contracts
 RUN forge build src script
 
-# Remove possible traces from private data
+###
+# Remove possible traces of the token
+###
 RUN rm -rf .git
+
+# Start from a clean image
+FROM ghcr.io/foundry-rs/foundry:latest AS fork
+
+WORKDIR /usr/app/
+
+COPY --from=build /usr/app/ /usr/app/
+###
+###
 
 # Append dump command to deployFork.sh
 RUN printf '\necho "$FORK_ENV_DUMP" > .env.fork' >> script/deployFork.sh
