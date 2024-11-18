@@ -12,9 +12,6 @@ COPY foundry.toml soldeer.lock \
 # Add bash and jq to foundry image
 RUN apk add bash jq
 
-# Install bash
-RUN apk add --no-cache bash
-
 # Define the base image with a build arg for the version
 ARG APP_TOKEN
 
