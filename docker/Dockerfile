@@ -16,7 +16,9 @@ RUN apk add bash jq git
 ARG APP_TOKEN
 
 # Install foundry
-RUN wget -L https://foundry.paradigm.xyz | bash
+RUN wget -L https://foundry.paradigm.xyz | bash && \
+    foundryup
+
 
 # Install dependencies
 RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
@@ -41,7 +43,8 @@ FROM node:20-alpine AS fork
 RUN apk add bash jq
 
 # Install foundry
-RUN wget -L https://foundry.paradigm.xyz | bash
+RUN wget -L https://foundry.paradigm.xyz | bash && \
+    foundryup
 
 COPY --from=build /usr/app/ /usr/app/
 
