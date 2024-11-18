@@ -15,10 +15,12 @@ RUN apk add bash jq git
 # Define the base image with a build arg for the version
 ARG APP_TOKEN
 
+# Install Rust
+RUN wget https://sh.rustup.rs -O rustup-init.sh
+
 # Install foundry
 RUN wget -L https://foundry.paradigm.xyz | bash && \
     foundryup
-
 
 # Install dependencies
 RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
@@ -41,6 +43,9 @@ FROM node:20-alpine AS fork
 
 # Add bash to foundry image and jq to get the env variables
 RUN apk add bash jq
+
+# Install Rust
+RUN wget https://sh.rustup.rs -O rustup-init.sh
 
 # Install foundry
 RUN wget -L https://foundry.paradigm.xyz | bash && \
