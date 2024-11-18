@@ -12,11 +12,14 @@ COPY foundry.toml soldeer.lock \
 # Add bash and jq to foundry image
 RUN apk add bash jq
 
+# Install bash
+RUN apk add --no-cache bash
+
 # Define the base image with a build arg for the version
 ARG APP_TOKEN
 
 # Install foundry
-RUN curl -L https://foundry.paradigm.xyz | bash
+RUN wget -L https://foundry.paradigm.xyz | bash
 
 # Install dependencies
 RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
