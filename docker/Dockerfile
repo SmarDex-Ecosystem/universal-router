@@ -9,7 +9,7 @@ COPY foundry.toml soldeer.lock \
     package.json package-lock.json \
     ./
 
-# Add bash and jq to foundry image
+# Add bash to foundry image and jq to get the env variables
 RUN apk add bash jq
 
 # Define the base image with a build arg for the version
@@ -37,8 +37,11 @@ RUN rm -rf .git
 # Start from a clean image
 FROM node:20-alpine AS fork
 
+# Add bash to foundry image and jq to get the env variables
+RUN apk add bash jq
+
 # Install foundry
-RUN curl -L https://foundry.paradigm.xyz | bash
+RUN wget -L https://foundry.paradigm.xyz | bash
 
 COPY --from=build /usr/app/ /usr/app/
 
