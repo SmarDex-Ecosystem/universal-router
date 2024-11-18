@@ -41,14 +41,14 @@ RUN rm -rf .git
 # Start from a clean image
 FROM ghcr.io/foundry-rs/foundry:latest AS fork
 
-WORKDIR /usr/app/
-
 COPY --from=build /usr/app/ /usr/app/
 
-COPY --from=build /anvil-scripts-custom /anvil-scripts-custom
+COPY --from=build /anvil-scripts-custom/ /anvil-scripts-custom/
 
 ###
 ###
+
+WORKDIR /usr/app/
 
 # Append dump command to deployFork.sh
 RUN printf '\necho "$FORK_ENV_DUMP" > .env.fork' >> script/deployFork.sh
