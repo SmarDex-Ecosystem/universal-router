@@ -9,8 +9,8 @@ COPY foundry.toml soldeer.lock \
     package.json package-lock.json \
     ./
 
-# Add bash to foundry image and jq to get the env variables
-RUN apk add bash jq
+# Add bash to foundry image, git for deps install and jq to get the env variables
+RUN apk add bash jq git
 
 # Define the base image with a build arg for the version
 ARG APP_TOKEN
