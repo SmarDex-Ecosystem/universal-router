@@ -1,4 +1,4 @@
-FROM ghcr.io/foundry-rs/foundry:latest AS build
+FROM node:20-alpine AS build
 
 WORKDIR /usr/app/
 
@@ -9,18 +9,14 @@ COPY foundry.toml soldeer.lock \
     package.json package-lock.json \
     ./
 
-# Add node 20 to foundry image
-COPY --from=node:20-alpine /usr/lib /usr/lib
-COPY --from=node:20-alpine /usr/local/share /usr/local/share
-COPY --from=node:20-alpine /usr/local/lib /usr/local/lib
-COPY --from=node:20-alpine /usr/local/include /usr/local/include
-COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
-
 # Add bash and jq to foundry image
 RUN apk add bash jq
 
 # Define the base image with a build arg for the version
 ARG APP_TOKEN
+
+# Install foundry
+RUN curl -L https://foundry.paradigm.xyz | bash
 
 # Install dependencies
 RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
@@ -39,11 +35,12 @@ RUN forge build src script
 RUN rm -rf .git
 
 # Start from a clean image
-FROM ghcr.io/foundry-rs/foundry:latest AS fork
+FROM node:20-alpine AS fork
+
+# Install foundry
+RUN curl -L https://foundry.paradigm.xyz | bash
 
 COPY --from=build /usr/app/ /usr/app/
-
-COPY --from=build /anvil-scripts-custom/ /anvil-scripts-custom/
 
 ###
 ###
