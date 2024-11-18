@@ -45,6 +45,14 @@ for i in {1..15}; do
     sleep 2s
 done
 
+echo "DEPLOYER_ADDRESS"
+echo $DEPLOYER_ADDRESS
+echo "________________"
+
+echo "USDN_PROTOCOL_ADDRESS"
+echo $USDN_PROTOCOL_ADDRESS
+echo "_____________________"
+
 # Add USDN protocol address to .env.fork of universal-router
 cat ".env.fork" > "../../.env.fork"
 
