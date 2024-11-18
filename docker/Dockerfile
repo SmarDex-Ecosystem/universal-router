@@ -44,6 +44,9 @@ FROM ghcr.io/foundry-rs/foundry:latest AS fork
 WORKDIR /usr/app/
 
 COPY --from=build /usr/app/ /usr/app/
+
+COPY --from=build /anvil-scripts-custom /anvil-scripts-custom
+
 ###
 ###
 
