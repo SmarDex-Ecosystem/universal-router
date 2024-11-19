@@ -7,6 +7,7 @@
     "name": "RA2 Tech SA",
     "url": "https://ra2.tech"
   },
+  "dockerize": true,
   "license": "GPL-3.0-or-later",
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && rm -rf dependencies && forge clean && npm i && forge soldeer install",
