@@ -45,14 +45,6 @@ for i in {1..15}; do
     sleep 2s
 done
 
-echo "DEPLOYER_ADDRESS"
-echo $DEPLOYER_ADDRESS
-echo "________________"
-
-echo "USDN_PROTOCOL_ADDRESS"
-echo $USDN_PROTOCOL_ADDRESS
-echo "_____________________"
-
 # Add USDN protocol address to .env.fork of universal-router
 cat ".env.fork" > "../../.env.fork"
 
@@ -79,62 +71,98 @@ popd  > /dev/null
 # Admin set roles
 #####
 
-# ADMIN_SET_EXTERNAL_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xe066b764dbc472e706cbc2f8733ab0fcee541dd01136dc6512dca8f6dc61b692" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+rolesArr=(
+    ADMIN_SET_EXTERNAL_ROLE
+    ADMIN_SET_OPTIONS_ROLE
+    ADMIN_SET_PROTOCOL_PARAMS_ROLE
+    ADMIN_SET_USDN_PARAMS_ROLE
+    SET_EXTERNAL_ROLE
+    SET_USDN_PARAMS_ROLE
+    SET_OPTIONS_ROLE
+    SET_PROTOCOL_PARAMS_ROLE
+    ADMIN_CRITICAL_FUNCTIONS_ROLE
+    ADMIN_PROXY_UPGRADE_ROLE
+    ADMIN_PAUSER_ROLE
+    ADMIN_UNPAUSER_ROLE
+    CRITICAL_FUNCTIONS_ROLE
+    PROXY_UPGRADE_ROLE
+    PAUSER_ROLE
+    UNPAUSER_ROLE
+)
 
-# ADMIN_SET_OPTIONS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x98de2855152060acaf991c6c67bcd523513322d493b38e46544cf92e3fee8334" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+for role in "${roles[@]}"; do
+    # Encode role
+    encodedRole=$(cast keccak "$role")
+    
+    # Send transaction
+    echo "Granting role $role to $DEPLOYER_ADDRESS..."
+    cast send $USDN_PROTOCOL_ADDRESS \
+        --from $DEPLOYER_ADDRESS \
+        "grantRole(bytes32 role, address account)" \
+        $encodedRole $DEPLOYER_ADDRESS \
+        --private-key $deployerPrivateKey
 
-# ADMIN_SET_PROTOCOL_PARAMS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x668144e07fd661d09cc13a56f823a5cecc9ddd81fac15e0f66a794e2048f7eeb" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+    echo "Role $role granted successfully."
+done
 
-# ADMIN_SET_USDN_PARAMS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x750ec48621e602bf6e87efd3f05aacefc0afaaf02ef76bf2316cd7d61322e136" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # ADMIN_SET_EXTERNAL_ROLE
+# encodedRole=$(cast keccak ADMIN_SET_EXTERNAL_ROLE)
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" $encodedRole $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-#####
-# Normal set roles
-#####
+# # ADMIN_SET_OPTIONS_ROLE
+# encodedRole=$(cast keccak ADMIN_SET_OPTIONS_ROLE)
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" $encodedRole $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# SET_EXTERNAL_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x112a81abbbc0a642a71c01ee707237745fdf9150a36cd6c341a77a82b042fcfe" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # ADMIN_SET_PROTOCOL_PARAMS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x668144e07fd661d09cc13a56f823a5cecc9ddd81fac15e0f66a794e2048f7eeb" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# SET_USDN_PARAMS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x2332b7708e4d211430c3d07e50a5483bc31f86f1a3c7c79e159a5bab63060e82" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # ADMIN_SET_USDN_PARAMS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x750ec48621e602bf6e87efd3f05aacefc0afaaf02ef76bf2316cd7d61322e136" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# SET_OPTIONS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x5fdbe07c81484705bc90cbf005feb2ecc66822288a5ac5d3cf89e384fa6fdd47" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# #####
+# # Normal set roles
+# #####
 
-# SET_PROTOCOL_PARAMS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xa33d215b27d5ec861579769ea5343a0a14da1a34a49b09fa343facf13bf852ba" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # SET_EXTERNAL_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x112a81abbbc0a642a71c01ee707237745fdf9150a36cd6c341a77a82b042fcfe" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-#####
-# Set admin roles
-#####
+# # SET_USDN_PARAMS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x2332b7708e4d211430c3d07e50a5483bc31f86f1a3c7c79e159a5bab63060e82" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# ADMIN_CRITICAL_FUNCTIONS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xe7b4cf829186f8c4eae56184e8b39efd89f053da9890202c466f766239b5c06d" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # SET_OPTIONS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x5fdbe07c81484705bc90cbf005feb2ecc66822288a5ac5d3cf89e384fa6fdd47" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# ADMIN_PROXY_UPGRADE_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x5afc0553d94a015add162f99e64d9f1e7954cb5168d8eb6c93ee26a783968d8a" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # SET_PROTOCOL_PARAMS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xa33d215b27d5ec861579769ea5343a0a14da1a34a49b09fa343facf13bf852ba" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# ADMIN_PAUSER_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x365fccb66c62533ad1447fec73f7b764cf03ac69d512070f7c0aa889025cec19" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# #####
+# # Set admin roles
+# #####
 
-# ADMIN_UNPAUSER_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xe7747964bba14b1d51bb4f84f826a6ba3ef37d424902280c5a01c99b837c970d" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # ADMIN_CRITICAL_FUNCTIONS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xe7b4cf829186f8c4eae56184e8b39efd89f053da9890202c466f766239b5c06d" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-#####
-# Set normal roles
-#####
+# # ADMIN_PROXY_UPGRADE_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x5afc0553d94a015add162f99e64d9f1e7954cb5168d8eb6c93ee26a783968d8a" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# CRITICAL_FUNCTIONS_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x02f5b57e73f7374270c293a6c0f8f21b963fcb794517ca371178f1ebf3e0ea7d" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # ADMIN_PAUSER_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x365fccb66c62533ad1447fec73f7b764cf03ac69d512070f7c0aa889025cec19" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# PROXY_UPGRADE_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x233d5d22cfc2df30a1764cac21e2207537a3711647f2c29fe3702201f65c1444" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # ADMIN_UNPAUSER_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0xe7747964bba14b1d51bb4f84f826a6ba3ef37d424902280c5a01c99b837c970d" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
 
-# PAUSER_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# #####
+# # Set normal roles
+# #####
 
-# UNPAUSER_ROLE
-cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x427da25fe773164f88948d3e215c94b6554e2ed5e5f203a821c9f2f6131cf75a" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+# # CRITICAL_FUNCTIONS_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x02f5b57e73f7374270c293a6c0f8f21b963fcb794517ca371178f1ebf3e0ea7d" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+
+# # PROXY_UPGRADE_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x233d5d22cfc2df30a1764cac21e2207537a3711647f2c29fe3702201f65c1444" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+
+# # PAUSER_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
+
+# # UNPAUSER_ROLE
+# cast send $USDN_PROTOCOL_ADDRESS --from $DEPLOYER_ADDRESS "grantRole(bytes32 role, address account)" "0x427da25fe773164f88948d3e215c94b6554e2ed5e5f203a821c9f2f6131cf75a" $DEPLOYER_ADDRESS --private-key $deployerPrivateKey
