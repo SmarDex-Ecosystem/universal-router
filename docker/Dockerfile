@@ -1,4 +1,4 @@
-FROM node:20-alpine AS build
+FROM ghcr.io/foundry-rs/foundry:latest AS build
 
 WORKDIR /usr/app/
 
@@ -9,18 +9,18 @@ COPY foundry.toml soldeer.lock \
     package.json package-lock.json \
     ./
 
+# Add node 20 to foundry image
+COPY --from=node:20-alpine /usr/lib /usr/lib
+COPY --from=node:20-alpine /usr/local/share /usr/local/share
+COPY --from=node:20-alpine /usr/local/lib /usr/local/lib
+COPY --from=node:20-alpine /usr/local/include /usr/local/include
+COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
+
 # Add bash to foundry image, git for deps install and jq to get the env variables
-RUN apk add bash jq git
+RUN apk add jq
 
 # Define the base image with a build arg for the version
 ARG APP_TOKEN
-
-# Install Rust
-RUN wget https://sh.rustup.rs -O rustup-init.sh
-
-# Install foundry
-RUN wget -L https://foundry.paradigm.xyz | bash && \
-    foundryup
 
 # Install dependencies
 RUN git config --global url."https://x-access-token:$APP_TOKEN@github.com/".insteadOf "git@github.com:" && \
@@ -39,18 +39,19 @@ RUN forge build src script
 RUN rm -rf .git
 
 # Start from a clean image
-FROM node:20-alpine AS fork
+FROM ghcr.io/foundry-rs/foundry:latest AS fork
 
 # Add bash to foundry image and jq to get the env variables
 RUN apk add bash jq
 
-# Install Rust
-RUN wget https://sh.rustup.rs -O rustup-init.sh
+# Add node 20 to foundry image
+COPY --from=node:20-alpine /usr/lib /usr/lib
+COPY --from=node:20-alpine /usr/local/share /usr/local/share
+COPY --from=node:20-alpine /usr/local/lib /usr/local/lib
+COPY --from=node:20-alpine /usr/local/include /usr/local/include
+COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
 
-# Install foundry
-RUN wget -L https://foundry.paradigm.xyz | bash && \
-    foundryup
-
+# Copy back necessary files
 COPY --from=build /usr/app/ /usr/app/
 
 ###
