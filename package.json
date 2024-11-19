@@ -1,12 +1,13 @@
 {
   "name": "@smardex/universal-router",
-  "version": "0.2.0",
+  "version": "test-0.3.16",
   "description": "Universal router to perform controlled multicall actions on the protocols of the SmarDex ecosystem",
   "repository": "github:SmarDex-Ecosystem/universal-router",
   "author": {
     "name": "RA2 Tech SA",
     "url": "https://ra2.tech"
   },
+  "dockerize": true,
   "license": "GPL-3.0-or-later",
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf .coverage && rm -rf out && rm -rf lib && rm -rf dependencies && forge clean && npm i && forge soldeer install",
