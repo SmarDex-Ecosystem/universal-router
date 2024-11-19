@@ -34,9 +34,7 @@ WORKDIR /usr/app/
 # Precompile contracts
 RUN forge build src script
 
-###
 # Remove possible traces of the token
-###
 RUN rm -rf .git
 
 # Start from a clean image
@@ -54,9 +52,6 @@ COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
 
 # Copy back necessary files
 COPY --from=build /usr/app/ /usr/app/
-
-###
-###
 
 WORKDIR /usr/app/
 
