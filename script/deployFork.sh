@@ -49,7 +49,7 @@ done
 cat ".env.fork" > "../../.env.fork"
 
 # Enter universal-router folder
-popd  > /dev/null
+popd > /dev/null
 
 # Deploy Router
 forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
