@@ -13,8 +13,9 @@ import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouter
 import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
+import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
-import { LidoRouter } from "../modules/lido/LidoRouter.sol";
+import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
 import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { Sweep } from "../modules/Sweep.sol";
@@ -29,10 +30,10 @@ abstract contract Dispatcher is
     Sweep,
     V2SwapRouter,
     V3SwapRouter,
-    LidoRouter,
     SmardexSwapRouter,
     LockAndMap,
-    UsdnProtocolRouter
+    UsdnProtocolRouter,
+    LidoImmutables
 {
     using BytesLib for bytes;
 
@@ -481,19 +482,23 @@ abstract contract Dispatcher is
                     }
                     UsdnProtocolRouterLib.unwrapUSDN(WUSDN, wusdnAmount, map(recipient));
                 } else if (command == Commands.WRAP_STETH) {
-                    // equivalent: abi.decode(inputs, address)
+                    // equivalent: abi.decode(inputs, (uint256, address))
+                    uint256 stethAmount;
                     address recipient;
                     assembly {
-                        recipient := calldataload(inputs.offset)
+                        stethAmount := calldataload(inputs.offset)
+                        recipient := calldataload(add(inputs.offset, 0x20))
                     }
-                    success_ = LidoRouter._wrapSTETH(map(recipient));
+                    success_ = LidoRouterLib.wrapSTETH(STETH, WSTETH, stethAmount, map(recipient));
                 } else if (command == Commands.UNWRAP_WSTETH) {
-                    // equivalent: abi.decode(inputs, address)
+                    // equivalent: abi.decode(inputs, (uint256, address))
+                    uint256 wstethAmount;
                     address recipient;
                     assembly {
-                        recipient := calldataload(inputs.offset)
+                        wstethAmount := calldataload(inputs.offset)
+                        recipient := calldataload(add(inputs.offset, 0x20))
                     }
-                    success_ = LidoRouter._unwrapWSTETH(map(recipient));
+                    success_ = LidoRouterLib.unwrapWSTETH(STETH, WSTETH, wstethAmount, map(recipient));
                 } else if (command == Commands.USDN_TRANSFER_SHARES_FROM) {
                     // equivalent:  abi.decode(inputs, (address, uint256))
                     address recipient;
