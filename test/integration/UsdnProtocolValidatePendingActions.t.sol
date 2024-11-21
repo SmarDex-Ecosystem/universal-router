@@ -91,7 +91,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
 
         // set the search range
         uint256 startBlock = block.number;
-        uint256 endBlock = block.number + 300;
+        uint256 endBlock = block.number + 325;
 
         (uint80 roundId,,) = getNextChainlinkPriceAfterTimestamp(ts1, startBlock, endBlock);
 
@@ -104,7 +104,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         for (uint256 i = 0; i < actionsCount; i++) {
             priceData[i] = data;
         }
-        (, uint128[] memory newRawIndices) = protocol.getActionablePendingActions(address(0));
+        (, uint128[] memory newRawIndices) = protocol.getActionablePendingActions(address(0), 0, 0);
         assertEq(newRawIndices.length, actionsCount, "newRawIndices.length");
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData =
             IUsdnProtocolTypes.PreviousActionsData({ priceData: priceData, rawIndices: newRawIndices });
