@@ -34,14 +34,13 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
     bytes internal _delegationData;
     IUsdnProtocolTypes.PositionId internal _posId;
     InitiateClosePositionDelegation internal _delegation;
-    bytes internal _data;
-    uint256 internal _oracleFee;
 
     function setUp() external {
         string memory url = vm.rpcUrl("mainnet");
         vm.createSelectFork(url);
         params = DEFAULT_PARAMS;
-        params.forkWarp = block.timestamp - 8 hours; // 2024-01-01 07:00:00 UTC;
+        // block.timestamp - 2 x rebalancer closeDelay
+        params.forkWarp = block.timestamp - 8 hours;
         params.forkBlock = block.number - 2400;
         _setUp(params);
         deal(_user, 10_000 ether);
@@ -74,10 +73,11 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
 
         _waitDelay();
 
-        (,,,, _data) = getHermesApiSignature(PYTH_ETH_USD, positionTimestamp + oracleMiddleware.getValidationDelay());
+        (,,,, bytes memory data) =
+            getHermesApiSignature(PYTH_ETH_USD, positionTimestamp + oracleMiddleware.getValidationDelay());
 
-        _oracleFee = oracleMiddleware.validationCost(_data, ProtocolAction.ValidateOpenPosition);
-        protocol.validateOpenPosition{ value: _oracleFee }(payable(rebalancer), _data, EMPTY_PREVIOUS_DATA);
+        uint256 oracleFee = oracleMiddleware.validationCost(data, ProtocolAction.ValidateOpenPosition);
+        protocol.validateOpenPosition{ value: oracleFee }(payable(rebalancer), data, EMPTY_PREVIOUS_DATA);
         vm.stopPrank();
 
         vm.prank(address(protocol));
@@ -98,9 +98,8 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
         _signature = _getDelegationSignature(USER_PK, _delegation);
         _delegationData = abi.encode(_user, _signature);
 
-        vm.warp(rebalancer.getCloseLockedUntil() + 1);
-        (,,,, _data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
-        _oracleFee = oracleMiddleware.validationCost(_data, ProtocolAction.InitiateClosePosition);
+        // wait for the rebalancer closeDelay: ~ 1200 blocks
+        vm.rollFork(block.number + 1300);
     }
 
     /**
@@ -121,13 +120,13 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
             Constants.MSG_SENDER,
             _delegation.userMinPrice,
             _delegation.deadline,
-            _data,
+            "",
             EMPTY_PREVIOUS_DATA,
             _delegationData,
-            _securityDeposit + _oracleFee
+            _securityDeposit
         );
 
-        router.execute{ value: _securityDeposit + _oracleFee }(commands, inputs);
+        router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(
             rebalancer.getUserDepositData(_user).amount, 0, "The user's deposited amount in rebalancer should be zero"
@@ -161,17 +160,17 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
             Constants.MSG_SENDER,
             _delegation.userMinPrice,
             _delegation.deadline,
-            _data,
+            "",
             EMPTY_PREVIOUS_DATA,
             _delegationData,
-            _securityDeposit + _oracleFee
+            _securityDeposit
         );
 
         vm.prank(USER_1);
-        router.execute{ value: _securityDeposit + _oracleFee }(commands, inputs);
+        router.execute{ value: _securityDeposit }(commands, inputs);
 
         commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_CLOSE) | uint8(Commands.FLAG_ALLOW_REVERT));
-        router.execute{ value: _securityDeposit + _oracleFee }(commands, inputs);
+        router.execute{ value: _securityDeposit }(commands, inputs);
 
         assertEq(
             rebalancer.getUserDepositData(_user).amount, 0, "The user's deposited amount in rebalancer should be zero"
