@@ -12,7 +12,6 @@ pushd $SCRIPT_DIR/.. > /dev/null
 
 # Deploy USDN contracts
 pushd dependencies/@smardex-usdn-contracts-* > /dev/null
-usdnFolder=$(pwd)
 
 script/deployFork.sh
 

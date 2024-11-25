@@ -1,6 +1,6 @@
 {
   "name": "@smardex/universal-router",
-  "version": "0.2.0-final-test-0.2",
+  "version": "0.2.0-final-test-0.7",
   "description": "Universal router to perform controlled multicall actions on the protocols of the SmarDex ecosystem",
   "repository": "github:SmarDex-Ecosystem/universal-router",
   "author": {
