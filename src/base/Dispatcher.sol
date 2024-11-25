@@ -401,14 +401,14 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL, previousActionsData, maxValidations, ethAmount
                         );
                     } else if (command == Commands.TRANSFER_POSITION_OWNERSHIP) {
-                        (IUsdnProtocolTypes.PositionId memory posId, bytes memory delegationSignature, address newOwner)
-                        = abi.decode(inputs, (IUsdnProtocolTypes.PositionId, bytes, address));
+                        (IUsdnProtocolTypes.PositionId memory posId, address newOwner, bytes memory delegationSignature)
+                        = abi.decode(inputs, (IUsdnProtocolTypes.PositionId, address, bytes));
                         (success_, output_) = address(USDN_PROTOCOL).call(
                             abi.encodeWithSelector(
                                 USDN_PROTOCOL.transferPositionOwnership.selector,
                                 posId,
-                                delegationSignature,
-                                map(newOwner)
+                                map(newOwner),
+                                delegationSignature
                             )
                         );
                     } else if (command == Commands.REBALANCER_INITIATE_DEPOSIT) {

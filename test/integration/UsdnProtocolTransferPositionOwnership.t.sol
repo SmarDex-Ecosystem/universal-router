@@ -79,7 +79,7 @@ contract TestForkUniversalRouterTransferPositionOwnership is UniversalRouterBase
         bytes memory commands = abi.encodePacked(uint8(Commands.TRANSFER_POSITION_OWNERSHIP));
         bytes[] memory inputs = new bytes[](1);
 
-        inputs[0] = abi.encode(_posId, _signature, USER_1);
+        inputs[0] = abi.encode(_posId, USER_1, _signature);
         router.execute(commands, inputs);
 
         (_pos,) = protocol.getLongPosition(_posId);
@@ -99,7 +99,7 @@ contract TestForkUniversalRouterTransferPositionOwnership is UniversalRouterBase
         bytes memory commands = abi.encodePacked(uint8(Commands.TRANSFER_POSITION_OWNERSHIP));
         bytes[] memory inputs = new bytes[](1);
 
-        inputs[0] = abi.encode(_posId, _signature, USER_1);
+        inputs[0] = abi.encode(_posId, USER_1, _signature);
 
         vm.prank(USER_2);
         router.execute(commands, inputs);

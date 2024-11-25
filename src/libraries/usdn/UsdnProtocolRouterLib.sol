@@ -221,9 +221,10 @@ library UsdnProtocolRouterLib {
         uint256 ethAmount
     ) external returns (bool success_) {
         // slither-disable-next-line arbitrary-send-eth
-        success_ = usdnProtocol.validateOpenPosition{ value: ethAmount }(
+        (IUsdnProtocolTypes.LongActionOutcome outcome_,) = usdnProtocol.validateOpenPosition{ value: ethAmount }(
             payable(validator), openPositionPriceData, previousActionsData
         );
+        return outcome_ == IUsdnProtocolTypes.LongActionOutcome.Processed;
     }
 
     /**
@@ -244,9 +245,10 @@ library UsdnProtocolRouterLib {
         uint256 ethAmount
     ) external returns (bool success_) {
         // slither-disable-next-line arbitrary-send-eth
-        success_ = usdnProtocol.validateClosePosition{ value: ethAmount }(
+        IUsdnProtocolTypes.LongActionOutcome outcome_ = usdnProtocol.validateClosePosition{ value: ethAmount }(
             payable(validator), closePriceData, previousActionsData
         );
+        return outcome_ == IUsdnProtocolTypes.LongActionOutcome.Processed;
     }
 
     /**
