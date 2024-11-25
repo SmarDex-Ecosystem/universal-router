@@ -36,7 +36,13 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
     InitiateClosePositionDelegation internal _delegation;
 
     function setUp() external {
-        _setUp(DEFAULT_PARAMS);
+        string memory url = vm.rpcUrl("mainnet");
+        vm.createSelectFork(url);
+        params = DEFAULT_PARAMS;
+        // block.timestamp - 2 x rebalancer closeDelay
+        params.forkWarp = block.timestamp - 8 hours;
+        params.forkBlock = block.number - 2400;
+        _setUp(params);
         deal(_user, 10_000 ether);
         deal(address(rebalancer), 10 ether);
         _securityDeposit = protocol.getSecurityDepositValue();
@@ -91,6 +97,9 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
 
         _signature = _getDelegationSignature(USER_PK, _delegation);
         _delegationData = abi.encode(_user, _signature);
+
+        // wait for the rebalancer `closeDelay`: ~ 1200 blocks
+        vm.rollFork(block.number + 1300);
     }
 
     /**

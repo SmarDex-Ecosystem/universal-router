@@ -4,6 +4,7 @@ pragma solidity 0.8.26;
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { DEPLOYER, WETH, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
+import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
 import { Wusdn } from "usdn-contracts/src/Usdn/Wusdn.sol";
 import { UsdnProtocolBaseIntegrationFixture } from "usdn-contracts/test/integration/UsdnProtocol/utils/Fixtures.sol";
 import { UsdnProtocolUtilsLibrary as Utils } from
@@ -48,7 +49,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
             v3Factory: 0x1F98431c8aD98523631AE4a59f267346ea31F984,
             pairInitCodeHash: 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f, // v2 pair hash
             poolInitCodeHash: 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54, // v3 pool hash
-            usdnProtocol: protocol,
+            usdnProtocol: IUsdnProtocol(address(protocol)),
             wstEth: WSTETH,
             wusdn: wusdn,
             smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F)
