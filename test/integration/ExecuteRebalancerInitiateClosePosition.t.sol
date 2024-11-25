@@ -98,7 +98,7 @@ contract TestForkUniversalRouterRebalancerInitiateClosePosition is UniversalRout
         _signature = _getDelegationSignature(USER_PK, _delegation);
         _delegationData = abi.encode(_user, _signature);
 
-        // wait for the rebalancer closeDelay: ~ 1200 blocks
+        // wait for the rebalancer `closeDelay`: ~ 1200 blocks
         vm.rollFork(block.number + 1300);
     }
 
