@@ -55,7 +55,7 @@ popd > /dev/null
 forge script --via-ir --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast
 
 # Check logs
-DEPLOYMENT_LOG=$(cat "broadcast/01_Deploy.s.sol/$chainId/run-latest.json")
+DEPLOYMENT_LOG=$(cat "broadcast/01_DeployProtocol.s.sol/$chainId/run-latest.json")
 FORK_ENV_DUMP=$(
     cat <<EOF
 $(cat .env.fork)
