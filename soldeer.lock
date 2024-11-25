@@ -3,7 +3,7 @@ name = "@chainlink"
 version = "1.2.0"
 url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip"
 checksum = "7050515ce90fd3dbac7cb958e960dd22ac85f6d0093bfdec87acc12560edbe3a"
-integrity = "015a826e4ca21760bfad5f746ade4e2eff65d2a92d1706ed5f09caa3911102ce"
+integrity = "327026361885672b88abd3145dc028d1dc549595b6a091cdf37ee67d0c6258f4"
 
 [[dependencies]]
 name = "@openzeppelin-contracts"
@@ -37,14 +37,14 @@ name = "@uniswap-permit2"
 version = "1.0.0"
 url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip"
 checksum = "180e009e8abfc5ed43383418f2593ac790655b58ec18ae52a92a636d5f298ad4"
-integrity = "f7d3fed096196e3968c5124d19165d4482afb55251982656cdf984c9ba39e9e7"
+integrity = "393047bfd13476671149d98263cf25e3ba7d301ef3f9e83f073c0183ea6b6586"
 
 [[dependencies]]
 name = "@uniswap-universal-router"
 version = "1.6.0"
 url = "https://soldeer-revisions.s3.amazonaws.com/@uniswap-universal-router/1_6_0_22-01-2024_13:15:39_universal-router.zip"
 checksum = "94f563c6e7629a3a46c6a69baff7190339eba49acd6c230f32a84969dae1aaff"
-integrity = "63d0f4f861e40fe70eb8367f08112a452c425dc1d6beeaf874c9741eac708bf7"
+integrity = "487bd32d40a5c54aee0ea191ace6027a03fed1449d6aa4548b96a5ea94b89ebb"
 
 [[dependencies]]
 name = "@uniswap-v2-core"
@@ -72,14 +72,14 @@ name = "openzeppelin-contracts"
 version = "4.7.0"
 url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.7.0.zip"
 checksum = "7a88a52b70872f3e428e595a03aed77c3323b118338d7256ce57dfc99eeab9e9"
-integrity = "e47aca6d7bf9d4e13aba827a315bac2ab10708d1a2d219bff645a20e5d78ff85"
+integrity = "40bc5e663f19cf42c5ab0ddfc049ca44d58a9f1236cef417c370af79fa8ac3a7"
 
 [[dependencies]]
 name = "openzeppelin-foundry-upgrades"
 version = "0.3.1"
 url = "https://soldeer-revisions.s3.amazonaws.com/openzeppelin-foundry-upgrades/0_3_1_25-06-2024_18:12:33_openzeppelin-foundry-upgrades.zip"
 checksum = "16a43c67b7c62e4a638b669b35f7b19c98a37278811fe910750b62b6e6fdffa7"
-integrity = "57e4cb1dc35fa8b9d8eb2b2d106f21b5c24d2757b9e2b658e9facbdbc73fcb35"
+integrity = "9a7b6e6f82f0524e1980342d1e8075e3e9fb65861ffccab7954958ce18f37038"
 
 [[dependencies]]
 name = "solady"
