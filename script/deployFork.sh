@@ -67,4 +67,3 @@ EOF
 
 echo "$FORK_ENV_DUMP" > .env.fork
 
-popd  > /dev/null
