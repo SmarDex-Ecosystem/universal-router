@@ -4,17 +4,20 @@ green='\033[0;32m'
 blue='\033[0;34m'
 nc='\033[0m'
 
-# Path of the script folder (so that the script can be invoked from somewhere else than the project's root)
-SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
+# # Path of the script folder (so that the script can be invoked from somewhere else than the project's root)
+# SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
-# Enter usdn-contracts folder
-pushd $SCRIPT_DIR/.. > /dev/null
+echo "LOG_Before pushd path=$PWD"
+
+# # Enter usdn-contracts folder
+# pushd $SCRIPT_DIR/.. > /dev/null
 
 # Deploy USDN contracts
 pushd dependencies/@smardex-usdn-contracts-* > /dev/null
-usdnFolder=$(pwd)
 
+echo "LOG_Calling deployFork.sh path=$PWD"
 script/deployFork.sh
+echo "LOG_deployFork.sh executed successfully"
 
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
@@ -65,4 +68,3 @@ EOF
 
 echo "$FORK_ENV_DUMP" > .env.fork
 
-popd  > /dev/null
