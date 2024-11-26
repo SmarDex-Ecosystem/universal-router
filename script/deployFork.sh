@@ -10,12 +10,10 @@ SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 # Enter usdn-contracts folder
 pushd $SCRIPT_DIR/.. > /dev/null
 
-# Deploy USDN contracts
-pushd dependencies/@smardex-usdn-contracts-* > /dev/null
+# # Deploy USDN contracts
+# pushd $SCRIPT_DIR/../dependencies/@smardex-usdn-contracts-* > /dev/null
 
-set -x
-bash script/deployFork.sh
-set +x
+script/deployFork.sh
 
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
