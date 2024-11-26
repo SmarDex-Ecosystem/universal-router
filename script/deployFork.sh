@@ -13,12 +13,14 @@ pushd $SCRIPT_DIR/.. > /dev/null
 # Deploy USDN contracts
 pushd dependencies/@smardex-usdn-contracts-* > /dev/null
 
+set -x
 bash script/deployFork.sh
+set +x
 
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
-broadcastUsdn="./broadcast/01_DeployProtocol.s.sol/$chainId/run-latest.json"
+broadcastUsdn="$PWD/broadcast/01_DeployProtocol.s.sol/$chainId/run-latest.json"
 export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
 printf "$green USDN protocol has been deployed !\n"
