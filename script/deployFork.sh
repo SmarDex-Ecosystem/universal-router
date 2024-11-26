@@ -13,11 +13,11 @@ SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 echo "here 1"
 echo "Path=$PWD"
 
-# Enter usdn-contracts folder
-pushd $SCRIPT_DIR/.. > /dev/null
+# # Enter usdn-contracts folder
+# pushd $SCRIPT_DIR/.. > /dev/null
 
-# # Deploy USDN contracts
-# pushd $SCRIPT_DIR/../dependencies/@smardex-usdn-contracts-* > /dev/null
+# Deploy USDN contracts
+pushd $SCRIPT_DIR/../dependencies/@smardex-usdn-contracts-* > /dev/null
 
 echo "here 2"
 echo "path=$PWD"
