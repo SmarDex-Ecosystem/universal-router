@@ -18,7 +18,7 @@ invariant = { fail_on_revert = true }
 remappings = [
     "forge-std=dependencies/forge-std-1.9.2/src",
     "@uniswap/universal-router=dependencies/@uniswap-universal-router-1.6.0",
-    "usdn-contracts=dependencies/@smardex-usdn-contracts-v1",
+    "usdn-contracts=dependencies/@smardex-usdn-contracts-0.23.0",
     "permit2=dependencies/@uniswap-permit2-1.0.0",
     "@chainlink/=dependencies/@chainlink-1.2.0/",
     "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.0.2/",
@@ -128,7 +128,7 @@ mainnet = { key = "${ETHERSCAN_API_KEY}" }
 [dependencies]
 "@uniswap-universal-router" = "1.6.0"
 forge-std = "1.9.2"
-"@smardex-usdn-contracts" = { version = "v1", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", rev = "3dddf2196918852a69f197f992990b8bbdd1d5a6" }
+"@smardex-usdn-contracts" = { version = "0.23.0", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", tag = "v0.23.0" }
 "@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
 "@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
 "@openzeppelin-contracts" = "5.0.2"
