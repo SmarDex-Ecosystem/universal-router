@@ -51,7 +51,7 @@ for i in {1..15}; do
 done
 
 # Add USDN protocol address to .env.fork of universal-router
-cp ".env.fork" "/usr/app/.env.fork"
+cat ".env.fork" > "/usr/app/.env.fork"
 
 # Enter universal-router folder
 popd > /dev/null
