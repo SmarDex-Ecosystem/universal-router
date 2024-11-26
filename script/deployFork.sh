@@ -44,6 +44,8 @@ for i in {1..15}; do
     sleep 2s
 done
 
+echo "path=$PWD"
+
 # Add USDN protocol address to .env.fork of universal-router
 cat ".env.fork" > "../../.env.fork"
 
