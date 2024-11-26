@@ -19,6 +19,8 @@ echo "LOG_Calling deployFork.sh path=$PWD"
 script/deployFork.sh
 echo "LOG_deployFork.sh executed successfully"
 
+echo "ls $(ls -a)"
+
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
@@ -49,7 +51,7 @@ for i in {1..15}; do
 done
 
 # Add USDN protocol address to .env.fork of universal-router
-cat ".env.fork" > "../../.env.fork"
+cp ".env.fork" "/usr/app/.env.fork"
 
 # Enter universal-router folder
 popd > /dev/null
