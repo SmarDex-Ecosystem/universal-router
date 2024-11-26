@@ -4,8 +4,14 @@ green='\033[0;32m'
 blue='\033[0;34m'
 nc='\033[0m'
 
+
+echo "here 0"
+
+
 # Path of the script folder (so that the script can be invoked from somewhere else than the project's root)
 SCRIPT_DIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
+echo "here 1"
+echo "Path=$PWD"
 
 # Enter usdn-contracts folder
 pushd $SCRIPT_DIR/.. > /dev/null
@@ -13,7 +19,10 @@ pushd $SCRIPT_DIR/.. > /dev/null
 # # Deploy USDN contracts
 # pushd $SCRIPT_DIR/../dependencies/@smardex-usdn-contracts-* > /dev/null
 
+echo "here 2"
+echo "path=$PWD"
 script/deployFork.sh
+echo "here 3"
 
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
