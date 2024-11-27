@@ -26,8 +26,17 @@ jobs:
       - name: Move docker files to root
         run: mv docker/Dockerfile ./
 
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "universal-router,usdn-contracts"
+
       - name: Release Docker image
         uses: Backend-RA2-Tech/composite-workflows/lerna-template/docker-build-publish@main
         with:
           working-directory: ./
           force-target-repository: "usdn-backend"
+          build-args: "APP_TOKEN=\"${{ steps.app-token.outputs.token }}\""
