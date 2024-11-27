@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.2.0...v0.3.0) (2024-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* usdn v0.23.0 ([#77](https://github.com/SmarDex-Ecosystem/universal-router/issues/77))
+
+### Features
+
+* add release docker image workflow ([#76](https://github.com/SmarDex-Ecosystem/universal-router/issues/76)) ([3ee6308](https://github.com/SmarDex-Ecosystem/universal-router/commit/3ee6308d549d6308b7a40c7fe13d9bb1aa77ca10))
+* **deployement:** for usdn v0.23.0 ([#79](https://github.com/SmarDex-Ecosystem/universal-router/issues/79)) ([51a3905](https://github.com/SmarDex-Ecosystem/universal-router/commit/51a3905ff464663e90924e3217dc36154d6f13eb))
+* lido amounts ([#72](https://github.com/SmarDex-Ecosystem/universal-router/issues/72)) ([2078394](https://github.com/SmarDex-Ecosystem/universal-router/commit/20783943616af93a36dd3bf03ee159b8bb893975))
+* usdn v0.23.0 ([#77](https://github.com/SmarDex-Ecosystem/universal-router/issues/77)) ([63c1ab3](https://github.com/SmarDex-Ecosystem/universal-router/commit/63c1ab32f1926626afa07d454cc05e9e8e49fead))
+
 ## [0.2.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.1.2...v0.2.0) (2024-11-14)
 
 
