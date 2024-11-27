@@ -12,7 +12,7 @@ script/deployFork.sh
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
-broadcastUsdn="./broadcast/01_DeployProtocol.s.sol/$chainId/run-latest.json"
+usdnProtocolBroadcast="./broadcast/01_DeployProtocol.s.sol/$chainId/run-latest.json"
 export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
 printf "$green USDN protocol has been deployed !\n"
@@ -20,13 +20,13 @@ sleep 1s
 
 for i in {1..15}; do
     printf "$green Trying to fetch WUSDN address... (attempt $i/15)$nc\n"
-    WUSDN_ADDRESS=$(cat "$broadcastUsdn" | jq -r '.returns.Wusdn_.value')
+    WUSDN_ADDRESS=$(cat "$usdnProtocolBroadcast" | jq -r '.returns.Wusdn_.value')
     wusdnCode=$(cast code -r "$rpcUrl" "$WUSDN_ADDRESS")
 
     if [[ ! -z $wusdnCode ]]; then
         printf "\n$green WUSDN contract found on blockchain$nc\n\n"
         export WUSDN_ADDRESS=$WUSDN_ADDRESS
-        export USDN_PROTOCOL_ADDRESS=$(cat "$broadcastUsdn" | jq -r '.returns.UsdnProtocol_.value')
+        export USDN_PROTOCOL_ADDRESS=$(cat "$usdnProtocolBroadcast" | jq -r '.returns.UsdnProtocol_.value')
         break
     fi
 

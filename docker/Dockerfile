@@ -16,7 +16,7 @@ COPY --from=node:20-alpine /usr/local/lib /usr/local/lib
 COPY --from=node:20-alpine /usr/local/include /usr/local/include
 COPY --from=node:20-alpine /usr/local/bin /usr/local/bin
 
-# Add apk to foundry image for deps install and jq to get the env variables
+# Add jq to get the env variables
 RUN apk add jq
 
 # Define the base image with a build arg for the version
