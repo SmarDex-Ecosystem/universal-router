@@ -165,6 +165,9 @@ library SmardexRouterLib {
      * @param params The smardex add liquidity params
      * @param receiver The liquidity receiver address
      * @param payer The payer address
+     * @return amountA_ The added amount of tokenA
+     * @return amountB_  The added amount of tokenB
+     * @return liquidity_ The liquidity amount minted to the receiver
      */
     function addLiquidity(
         ISmardexFactory smardexFactory,
