@@ -28,8 +28,6 @@ contract SmardexImmutables {
     /// @dev The permit2 contract
     IAllowanceTransfer internal immutable SMARDEX_PERMIT2;
 
-    mapping(address => bool) internal whitelist;
-
     /// @param params The Smardex parameters
     constructor(SmardexParameters memory params) {
         SMARDEX_FACTORY = params.smardexFactory;

@@ -12,7 +12,7 @@ import { ISmardexRouter } from "../../src/interfaces/smardex/ISmardexRouter.sol"
 import { ISmardexPair } from "../../src/interfaces/smardex/ISmardexPair.sol";
 
 /**
- * @custom:feature Test router commands smardex add liquidity
+ * @custom:feature Test router commands for smardex add liquidity
  * @custom:background A initiated universal router
  */
 contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixture {

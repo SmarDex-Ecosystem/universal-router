@@ -16,4 +16,19 @@ interface ISmardexRouterErrors {
 
     /// @notice Indicates that the callback amount is invalid
     error CallbackInvalidAmount();
+
+    /// @notice Indicates that the price is too high
+    error PriceTooHigh();
+
+    /// @notice Indicates that the price is too low
+    error PriceTooLow();
+
+    /// @notice Indicates that the amount of asset B is insufficient
+    error InsufficientAmountB();
+
+    /// @notice Indicates that the amount of asset A desired is insufficient
+    error InsufficientAmountADesired();
+
+    /// @notice Indicates that the amount of asset A is insufficient
+    error InsufficientAmountA();
 }

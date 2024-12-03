@@ -2,10 +2,10 @@
 pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
+import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
 import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
@@ -173,7 +173,7 @@ library SmardexRouterLib {
         address payer
     ) external returns (uint256 amountA_, uint256 amountB_, uint256 liquidity_) {
         address pair;
-        (amountA_, amountB_, pair) = _addLiquidity(smardexFactory, params);
+        (amountA_, amountB_, pair) = _addLiquidity(smardexFactory, params, receiver);
         (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA_, amountB_);
         liquidity_ = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
     }
@@ -261,47 +261,61 @@ library SmardexRouterLib {
 
     /**
      * @notice Add liquidity to an ERC-20=ERC-20 pool. Receive liquidity token to materialize shares in the pool
-     * @param factory parameters of the liquidity to add
-     * @param params parameters of the liquidity to add
+     * @param smardexFactory The smardex factory
+     * @param params Parameters of the liquidity to add
+     * @param skimReceiver The skim receiver address to use if a skim is performed
      * @return amountA_ The amount of tokenA sent to the pool.
      * @return amountB_ The amount of tokenB sent to the pool.
      * @return pair_ The address of the pool where the liquidity was added.
      */
-    function _addLiquidity(ISmardexFactory factory, ISmardexRouter.AddLiquidityParams memory params)
-        internal
-        returns (uint256 amountA_, uint256 amountB_, address pair_)
-    {
-        // create the pair if it doesn't exist yet
-        pair_ = factory.getPair(params.tokenA, params.tokenB);
+    function _addLiquidity(
+        ISmardexFactory smardexFactory,
+        ISmardexRouter.AddLiquidityParams calldata params,
+        address skimReceiver
+    ) internal returns (uint256 amountA_, uint256 amountB_, address pair_) {
+        pair_ = smardexFactory.getPair(params.tokenA, params.tokenB);
+
         if (pair_ == address(0)) {
-            pair_ = ISmardexFactory(factory).createPair(params.tokenA, params.tokenB);
+            pair_ = smardexFactory.createPair(params.tokenA, params.tokenB);
         }
         if (ISmardexPair(pair_).totalSupply() == 0) {
-            ISmardexPair(pair_).skim(msg.sender); // in case some tokens are already on the pair
+            ISmardexPair(pair_).skim(skimReceiver); // in case some tokens are already on the pair
         }
-        (uint256 _reserveA, uint256 _reserveB, uint256 _reserveAFic, uint256 _reserveBFic) =
+
+        (uint256 reserveA, uint256 reserveB, uint256 reserveAFic, uint256 reserveBFic) =
             PoolHelpers.getAllReserves(ISmardexPair(pair_), params.tokenA);
-        if (_reserveA == 0 && _reserveB == 0) {
+
+        if (reserveA == 0 && reserveB == 0) {
             (amountA_, amountB_) = (params.amountADesired, params.amountBDesired);
         } else {
-            // price slippage check
-            // the current price is _reserveAFic / _reserveBFic
-            // the max price that the user accepts is params.fictiveReserveAMax / params.fictiveReserveB
-            // the min price that the user accepts is params.fictiveReserveAMin / params.fictiveReserveB
-            uint256 _product = _reserveAFic * params.fictiveReserveB;
-            require(_product <= params.fictiveReserveAMax * _reserveBFic, "SmarDexRouter: PRICE_TOO_HIGH");
-            require(_product >= params.fictiveReserveAMin * _reserveBFic, "SmarDexRouter: PRICE_TOO_LOW");
+            uint256 product = reserveAFic * params.fictiveReserveB;
 
-            // real reserves slippage check
-            uint256 _amountBOptimal = PoolHelpers.quote(params.amountADesired, _reserveA, _reserveB);
-            if (_amountBOptimal <= params.amountBDesired) {
-                require(_amountBOptimal >= params.amountBMin, "SmarDexRouter: INSUFFICIENT_B_AMOUNT");
-                (amountA_, amountB_) = (params.amountADesired, _amountBOptimal);
+            if (product > params.fictiveReserveAMax * reserveBFic) {
+                revert ISmardexRouterErrors.PriceTooHigh();
+            }
+            if (product < params.fictiveReserveAMin * reserveBFic) {
+                revert ISmardexRouterErrors.PriceTooLow();
+            }
+
+            uint256 amountBOptimal = PoolHelpers.quote(params.amountADesired, reserveA, reserveB);
+
+            if (amountBOptimal <= params.amountBDesired) {
+                if (amountBOptimal < params.amountBMin) {
+                    revert ISmardexRouterErrors.InsufficientAmountB();
+                }
+
+                (amountA_, amountB_) = (params.amountADesired, amountBOptimal);
             } else {
-                uint256 _amountAOptimal = PoolHelpers.quote(params.amountBDesired, _reserveB, _reserveA);
-                assert(_amountAOptimal <= params.amountADesired);
-                require(_amountAOptimal >= params.amountAMin, "SmarDexRouter: INSUFFICIENT_A_AMOUNT");
-                (amountA_, amountB_) = (_amountAOptimal, params.amountBDesired);
+                uint256 amountAOptimal = PoolHelpers.quote(params.amountBDesired, reserveB, reserveA);
+
+                if (amountAOptimal > params.amountADesired) {
+                    revert ISmardexRouterErrors.InsufficientAmountADesired();
+                }
+                if (amountAOptimal < params.amountAMin) {
+                    revert ISmardexRouterErrors.InsufficientAmountA();
+                }
+
+                (amountA_, amountB_) = (amountAOptimal, params.amountBDesired);
             }
         }
     }
