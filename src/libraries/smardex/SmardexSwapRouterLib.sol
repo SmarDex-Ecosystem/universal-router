@@ -7,11 +7,14 @@ import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
+import { ISmardexMintCallback } from "../../interfaces/smardex/ISmardexMintCallback.sol";
 import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
+import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
 import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
 import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
 import { Path } from "./Path.sol";
+import { PoolHelpers } from "./PoolHelpers.sol";
 
 /// @title Router library for Smardex
 library SmardexSwapRouterLib {
@@ -137,6 +140,35 @@ library SmardexSwapRouterLib {
         );
     }
 
+    function addLiquidity(
+        ISmardexFactory factory,
+        ISmardexRouter.AddLiquidityParams calldata params,
+        address to,
+        address payer
+    ) external returns (uint256 amountA_, uint256 amountB_, uint256 liquidity_) {
+        address pair;
+        (amountA_, amountB_, pair) = _addLiquidity(factory, params);
+        (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA_, amountB_);
+        liquidity_ = ISmardexPair(pair).mint(to, amount0, amount1, payer);
+    }
+
+    function smardexMintCallback(
+        ISmardexFactory smardexFactory,
+        IAllowanceTransfer permit2,
+        ISmardexMintCallback.MintCallbackData calldata data
+    ) external {
+        if (data.amount0 == 0 && data.amount1 == 0) {
+            revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
+        }
+
+        if (msg.sender != smardexFactory.getPair(data.token0, data.token1)) {
+            revert ISmardexSwapRouterErrors.InvalidPair();
+        }
+
+        _payOrPermit2Transfer(permit2, data.token0, data.payer, msg.sender, data.amount0);
+        _payOrPermit2Transfer(permit2, data.token1, data.payer, msg.sender, data.amount1);
+    }
+
     /**
      * @notice Internal function to swap quantity of token to receive a determined quantity
      * @param smardexFactory The Smardex factory contract
@@ -215,6 +247,53 @@ library SmardexSwapRouterLib {
             IERC20(token).safeTransfer(recipient, amount);
         } else {
             permit2.transferFrom(payer, recipient, amount.toUint160(), token);
+        }
+    }
+
+    /**
+     * @notice Add liquidity to an ERC-20=ERC-20 pool. Receive liquidity token to materialize shares in the pool
+     * @param factory parameters of the liquidity to add
+     * @param params parameters of the liquidity to add
+     * @return amountA_ The amount of tokenA sent to the pool.
+     * @return amountB_ The amount of tokenB sent to the pool.
+     * @return pair_ The address of the pool where the liquidity was added.
+     */
+    function _addLiquidity(ISmardexFactory factory, ISmardexRouter.AddLiquidityParams memory params)
+        internal
+        returns (uint256 amountA_, uint256 amountB_, address pair_)
+    {
+        // create the pair if it doesn't exist yet
+        pair_ = factory.getPair(params.tokenA, params.tokenB);
+        if (pair_ == address(0)) {
+            pair_ = ISmardexFactory(factory).createPair(params.tokenA, params.tokenB);
+        }
+        if (ISmardexPair(pair_).totalSupply() == 0) {
+            ISmardexPair(pair_).skim(msg.sender); // in case some tokens are already on the pair
+        }
+        (uint256 _reserveA, uint256 _reserveB, uint256 _reserveAFic, uint256 _reserveBFic) =
+            PoolHelpers.getAllReserves(ISmardexPair(pair_), params.tokenA);
+        if (_reserveA == 0 && _reserveB == 0) {
+            (amountA_, amountB_) = (params.amountADesired, params.amountBDesired);
+        } else {
+            // price slippage check
+            // the current price is _reserveAFic / _reserveBFic
+            // the max price that the user accepts is params.fictiveReserveAMax / params.fictiveReserveB
+            // the min price that the user accepts is params.fictiveReserveAMin / params.fictiveReserveB
+            uint256 _product = _reserveAFic * params.fictiveReserveB;
+            require(_product <= params.fictiveReserveAMax * _reserveBFic, "SmarDexRouter: PRICE_TOO_HIGH");
+            require(_product >= params.fictiveReserveAMin * _reserveBFic, "SmarDexRouter: PRICE_TOO_LOW");
+
+            // real reserves slippage check
+            uint256 _amountBOptimal = PoolHelpers.quote(params.amountADesired, _reserveA, _reserveB);
+            if (_amountBOptimal <= params.amountBDesired) {
+                require(_amountBOptimal >= params.amountBMin, "SmarDexRouter: INSUFFICIENT_B_AMOUNT");
+                (amountA_, amountB_) = (params.amountADesired, _amountBOptimal);
+            } else {
+                uint256 _amountAOptimal = PoolHelpers.quote(params.amountBDesired, _reserveB, _reserveA);
+                assert(_amountAOptimal <= params.amountADesired);
+                require(_amountAOptimal >= params.amountAMin, "SmarDexRouter: INSUFFICIENT_A_AMOUNT");
+                (amountA_, amountB_) = (_amountAOptimal, params.amountBDesired);
+            }
         }
     }
 }

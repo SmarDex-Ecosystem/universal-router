@@ -11,11 +11,13 @@ import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
  * @param smardexFactory The Smardex factory
  * @param weth The wrapped ETH address
  * @param permit2 The permit2 address
+ * @param whitelisted The whitelisted pair addresses of the v1 factory
  */
 struct SmardexParameters {
     ISmardexFactory smardexFactory;
     address weth;
     address permit2;
+    address[] whitelisted;
 }
 
 contract SmardexImmutables {
@@ -28,10 +30,18 @@ contract SmardexImmutables {
     /// @dev The permit2 contract
     IAllowanceTransfer internal immutable SMARDEX_PERMIT2;
 
+    mapping(address => bool) internal whitelist;
+
     /// @param params The Smardex parameters
     constructor(SmardexParameters memory params) {
         SMARDEX_FACTORY = params.smardexFactory;
         WETH = IWETH9(params.weth);
         SMARDEX_PERMIT2 = IAllowanceTransfer(params.permit2);
+        for (uint256 i; i < params.whitelisted.length;) {
+            whitelist[params.whitelisted[i]] = true;
+            unchecked {
+                ++i;
+            }
+        }
     }
 }

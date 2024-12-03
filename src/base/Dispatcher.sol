@@ -11,8 +11,10 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
+import { ISmardexRouter } from "../interfaces/smardex/ISmardexRouter.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
+import { SmardexSwapRouterLib } from "../libraries/smardex/SmardexSwapRouterLib.sol";
 import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
@@ -547,6 +549,11 @@ abstract contract Dispatcher is
                 bytes calldata path = inputs.toBytes(3);
                 address payer = payerIsUser ? lockedBy : address(this);
                 _smardexSwapExactOutput(map(recipient), amountOut, amountInMax, path, payer);
+            } else if (command == Commands.SMARDEX_ADD_LIQUIDITY) {
+                (ISmardexRouter.AddLiquidityParams memory params, address to, bool payerIsUser) =
+                    abi.decode(inputs, (ISmardexRouter.AddLiquidityParams, address, bool));
+                address payer = payerIsUser ? lockedBy : address(this);
+                SmardexSwapRouterLib.addLiquidity(SMARDEX_FACTORY, params, to, payer);
             } else {
                 revert InvalidCommandType(command);
             }

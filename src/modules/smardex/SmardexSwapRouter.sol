@@ -2,13 +2,14 @@
 pragma solidity 0.8.26;
 
 import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
+import { ISmardexMintCallback } from "../../interfaces/smardex/ISmardexMintCallback.sol";
 import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
 import { Path } from "../../libraries/smardex/Path.sol";
 import { SmardexSwapRouterLib } from "../../libraries/smardex/SmardexSwapRouterLib.sol";
 import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
-abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
+abstract contract SmardexSwapRouter is ISmardexSwapRouter, ISmardexMintCallback, SmardexImmutables {
     /// @dev Transient storage variable used for checking slippage
     uint256 private amountInCached = type(uint256).max;
 
@@ -22,6 +23,11 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         if (amountIn > 0) {
             amountInCached = amountIn;
         }
+    }
+
+    /// @inheritdoc ISmardexMintCallback
+    function smardexMintCallback(MintCallbackData calldata data) external {
+        SmardexSwapRouterLib.smardexMintCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, data);
     }
 
     /**

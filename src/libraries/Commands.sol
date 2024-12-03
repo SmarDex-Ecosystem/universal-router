@@ -69,5 +69,6 @@ library Commands {
 
     uint256 constant SMARDEX_SWAP_EXACT_IN = 0x38;
     uint256 constant SMARDEX_SWAP_EXACT_OUT = 0x39;
-    // COMMAND_PLACEHOLDER from 0x3a to 0x3f (all unused)
+    uint256 constant SMARDEX_ADD_LIQUIDITY = 0x3a;
+    // COMMAND_PLACEHOLDER from 0x3b to 0x3f (all unused)
 }

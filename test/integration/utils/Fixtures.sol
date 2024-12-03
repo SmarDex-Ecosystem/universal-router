@@ -34,6 +34,14 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
     Wusdn internal wusdn;
     uint256 internal maxLeverage;
 
+    // whitelisted smardex factory v1 pairs
+    address[] internal whitelisted = [
+        0xD2dF60073C0A9c0b607ca6AC809ACecc0D9250bD, //  TET / SDEX
+        0xE547ff1C20a6fb24f4AfC20A3A02c6d7B0210799, // WBTC / WETH
+        0xf3a4B8eFe3e3049F6BC71B47ccB7Ce6665420179, // SDEX / WETH
+        0xD2Bf378cEA07fe117Ffdfd3F5b7e53C2b0b78c05 // SDEX / USDT
+    ];
+
     function _setUp(SetUpParams memory setupParams) public virtual override {
         setupParams.fork = true;
         setupParams.initialDeposit = 1000 ether;
@@ -52,7 +60,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
             usdnProtocol: IUsdnProtocol(address(protocol)),
             wstEth: WSTETH,
             wusdn: wusdn,
-            smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F)
+            smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F),
+            whitelisted: whitelisted
         });
 
         vm.prank(DEPLOYER);

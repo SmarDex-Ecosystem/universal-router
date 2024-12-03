@@ -18,6 +18,7 @@ import { ISmardexFactory } from "../interfaces/smardex/ISmardexFactory.sol";
  * @param wstEth The WstETH address
  * @param wusdn The wrapped usdn address
  * @param smardexFactory The smardex factory
+ * @param whitelisted The whitelisted smardex factory v1 pairs
  */
 struct RouterParameters {
     address permit2;
@@ -30,4 +31,5 @@ struct RouterParameters {
     address wstEth;
     IWusdn wusdn;
     ISmardexFactory smardexFactory;
+    address[] whitelisted;
 }

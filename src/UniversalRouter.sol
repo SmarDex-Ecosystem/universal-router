@@ -37,7 +37,7 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
         PaymentsImmutables(PaymentsParameters(params.permit2, params.weth9, address(0), address(0)))
         UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn, params.permit2))
         LidoImmutables(params.wstEth)
-        SmardexImmutables(SmardexParameters(params.smardexFactory, params.weth9, params.permit2))
+        SmardexImmutables(SmardexParameters(params.smardexFactory, params.weth9, params.permit2, params.whitelisted))
     { }
 
     /// @inheritdoc IUniversalRouter
