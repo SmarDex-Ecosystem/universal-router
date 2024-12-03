@@ -68,6 +68,29 @@ library SmardexRouterLib {
     }
 
     /**
+     * @notice The Smardex callback for Smardex mint
+     * @param smardexFactory The Smardex factory contract
+     * @param permit2 The permit2 contract
+     * @param data The mint callback data
+     */
+    function smardexMintCallback(
+        ISmardexFactory smardexFactory,
+        IAllowanceTransfer permit2,
+        ISmardexRouter.MintCallbackData calldata data
+    ) external {
+        if (data.amount0 == 0 && data.amount1 == 0) {
+            revert ISmardexRouterErrors.CallbackInvalidAmount();
+        }
+
+        if (msg.sender != smardexFactory.getPair(data.token0, data.token1)) {
+            revert ISmardexRouterErrors.InvalidPair();
+        }
+
+        _payOrPermit2Transfer(permit2, data.token0, data.payer, msg.sender, data.amount0);
+        _payOrPermit2Transfer(permit2, data.token1, data.payer, msg.sender, data.amount1);
+    }
+
+    /**
      * @notice Performs a Smardex exact input swap
      * @dev Use router balance if the payer is the router or use permit2 from msg.sender
      * @param smardexFactory The Smardex factory contract
@@ -135,33 +158,24 @@ library SmardexRouterLib {
         );
     }
 
+    /**
+     * @notice Performs the Smardex add liquidity
+     * @dev Use router balance if the payer is the router or use permit2 from msg.sender
+     * @param smardexFactory The Smardex factory contract
+     * @param params The smardex add liquidity params
+     * @param receiver The liquidity receiver address
+     * @param payer The payer address
+     */
     function addLiquidity(
-        ISmardexFactory factory,
+        ISmardexFactory smardexFactory,
         ISmardexRouter.AddLiquidityParams calldata params,
-        address to,
+        address receiver,
         address payer
     ) external returns (uint256 amountA_, uint256 amountB_, uint256 liquidity_) {
         address pair;
-        (amountA_, amountB_, pair) = _addLiquidity(factory, params);
+        (amountA_, amountB_, pair) = _addLiquidity(smardexFactory, params);
         (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA_, amountB_);
-        liquidity_ = ISmardexPair(pair).mint(to, amount0, amount1, payer);
-    }
-
-    function smardexMintCallback(
-        ISmardexFactory smardexFactory,
-        IAllowanceTransfer permit2,
-        ISmardexRouter.MintCallbackData calldata data
-    ) external {
-        if (data.amount0 == 0 && data.amount1 == 0) {
-            revert ISmardexRouterErrors.CallbackInvalidAmount();
-        }
-
-        if (msg.sender != smardexFactory.getPair(data.token0, data.token1)) {
-            revert ISmardexRouterErrors.InvalidPair();
-        }
-
-        _payOrPermit2Transfer(permit2, data.token0, data.payer, msg.sender, data.amount0);
-        _payOrPermit2Transfer(permit2, data.token1, data.payer, msg.sender, data.amount1);
+        liquidity_ = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
     }
 
     /**
