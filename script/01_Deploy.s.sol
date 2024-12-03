@@ -34,13 +34,6 @@ contract Deploy is Script {
     address _deployerAddress;
     ChainId _chainId;
 
-    address[] internal whitelistedMainnet = [
-        0xD2dF60073C0A9c0b607ca6AC809ACecc0D9250bD, //  TET / SDEX
-        0xE547ff1C20a6fb24f4AfC20A3A02c6d7B0210799, // WBTC / WETH
-        0xf3a4B8eFe3e3049F6BC71B47ccB7Ce6665420179, // SDEX / WETH
-        0xD2Bf378cEA07fe117Ffdfd3F5b7e53C2b0b78c05 // SDEX / USDT
-    ];
-
     function run() external returns (UniversalRouter UniversalRouter_) {
         if (block.chainid == 1 || block.chainid == 983_659_430_532) {
             _chainId = ChainId.Mainnet;
@@ -50,22 +43,19 @@ contract Deploy is Script {
             _chainId = ChainId.Fork;
         }
 
-        (address wstEthAddress, address wusdnTokenAddress, address usdnProtocolAddress, address[] memory whitelisted) =
-            _handleEnvVariables();
+        (address wstEthAddress, address wusdnTokenAddress, address usdnProtocolAddress) = _handleEnvVariables();
 
         vm.startBroadcast(_deployerAddress);
 
-        UniversalRouter_ = _deployRouter(wstEthAddress, wusdnTokenAddress, usdnProtocolAddress, whitelisted);
+        UniversalRouter_ = _deployRouter(wstEthAddress, wusdnTokenAddress, usdnProtocolAddress);
 
         vm.stopBroadcast();
     }
 
-    function _deployRouter(
-        address wstEthAddress,
-        address wusdnTokenAddress,
-        address usdnProtocolAddress,
-        address[] memory whitelisted
-    ) internal returns (UniversalRouter router_) {
+    function _deployRouter(address wstEthAddress, address wusdnTokenAddress, address usdnProtocolAddress)
+        internal
+        returns (UniversalRouter router_)
+    {
         router_ = new UniversalRouter(
             RouterParameters({
                 permit2: vm.envOr("PERMIT2", PERMIT2),
@@ -77,8 +67,7 @@ contract Deploy is Script {
                 usdnProtocol: IUsdnProtocol(usdnProtocolAddress),
                 wstEth: wstEthAddress,
                 wusdn: IWusdn(wusdnTokenAddress),
-                smardexFactory: ISmardexFactory(vm.envOr("SMARDEX_FACTORY", SMARDEX_FACTORY_MAINNET)),
-                whitelisted: whitelisted
+                smardexFactory: ISmardexFactory(vm.envOr("SMARDEX_FACTORY", SMARDEX_FACTORY_MAINNET))
             })
         );
     }
@@ -88,12 +77,7 @@ contract Deploy is Script {
      */
     function _handleEnvVariables()
         internal
-        returns (
-            address wstEthAddress_,
-            address wusdnTokenAddress_,
-            address usdnProtocolAddress_,
-            address[] memory whitelisted_
-        )
+        returns (address wstEthAddress_, address wusdnTokenAddress_, address usdnProtocolAddress_)
     {
         try vm.envAddress("DEPLOYER_ADDRESS") {
             _deployerAddress = vm.envAddress("DEPLOYER_ADDRESS");
@@ -113,7 +97,6 @@ contract Deploy is Script {
             vm.setEnv("SMARDEX_FACTORY", vm.toString(SMARDEX_FACTORY_SEPOLIA));
         } else {
             wstEthAddress_ = WSTETH_MAINNET;
-            whitelisted_ = whitelistedMainnet;
         }
 
         wusdnTokenAddress_ = vm.envOr("WUSDN_ADDRESS", address(0));

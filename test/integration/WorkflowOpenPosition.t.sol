@@ -8,7 +8,7 @@ import { USER_1 } from "usdn-contracts/test/utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
-import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
 
@@ -16,7 +16,7 @@ import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol
  * @custom:feature Entire workflow of open position through the router
  * @custom:background An initiated universal router
  */
-contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
+contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRouterErrors {
     uint256 constant OPEN_POSITION_AMOUNT = 3 ether;
     uint256 constant DESIRED_LIQUIDATION = 2500 ether;
     uint256 internal _securityOpenPosition;

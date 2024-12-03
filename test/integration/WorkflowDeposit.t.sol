@@ -9,14 +9,14 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
-import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
 
 /**
  * @custom:feature Entire workflow of deposit through the router
  * @custom:background An initiated universal router
  */
-contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
+contract TestForkWorkflowDeposit is UniversalRouterBaseFixture, ISmardexRouterErrors {
     uint256 constant DEPOSIT_AMOUNT = 0.1 ether;
     uint256 internal _securityDeposit;
     uint256 internal _sdexToBurn;

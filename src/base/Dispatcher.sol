@@ -14,11 +14,11 @@ import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
 import { ISmardexRouter } from "../interfaces/smardex/ISmardexRouter.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
-import { SmardexSwapRouterLib } from "../libraries/smardex/SmardexSwapRouterLib.sol";
+import { SmardexRouterLib } from "../libraries/smardex/SmardexRouterLib.sol";
 import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
 import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
 import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
-import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
+import { SmardexRouter } from "../modules/smardex/SmardexRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { Sweep } from "../modules/Sweep.sol";
 import { LockAndMap } from "../modules/usdn/LockAndMap.sol";
@@ -32,7 +32,7 @@ abstract contract Dispatcher is
     Sweep,
     V2SwapRouter,
     V3SwapRouter,
-    SmardexSwapRouter,
+    SmardexRouter,
     LockAndMap,
     UsdnProtocolRouter,
     LidoImmutables
@@ -553,7 +553,7 @@ abstract contract Dispatcher is
                 (ISmardexRouter.AddLiquidityParams memory params, address to, bool payerIsUser) =
                     abi.decode(inputs, (ISmardexRouter.AddLiquidityParams, address, bool));
                 address payer = payerIsUser ? lockedBy : address(this);
-                SmardexSwapRouterLib.addLiquidity(SMARDEX_FACTORY, params, to, payer);
+                SmardexRouterLib.addLiquidity(SMARDEX_FACTORY, params, map(to), payer);
             } else {
                 revert InvalidCommandType(command);
             }

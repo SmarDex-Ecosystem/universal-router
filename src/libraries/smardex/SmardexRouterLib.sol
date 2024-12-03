@@ -7,17 +7,15 @@ import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
-import { ISmardexMintCallback } from "../../interfaces/smardex/ISmardexMintCallback.sol";
 import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
-import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
-import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
-import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
+import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
 import { Path } from "./Path.sol";
 import { PoolHelpers } from "./PoolHelpers.sol";
 
 /// @title Router library for Smardex
-library SmardexSwapRouterLib {
+library SmardexRouterLib {
     using Path for bytes;
     using SafeCast for uint256;
     using SafeCast for int256;
@@ -43,14 +41,14 @@ library SmardexSwapRouterLib {
         bytes calldata data
     ) external returns (uint256 amountInCached_) {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
-            revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
+            revert ISmardexRouterErrors.CallbackInvalidAmount();
         }
 
-        ISmardexSwapRouter.SwapCallbackData memory decodedData = abi.decode(data, (ISmardexSwapRouter.SwapCallbackData));
+        ISmardexRouter.SwapCallbackData memory decodedData = abi.decode(data, (ISmardexRouter.SwapCallbackData));
         (address tokenIn, address tokenOut) = decodedData.path.decodeFirstPool();
 
         if (msg.sender != smardexFactory.getPair(tokenIn, tokenOut)) {
-            revert ISmardexSwapRouterErrors.InvalidPair();
+            revert ISmardexRouterErrors.InvalidPair();
         }
 
         (bool isExactInput, uint256 amountToPay) =
@@ -99,7 +97,7 @@ library SmardexSwapRouterLib {
                 amountIn,
                 hasMultiplePools ? address(this) : recipient,
                 // only the first pool in the path is necessary
-                ISmardexSwapRouter.SwapCallbackData({ path: path.getFirstPool(), payer: payer })
+                ISmardexRouter.SwapCallbackData({ path: path.getFirstPool(), payer: payer })
             );
 
             if (hasMultiplePools) {
@@ -133,10 +131,7 @@ library SmardexSwapRouterLib {
         bytes memory reversedPath = path.encodeTightlyPackedReversed();
 
         amountIn_ = _swapExactOut(
-            smardexFactory,
-            amountOut,
-            recipient,
-            ISmardexSwapRouter.SwapCallbackData({ path: reversedPath, payer: payer })
+            smardexFactory, amountOut, recipient, ISmardexRouter.SwapCallbackData({ path: reversedPath, payer: payer })
         );
     }
 
@@ -155,14 +150,14 @@ library SmardexSwapRouterLib {
     function smardexMintCallback(
         ISmardexFactory smardexFactory,
         IAllowanceTransfer permit2,
-        ISmardexMintCallback.MintCallbackData calldata data
+        ISmardexRouter.MintCallbackData calldata data
     ) external {
         if (data.amount0 == 0 && data.amount1 == 0) {
-            revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
+            revert ISmardexRouterErrors.CallbackInvalidAmount();
         }
 
         if (msg.sender != smardexFactory.getPair(data.token0, data.token1)) {
-            revert ISmardexSwapRouterErrors.InvalidPair();
+            revert ISmardexRouterErrors.InvalidPair();
         }
 
         _payOrPermit2Transfer(permit2, data.token0, data.payer, msg.sender, data.amount0);
@@ -181,10 +176,10 @@ library SmardexSwapRouterLib {
         ISmardexFactory smardexFactory,
         uint256 amountOut,
         address to,
-        ISmardexSwapRouter.SwapCallbackData memory data
+        ISmardexRouter.SwapCallbackData memory data
     ) private returns (uint256 amountIn_) {
         if (to == address(0)) {
-            revert ISmardexSwapRouterErrors.InvalidRecipient();
+            revert ISmardexRouterErrors.InvalidRecipient();
         }
 
         (address tokenOut, address tokenIn) = data.path.decodeFirstPool();
@@ -213,7 +208,7 @@ library SmardexSwapRouterLib {
         ISmardexFactory smardexFactory,
         uint256 amountIn,
         address to,
-        ISmardexSwapRouter.SwapCallbackData memory data
+        ISmardexRouter.SwapCallbackData memory data
     ) private returns (uint256 amountOut_) {
         // allow swapping to the router address with address 0
         if (to == address(0)) {
