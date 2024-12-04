@@ -5,10 +5,10 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { WETH, SDEX } from "usdn-contracts/test/utils/Constants.sol";
 
+import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+
 import { Commands } from "../../src/libraries/Commands.sol";
 import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
-
-import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 /**
  * @custom:feature Test smardex swap exact in commands

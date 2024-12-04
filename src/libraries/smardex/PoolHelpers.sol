@@ -10,7 +10,7 @@ library PoolHelpers {
     error insufficientLiquidity();
 
     /**
-     * @notice Fetches the real and fictive reserves for a pair
+     * @notice Get the real and fictive reserves for a pair
      * @param pair The pair contract
      * @param tokenA The tokenA address
      * @return reserveA_ The reserve of tokenA in the pair tokenA/TokenB
@@ -57,7 +57,8 @@ library PoolHelpers {
     }
 
     /**
-     * @notice Sorts amounts between two tokens in a pair in relation to token0 and token1
+     * @notice Sorts tokens of a pair tokenA/tokenB into the form token0/token1
+     * and returns respectively amount0 and amount1
      * @param tokenA The tokenA address
      * @param tokenB The tokenB address
      * @param amountA The amount of tokenA

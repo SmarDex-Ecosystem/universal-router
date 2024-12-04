@@ -166,7 +166,7 @@ library SmardexRouterLib {
      * @param receiver The liquidity receiver address
      * @param payer The payer address
      * @return success_ Whether the add liquidity is successful
-     * @return output_ The output which contains amountA, AmountB and liquidity values
+     * @return output_ The output which contains amountA, amountB and liquidity values
      */
     function addLiquidity(
         ISmardexFactory smardexFactory,
@@ -263,7 +263,7 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Add liquidity to an ERC-20=ERC-20 pool. Receive liquidity token to materialize shares in the pool
+     * @notice Add liquidity to a smardex pair. Receive liquidity token to materialize shares in the pool
      * @param smardexFactory The smardex factory
      * @param params Parameters of the liquidity to add
      * @param skimReceiver The skim receiver address to use if a skim is performed
