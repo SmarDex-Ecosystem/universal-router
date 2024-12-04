@@ -177,8 +177,7 @@ library SmardexRouterLib {
         (uint256 amountA, uint256 amountB, address pair) = _addLiquidity(smardexFactory, params, receiver);
         (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA, amountB);
         uint256 liquidity = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
-        success_ = true;
-        output_ = abi.encode(amountA, amountB, liquidity);
+        return (true, abi.encode(amountA, amountB, liquidity));
     }
 
     /**
