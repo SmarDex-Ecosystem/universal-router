@@ -311,6 +311,7 @@ library SmardexRouterLib {
             } else {
                 uint256 amountAOptimal = PoolHelpers.quote(params.amountBDesired, reserveB, reserveA);
 
+                // sanity check
                 if (amountAOptimal > params.amountADesired) {
                     revert ISmardexRouterErrors.InsufficientAmountADesired();
                 }

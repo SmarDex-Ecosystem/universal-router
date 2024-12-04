@@ -5,9 +5,9 @@ import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
 
 library PoolHelpers {
     /// @notice Indicates that the amount of asset is insufficient
-    error insufficientAmount();
+    error InsufficientAmount();
     /// @notice Indicates that the amount of liquidity is insufficient
-    error insufficientLiquidity();
+    error InsufficientLiquidity();
 
     /**
      * @notice Get the real and fictive reserves for a pair
@@ -47,10 +47,10 @@ library PoolHelpers {
      */
     function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) internal pure returns (uint256 amountB_) {
         if (amountA == 0) {
-            revert insufficientAmount();
+            revert InsufficientAmount();
         }
         if (reserveA == 0 || reserveB == 0) {
-            revert insufficientLiquidity();
+            revert InsufficientLiquidity();
         }
 
         amountB_ = (amountA * reserveB) / reserveA;
