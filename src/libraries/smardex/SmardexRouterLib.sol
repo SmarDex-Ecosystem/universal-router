@@ -165,20 +165,20 @@ library SmardexRouterLib {
      * @param params The smardex add liquidity params
      * @param receiver The liquidity receiver address
      * @param payer The payer address
-     * @return amountA_ The added amount of tokenA
-     * @return amountB_  The added amount of tokenB
-     * @return liquidity_ The liquidity amount minted to the receiver
+     * @return success_ Whether the add liquidity is successful
+     * @return output_ The output which contains amountA, AmountB and liquidity values
      */
     function addLiquidity(
         ISmardexFactory smardexFactory,
         ISmardexRouter.AddLiquidityParams calldata params,
         address receiver,
         address payer
-    ) external returns (uint256 amountA_, uint256 amountB_, uint256 liquidity_) {
-        address pair;
-        (amountA_, amountB_, pair) = _addLiquidity(smardexFactory, params, receiver);
-        (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA_, amountB_);
-        liquidity_ = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
+    ) external returns (bool success_, bytes memory output_) {
+        (uint256 amountA, uint256 amountB, address pair) = _addLiquidity(smardexFactory, params, receiver);
+        (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA, amountB);
+        uint256 liquidity = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
+        success_ = true;
+        output_ = abi.encode(amountA, amountB, liquidity);
     }
 
     /**
