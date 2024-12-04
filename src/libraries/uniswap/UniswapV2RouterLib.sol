@@ -23,6 +23,7 @@ library UniswapV2RouterLib {
      * @notice Performs a Uniswap v2 exact input swap
      * @param uniswapV2Factory The address of UniswapV3Factory
      * @param uniswapV2PairInitCodeHash The UniswapV2Pair init code hash
+     * @param permit2 The permit2 contract
      * @param recipient The recipient of the output tokens
      * @param amountIn The amount of input tokens for the trade
      * @param amountOutMinimum The minimum desired amount of output tokens
@@ -61,6 +62,7 @@ library UniswapV2RouterLib {
      * @notice Performs a Uniswap v2 exact output swap
      * @param uniswapV2Factory The address of UniswapV3Factory
      * @param uniswapV2PairInitCodeHash The UniswapV2Pair init code hash
+     * @param permit2 The permit2 contract
      * @param recipient The recipient of the output tokens
      * @param amountOut The amount of output tokens to receive for the trade
      * @param amountInMaximum The maximum desired amount of input tokens
