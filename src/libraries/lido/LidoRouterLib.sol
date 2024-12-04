@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
-import { IWstETH } from "../../interfaces/IWstETH.sol";
-import { IStETH } from "../../interfaces/IStETH.sol";
+import { IWstETH } from "../../interfaces/lido/IWstETH.sol";
+import { IStETH } from "../../interfaces/lido/IStETH.sol";
 
 /// @title Router library for Lido
 library LidoRouterLib {

@@ -5,7 +5,7 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
-import { IStETH } from "../../src/interfaces/IStETH.sol";
+import { IStETH } from "../../src/interfaces/lido/IStETH.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
