@@ -550,10 +550,10 @@ abstract contract Dispatcher is
                 address payer = payerIsUser ? lockedBy : address(this);
                 _smardexSwapExactOutput(map(recipient), amountOut, amountInMax, path, payer);
             } else if (command == Commands.SMARDEX_ADD_LIQUIDITY) {
-                (ISmardexRouter.AddLiquidityParams memory params, address to, bool payerIsUser) =
-                    abi.decode(inputs, (ISmardexRouter.AddLiquidityParams, address, bool));
+                (ISmardexRouter.AddLiquidityParams memory params, address to, bool payerIsUser, uint256 deadline) =
+                    abi.decode(inputs, (ISmardexRouter.AddLiquidityParams, address, bool, uint256));
                 address payer = payerIsUser ? lockedBy : address(this);
-                (success_, output_) = SmardexRouterLib.addLiquidity(SMARDEX_FACTORY, params, map(to), payer);
+                (success_, output_) = SmardexRouterLib.addLiquidity(SMARDEX_FACTORY, params, map(to), payer, deadline);
             } else {
                 revert InvalidCommandType(command);
             }

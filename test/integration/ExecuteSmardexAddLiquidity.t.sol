@@ -56,7 +56,7 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
         IERC20(WSTETH).transfer(address(router), BASE_AMOUNT);
         IERC20(WETH).transfer(address(router), BASE_AMOUNT);
 
-        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, false);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, false, type(uint256).max);
         router.execute(commands, inputs);
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
@@ -82,7 +82,7 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
         permit2.approve(WSTETH, address(router), type(uint160).max, type(uint48).max);
         permit2.approve(WETH, address(router), type(uint160).max, type(uint48).max);
 
-        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true, type(uint256).max);
         router.execute(commands, inputs);
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
@@ -104,7 +104,7 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
 
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true, type(uint256).max);
 
         vm.expectRevert(ISmardexRouterErrors.PriceTooHigh.selector);
         router.execute(commands, inputs);
@@ -123,7 +123,7 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
 
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true, type(uint256).max);
 
         vm.expectRevert(ISmardexRouterErrors.PriceTooLow.selector);
         router.execute(commands, inputs);
@@ -147,7 +147,7 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
 
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true, type(uint256).max);
 
         vm.expectRevert(ISmardexRouterErrors.InsufficientAmountB.selector);
         router.execute(commands, inputs);
@@ -172,7 +172,7 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
 
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true, type(uint256).max);
 
         vm.expectRevert(ISmardexRouterErrors.InsufficientAmountA.selector);
         router.execute(commands, inputs);

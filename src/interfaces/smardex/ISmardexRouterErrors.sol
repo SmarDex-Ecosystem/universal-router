@@ -31,4 +31,7 @@ interface ISmardexRouterErrors {
 
     /// @notice Indicates that the amount of asset A is insufficient
     error InsufficientAmountA();
+
+    /// @notice Indicates that the deadline was exceeded
+    error DeadlineExceeded();
 }

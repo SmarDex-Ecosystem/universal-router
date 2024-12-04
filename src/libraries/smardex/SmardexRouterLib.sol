@@ -25,6 +25,17 @@ library SmardexRouterLib {
     uint8 private constant ADDR_SIZE = 20;
 
     /**
+     * @notice Ensures that the deadline timestamp wasn't exceeded
+     * @param deadline The deadline timestamp
+     */
+    modifier ensure(uint256 deadline) {
+        if (deadline < block.timestamp) {
+            revert ISmardexRouterErrors.DeadlineExceeded();
+        }
+        _;
+    }
+
+    /**
      * @notice The Smardex callback for Smardex swap
      * @param smardexFactory The Smardex factory contract
      * @param permit2 The permit2 contract
@@ -165,6 +176,7 @@ library SmardexRouterLib {
      * @param params The smardex add liquidity params
      * @param receiver The liquidity receiver address
      * @param payer The payer address
+     * @param deadline The deadline not to exceed
      * @return success_ Whether the add liquidity is successful
      * @return output_ The output which contains amountA, amountB and liquidity values
      */
@@ -172,8 +184,9 @@ library SmardexRouterLib {
         ISmardexFactory smardexFactory,
         ISmardexRouter.AddLiquidityParams calldata params,
         address receiver,
-        address payer
-    ) external returns (bool success_, bytes memory output_) {
+        address payer,
+        uint256 deadline
+    ) external ensure(deadline) returns (bool success_, bytes memory output_) {
         (uint256 amountA, uint256 amountB, address pair) = _addLiquidity(smardexFactory, params, receiver);
         (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA, amountB);
         uint256 liquidity = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
