@@ -42,6 +42,19 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
     }
 
     /**
+     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} command with a exceeded deadline
+     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY}
+     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should revert with {DeadlineExceeded}
+     */
+    function test_RevertWhen_executeSmardexAddLiquidityDeadlineExceeded() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, false, 0);
+        vm.expectRevert(ISmardexRouterErrors.DeadlineExceeded.selector);
+        router.execute(commands, inputs);
+    }
+
+    /**
      * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} command using the router balance
      * @custom:given The router should be funded with some `WSTETH` and `WETH`
      * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY}
