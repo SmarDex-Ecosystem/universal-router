@@ -194,6 +194,51 @@ library SmardexRouterLib {
     }
 
     /**
+     * @notice Removes liquidity from a pair
+     * @param smardexFactory The Smardex factory contract
+     * @param permit2 The permit2 contract
+     * @param params The smardex remove liquidity params
+     * @param payer The payer address
+     * @param receiver The receiver of tokenA and tokenB
+     * @param deadline The timestamp deadline
+     */
+    function removeLiquidity(
+        ISmardexFactory smardexFactory,
+        IAllowanceTransfer permit2,
+        ISmardexRouter.RemoveLiquidityParams calldata params,
+        address receiver,
+        address payer,
+        uint256 deadline
+    ) external ensure(deadline) returns (bool success_, bytes memory output_) {
+        if (params.tokenA == params.tokenB) {
+            revert ISmardexRouterErrors.IdenticalAddresses();
+        }
+        if (params.tokenA == address(0) || params.tokenB == address(0)) {
+            revert ISmardexRouterErrors.ZeroAddress();
+        }
+
+        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(params.tokenA, params.tokenB));
+
+        if (address(pair) == address(0)) {
+            revert ISmardexRouterErrors.NoPair();
+        }
+
+        _payOrPermit2Transfer(permit2, address(pair), payer, address(pair), params.liquidity);
+
+        (uint256 amount0, uint256 amount1) = pair.burn(receiver);
+        (uint256 amountA, uint256 amountB) = params.tokenA < params.tokenB ? (amount0, amount1) : (amount1, amount0);
+
+        if (amountA < params.amountAMin) {
+            revert ISmardexRouterErrors.InsufficientAmountA();
+        }
+        if (amountB < params.amountBMin) {
+            revert ISmardexRouterErrors.InsufficientAmountB();
+        }
+
+        return (true, abi.encode(amountA, amountB));
+    }
+
+    /**
      * @notice Internal function to swap quantity of token to receive a determined quantity
      * @param smardexFactory The Smardex factory contract
      * @param amountOut The quantity to receive

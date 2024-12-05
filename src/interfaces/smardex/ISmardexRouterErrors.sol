@@ -34,4 +34,13 @@ interface ISmardexRouterErrors {
 
     /// @notice Indicates that the deadline was exceeded
     error DeadlineExceeded();
+
+    /// @notice Indicates that the addresses are identical
+    error IdenticalAddresses();
+
+    /// @notice Indicates that the address is equal to the zero address
+    error ZeroAddress();
+
+    /// @notice Indicates that the pair address doesn't exist
+    error NoPair();
 }

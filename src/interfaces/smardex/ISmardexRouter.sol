@@ -49,6 +49,22 @@ interface ISmardexRouter {
     }
 
     /**
+     * @notice Parameters used by the remove liquidity command
+     * @param tokenA The address of the first token in the pair
+     * @param tokenB The address of the second token in the pair
+     * @param liquidity The liquidity amount to burn
+     * @param amountAMin The minimum amountA to receive
+     * @param amountBMin The minimum amountB to receive
+     */
+    struct RemoveLiquidityParams {
+        address tokenA;
+        address tokenB;
+        uint256 liquidity;
+        uint256 amountAMin;
+        uint256 amountBMin;
+    }
+
+    /**
      * @notice The callback data for swap from SmardexRouter
      * @param path The path of the swap, array of token addresses tightly packed
      * @param payer The address of the payer for the swap
