@@ -116,7 +116,7 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is TestForkUniversalRoute
     /**
      * @custom:scenario Test the {SMARDEX_REMOVE_LIQUIDITY} with identical addresses
      * @custom:when The {execute} function is called for {SMARDEX_REMOVE_LIQUIDITY} with identical addresses
-     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {IdenticalAddresses}
+     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {InvalidAddress}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityIdenticalAddresses() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_REMOVE_LIQUIDITY));
@@ -127,16 +127,16 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is TestForkUniversalRoute
 
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
 
-        vm.expectRevert(ISmardexRouterErrors.IdenticalAddresses.selector);
+        vm.expectRevert(ISmardexRouterErrors.InvalidAddress.selector);
         router.execute(commands, inputs);
     }
 
     /**
      * @custom:scenario Test the {SMARDEX_REMOVE_LIQUIDITY} with tokenA or tokenB address equal the zero address
      * @custom:when The {execute} function is called for {SMARDEX_REMOVE_LIQUIDITY} with a tokenA equal zero address
-     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {ZeroAddress}
+     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {InvalidAddress}
      * @custom:when The {execute} function is called for {SMARDEX_REMOVE_LIQUIDITY} with a tokenB equal zero address
-     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {ZeroAddress}
+     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {InvalidAddress}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityZeroAddress() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_REMOVE_LIQUIDITY));
@@ -144,20 +144,20 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is TestForkUniversalRoute
 
         _removeParams.tokenA = address(0);
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
-        vm.expectRevert(ISmardexRouterErrors.ZeroAddress.selector);
+        vm.expectRevert(ISmardexRouterErrors.InvalidAddress.selector);
         router.execute(commands, inputs);
 
         _removeParams.tokenA = WSTETH;
         _removeParams.tokenB = address(0);
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
-        vm.expectRevert(ISmardexRouterErrors.ZeroAddress.selector);
+        vm.expectRevert(ISmardexRouterErrors.InvalidAddress.selector);
         router.execute(commands, inputs);
     }
 
     /**
      * @custom:scenario Test the {SMARDEX_REMOVE_LIQUIDITY} with nonexistent pair
      * @custom:when The {execute} function is called for {SMARDEX_REMOVE_LIQUIDITY}
-     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {NoPair}
+     * @custom:then The {SMARDEX_REMOVE_LIQUIDITY} command should revert with {InvalidPair}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityNoPair() public {
         address one = address(1);
@@ -173,7 +173,7 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is TestForkUniversalRoute
 
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
 
-        vm.expectRevert(ISmardexRouterErrors.NoPair.selector);
+        vm.expectRevert(ISmardexRouterErrors.InvalidPair.selector);
         router.execute(commands, inputs);
     }
 

@@ -4,8 +4,8 @@ pragma solidity >=0.8.0;
 interface ISmardexRouter {
     /**
      * @notice Parameters used by the addLiquidity function
-     * @param tokenA The address of the first token in the pair
-     * @param tokenB The address of the second token in the pair
+     * @param tokenA The address of the tokenA
+     * @param tokenB The address of the tokenB
      * @param amountADesired The amount of tokenA to add as liquidity
      * if the B/A price is <= amountBDesired/amountADesired
      * @param amountBDesired The amount of tokenB to add as liquidity
@@ -50,8 +50,8 @@ interface ISmardexRouter {
 
     /**
      * @notice Parameters used by the remove liquidity command
-     * @param tokenA The address of the first token in the pair
-     * @param tokenB The address of the second token in the pair
+     * @param tokenA The address of the tokenA
+     * @param tokenB The address of the tokenB
      * @param liquidity The liquidity amount to burn
      * @param amountAMin The minimum amountA to receive
      * @param amountBMin The minimum amountB to receive

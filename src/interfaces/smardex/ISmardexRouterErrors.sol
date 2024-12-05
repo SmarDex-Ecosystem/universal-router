@@ -11,7 +11,7 @@ interface ISmardexRouterErrors {
     /// @notice Indicates that the recipient is invalid
     error InvalidRecipient();
 
-    /// @notice Indicates that msg.sender is not the pair
+    /// @notice Indicates that the pair address is invalid
     error InvalidPair();
 
     /// @notice Indicates that the callback amount is invalid
@@ -35,12 +35,6 @@ interface ISmardexRouterErrors {
     /// @notice Indicates that the deadline was exceeded
     error DeadlineExceeded();
 
-    /// @notice Indicates that the addresses are identical
-    error IdenticalAddresses();
-
-    /// @notice Indicates that the address is equal to the zero address
-    error ZeroAddress();
-
-    /// @notice Indicates that the pair address doesn't exist
-    error NoPair();
+    /// @notice Indicates that the address is invalid
+    error InvalidAddress();
 }

@@ -211,16 +211,16 @@ library SmardexRouterLib {
         uint256 deadline
     ) external ensure(deadline) returns (bool success_, bytes memory output_) {
         if (params.tokenA == params.tokenB) {
-            revert ISmardexRouterErrors.IdenticalAddresses();
+            revert ISmardexRouterErrors.InvalidAddress();
         }
         if (params.tokenA == address(0) || params.tokenB == address(0)) {
-            revert ISmardexRouterErrors.ZeroAddress();
+            revert ISmardexRouterErrors.InvalidAddress();
         }
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(params.tokenA, params.tokenB));
 
         if (address(pair) == address(0)) {
-            revert ISmardexRouterErrors.NoPair();
+            revert ISmardexRouterErrors.InvalidPair();
         }
 
         _payOrPermit2Transfer(permit2, address(pair), payer, address(pair), params.liquidity);
