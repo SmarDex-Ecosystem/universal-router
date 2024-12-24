@@ -10,18 +10,18 @@ import { ISweepErrors } from "../interfaces/ISweepErrors.sol";
 
 /**
  * @title Sweep contract
- * @notice Sweeps all of the contract's ERC20 or ETH to an address
+ * @notice Sweeps all of the contract's ERC20 or ETH to an address.
  */
 abstract contract Sweep {
     using SafeTransferLib for ERC20;
     using SafeTransferLib for address;
 
     /**
-     * @notice Sweeps all of the contract's ERC20 or ETH to an address
-     * @param token The token to sweep (can be ETH using Constants.ETH)
-     * @param recipient The address that will receive payment
-     * @param amountOutMin The minimum desired amount
-     * @param amountOutThreshold The minimum amount to activate the sweep
+     * @notice Sweeps all of the contract's ERC20 or ETH to an address.
+     * @param token The token to sweep (can be ETH using Constants.ETH).
+     * @param recipient The address that will receive payment.
+     * @param amountOutMin The minimum desired amount.
+     * @param amountOutThreshold The minimum amount to activate the sweep.
      */
     function sweep(address token, address recipient, uint256 amountOutMin, uint256 amountOutThreshold) internal {
         uint256 balance;
