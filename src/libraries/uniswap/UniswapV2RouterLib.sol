@@ -21,7 +21,7 @@ library UniswapV2RouterLib {
 
     /**
      * @notice Performs a Uniswap v2 exact input swap
-     * @param uniswapV2Factory The address of UniswapV3Factory
+     * @param uniswapV2Factory The address of UniswapV2Factory
      * @param uniswapV2PairInitCodeHash The UniswapV2Pair init code hash
      * @param permit2 The permit2 contract
      * @param recipient The recipient of the output tokens
@@ -44,7 +44,7 @@ library UniswapV2RouterLib {
         if (
             amountIn != Constants.ALREADY_PAID // amountIn of 0 to signal that the pair already has the tokens
         ) {
-            _payOrPermit2Transfer(permit2, path[0], payer, firstPair, amountIn);
+            _pay(permit2, path[0], payer, firstPair, amountIn);
         }
 
         IERC20 tokenOut = IERC20(path[path.length - 1]);
@@ -60,7 +60,7 @@ library UniswapV2RouterLib {
 
     /**
      * @notice Performs a Uniswap v2 exact output swap
-     * @param uniswapV2Factory The address of UniswapV3Factory
+     * @param uniswapV2Factory The address of UniswapV2Factory
      * @param uniswapV2PairInitCodeHash The UniswapV2Pair init code hash
      * @param permit2 The permit2 contract
      * @param recipient The recipient of the output tokens
@@ -85,13 +85,13 @@ library UniswapV2RouterLib {
             revert IUniswapV2RouterErrors.V2TooMuchRequested();
         }
 
-        _payOrPermit2Transfer(permit2, path[0], payer, firstPair, amountIn);
+        _pay(permit2, path[0], payer, firstPair, amountIn);
         _v2Swap(uniswapV2Factory, uniswapV2PairInitCodeHash, path, recipient, firstPair);
     }
 
     /**
      * @notice Checks if the path is valid and performs the swap
-     * @param uniswapV2Factory The address of UniswapV3Factory
+     * @param uniswapV2Factory The address of UniswapV2Factory
      * @param uniswapV2PairInitCodeHash The UniswapV2Pair init code hash
      * @param path The path of the trade as an array of token addresses
      * @param recipient The recipient of the output tokens
@@ -149,35 +149,21 @@ library UniswapV2RouterLib {
      * @param recipient The recipient of the transfer
      * @param amount The amount to transfer
      */
-    function _payOrPermit2Transfer(
-        IAllowanceTransfer permit2,
-        address token,
-        address payer,
-        address recipient,
-        uint256 amount
-    ) private {
+    function _pay(IAllowanceTransfer permit2, address token, address payer, address recipient, uint256 amount)
+        private
+    {
         if (payer == address(this)) {
-            _pay(token, recipient, amount);
+            if (token == Constants.ETH) {
+                recipient.safeTransferETH(amount);
+            } else {
+                if (amount == Constants.CONTRACT_BALANCE) {
+                    amount = IERC20(token).balanceOf(address(this));
+                }
+
+                IERC20(token).safeTransfer(recipient, amount);
+            }
         } else {
             permit2.transferFrom(payer, recipient, amount.toUint160(), token);
-        }
-    }
-
-    /**
-     * @notice Pays an amount of ETH or ERC20 to a recipient
-     * @param token The token to pay (can be ETH using Constants.ETH)
-     * @param recipient The address that will receive the payment
-     * @param value The amount to pay
-     */
-    function _pay(address token, address recipient, uint256 value) internal {
-        if (token == Constants.ETH) {
-            recipient.safeTransferETH(value);
-        } else {
-            if (value == Constants.CONTRACT_BALANCE) {
-                value = IERC20(token).balanceOf(address(this));
-            }
-
-            IERC20(token).safeTransfer(recipient, value);
         }
     }
 }
