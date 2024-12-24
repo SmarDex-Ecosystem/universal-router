@@ -2,6 +2,6 @@
 pragma solidity 0.8.26;
 
 interface ISweepErrors {
-    /// @notice Reverts when the recipient is invalid
+    /// @notice Reverts when the recipient is invalid.
     error SweepInvalidRecipient();
 }

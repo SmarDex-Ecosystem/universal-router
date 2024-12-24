@@ -7,17 +7,17 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
 
 interface ISmardexPair is IERC20, IERC20Permit {
     /**
-     * @notice Swap parameters used by function swap
+     * @notice Swap parameters used by function swap.
      * @param amountCalculated The return amount from getAmountIn/Out is always positive but to avoid too much cast, is
-     * int
-     * @param fictiveReserveIn The fictive reserve of the in-token of the pair
-     * @param fictiveReserveOut The fictive reserve of the out-token of the pair
-     * @param priceAverageIn The in-token ratio component of the price average
-     * @param priceAverageOut The out-token ratio component of the price average
-     * @param token0 The address of the token0
-     * @param token1 The address of the token1
-     * @param balanceIn The contract balance of the in-token
-     * @param balanceOut The contract balance of the out-token
+     * int.
+     * @param fictiveReserveIn The fictive reserve of the in-token of the pair.
+     * @param fictiveReserveOut The fictive reserve of the out-token of the pair.
+     * @param priceAverageIn The in-token ratio component of the price average.
+     * @param priceAverageOut The out-token ratio component of the price average.
+     * @param token0 The address of the token0.
+     * @param token1 The address of the token1.
+     * @param balanceIn The contract balance of the in-token.
+     * @param balanceOut The contract balance of the out-token.
      */
     struct SwapParams {
         int256 amountCalculated;
