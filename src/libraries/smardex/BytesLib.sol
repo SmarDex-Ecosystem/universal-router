@@ -3,19 +3,19 @@ pragma solidity ^0.8.20;
 
 /**
  * @title Solidity Bytes Arrays Utils
- * @author Gonçalo Sá <goncalo.sa@consensys.net>
- * @custom:url https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol
+ * @author Gonçalo Sá <goncalo.sa@consensys.net>.
+ * @custom:url https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol.
  *
  * @dev Bytes tightly packed arrays utility library for ethereum contracts written in Solidity.
  *      The library lets you concatenate, slice and type cast bytes arrays both in memory and storage.
  */
 library BytesLib {
     /**
-     * @notice Perform a slice from a bytes offset
-     * @param memBytes The bytes to perform the parsing
-     * @param start The start offset
-     * @param length The slice length from start
-     * @return A sliced bytes
+     * @notice Perform a slice from a bytes offset.
+     * @param memBytes The bytes to perform the parsing.
+     * @param start The start offset.
+     * @param length The slice length from start.
+     * @return A sliced bytes.
      */
     function slice(bytes memory memBytes, uint256 start, uint256 length) internal pure returns (bytes memory) {
         require(length + 31 >= length, "slice_overflow");
@@ -78,10 +78,10 @@ library BytesLib {
     }
 
     /**
-     * @notice Parse and return an address from a specified bytes offset
-     * @param memBytes The bytes to perform the parsing
-     * @param start The start offset
-     * @return A parsed address
+     * @notice Parse and return an address from a specified bytes offset.
+     * @param memBytes The bytes to perform the parsing.
+     * @param start The start offset.
+     * @return A parsed address.
      */
     function toAddress(bytes memory memBytes, uint256 start) internal pure returns (address) {
         require(start + 20 >= start, "toAddress_overflow");

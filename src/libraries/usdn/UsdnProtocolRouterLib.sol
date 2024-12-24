@@ -24,9 +24,9 @@ library UsdnProtocolRouterLib {
     using SafeERC20 for IUsdn;
 
     /**
-     * @notice The payment modifier
-     * @param payment The payment value
-     * @param action The USDN protocol action
+     * @notice The payment modifier.
+     * @param payment The payment value.
+     * @param action The USDN protocol action.
      */
     modifier usePayment(IPaymentLibTypes.PaymentType payment, IPaymentLibTypes.PaymentAction action) {
         if (
@@ -42,13 +42,13 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Initiate a deposit into the USDN protocol vault
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * Note: the deposit can fail without reverting, in case there are some pending liquidations in the protocol
-     * @param protocolAsset The USDN protocol asset
-     * @param usdnProtocol The USDN protocol
-     * @param data The USDN initiateDeposit router data
-     * @return success_ Whether the deposit was successful
+     * @notice Initiate a deposit into the USDN protocol vault.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * Note: the deposit can fail without reverting, in case there are some pending liquidations in the protocol.
+     * @param protocolAsset The USDN protocol asset.
+     * @param usdnProtocol The USDN protocol.
+     * @param data The USDN initiateDeposit router data.
+     * @return success_ Whether the deposit was successful.
      */
     function usdnInitiateDeposit(
         IERC20Metadata protocolAsset,
@@ -73,14 +73,14 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Validate a deposit into the USDN protocol vault
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * @param usdnProtocol The USDN protocol
-     * @param validator The address that should validate the deposit (receives the security deposit)
-     * @param depositPriceData The price data corresponding to the validator's pending deposit action
-     * @param previousActionsData The data needed to validate actionable pending actions
-     * @param ethAmount The amount of Ether to send with the transaction
-     * @return success_ Whether the deposit was successfully
+     * @notice Validate a deposit into the USDN protocol vault.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * @param usdnProtocol The USDN protocol.
+     * @param validator The address that should validate the deposit (receives the security deposit).
+     * @param depositPriceData The price data corresponding to the validator's pending deposit action.
+     * @param previousActionsData The data needed to validate actionable pending actions.
+     * @param ethAmount The amount of Ether to send with the transaction.
+     * @return success_ Whether the deposit was successfully.
      */
     function usdnValidateDeposit(
         IUsdnProtocol usdnProtocol,
@@ -95,21 +95,21 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Initiate a withdrawal from the USDN protocol vault
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * Note: the withdrawal can fail without reverting, in case there are some pending liquidations in the protocol
-     * @param usdn The USDN token
-     * @param usdnProtocol The USDN protocol
-     * @param payment The USDN protocol payment method
-     * @param sharesAmount The amount of USDN shares to burn
-     * @param amountOutMin The minimum amount of assets to receive
-     * @param to The address that will receive the asset upon validation
-     * @param validator The address that should validate the withdrawal (receives the security deposit back)
-     * @param deadline The transaction deadline
-     * @param currentPriceData The current price data
-     * @param previousActionsData The data needed to validate actionable pending actions
-     * @param ethAmount The amount of Ether to send with the transaction
-     * @return success_ Whether the withdrawal was successful
+     * @notice Initiate a withdrawal from the USDN protocol vault.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * Note: the withdrawal can fail without reverting, in case there are some pending liquidations in the protocol.
+     * @param usdn The USDN token.
+     * @param usdnProtocol The USDN protocol.
+     * @param payment The USDN protocol payment method.
+     * @param sharesAmount The amount of USDN shares to burn.
+     * @param amountOutMin The minimum amount of assets to receive.
+     * @param to The address that will receive the asset upon validation.
+     * @param validator The address that should validate the withdrawal (receives the security deposit back).
+     * @param deadline The transaction deadline.
+     * @param currentPriceData The current price data.
+     * @param previousActionsData The data needed to validate actionable pending actions.
+     * @param ethAmount The amount of Ether to send with the transaction.
+     * @return success_ Whether the withdrawal was successful.
      */
     function usdnInitiateWithdrawal(
         IUsdn usdn,
@@ -141,15 +141,15 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Validate a withdrawal into the USDN protocol vault
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * Note: the withdrawal can fail without reverting, in case there are some pending liquidations in the protocol
-     * @param usdnProtocol The USDN protocol
-     * @param validator The address that should validate the withdrawal (receives the security deposit)
-     * @param withdrawalPriceData The price data corresponding to the validator's pending deposit action
-     * @param previousActionsData The data needed to validate actionable pending actions
-     * @param ethAmount The amount of Ether to send with the transaction
-     * @return success_ Whether the withdrawal was successful
+     * @notice Validate a withdrawal into the USDN protocol vault.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * Note: the withdrawal can fail without reverting, in case there are some pending liquidations in the protocol.
+     * @param usdnProtocol The USDN protocol.
+     * @param validator The address that should validate the withdrawal (receives the security deposit).
+     * @param withdrawalPriceData The price data corresponding to the validator's pending deposit action.
+     * @param previousActionsData The data needed to validate actionable pending actions.
+     * @param ethAmount The amount of Ether to send with the transaction.
+     * @return success_ Whether the withdrawal was successful.
      */
     function usdnValidateWithdrawal(
         IUsdnProtocol usdnProtocol,
@@ -165,14 +165,14 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Initiate an open position in the USDN protocol
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * Note: the open position can fail without reverting, in case there are some pending liquidations in the protocol
-     * @param protocolAsset The USDN protocol asset
-     * @param usdnProtocol The USDN protocol
-     * @param data The initiateOpenPosition router data
-     * @return success_ Whether the open position was successful
-     * @return posId_ The position ID of the newly opened position
+     * @notice Initiate an open position in the USDN protocol.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * Note: the open position can fail without reverting, in case there are some pending liquidations in the protocol.
+     * @param protocolAsset The USDN protocol asset.
+     * @param usdnProtocol The USDN protocol.
+     * @param data The initiateOpenPosition router data.
+     * @return success_ Whether the open position was successful.
+     * @return posId_ The position ID of the newly opened position.
      */
     function usdnInitiateOpenPosition(
         IERC20Metadata protocolAsset,
@@ -204,14 +204,14 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Validate an open position in the USDN protocol
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * @param usdnProtocol The USDN protocol
-     * @param validator The address that should validate the open position (receives the security deposit)
-     * @param openPositionPriceData The price data corresponding to the validator's pending open position action
-     * @param previousActionsData The data needed to validate actionable pending actions
-     * @param ethAmount The amount of Ether to send with the transaction
-     * @return success_ Whether the open position was successful
+     * @notice Validate an open position in the USDN protocol.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * @param usdnProtocol The USDN protocol.
+     * @param validator The address that should validate the open position (receives the security deposit).
+     * @param openPositionPriceData The price data corresponding to the validator's pending open position action.
+     * @param previousActionsData The data needed to validate actionable pending actions.
+     * @param ethAmount The amount of Ether to send with the transaction.
+     * @return success_ Whether the open position was successful.
      */
     function usdnValidateOpenPosition(
         IUsdnProtocol usdnProtocol,
@@ -228,14 +228,14 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Validate a close position in the USDN protocol
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * @param usdnProtocol The USDN protocol
-     * @param validator The address of the validator
-     * @param closePriceData The price data corresponding to the position's close
-     * @param previousActionsData The data needed to validate actionable pending actions
-     * @param ethAmount The amount of Ether to send with the transaction
-     * @return success_ Whether the close position was successful
+     * @notice Validate a close position in the USDN protocol.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * @param usdnProtocol The USDN protocol.
+     * @param validator The address of the validator.
+     * @param closePriceData The price data corresponding to the position's close.
+     * @param previousActionsData The data needed to validate actionable pending actions.
+     * @param ethAmount The amount of Ether to send with the transaction.
+     * @return success_ Whether the close position was successful.
      */
     function usdnValidateClosePosition(
         IUsdnProtocol usdnProtocol,
@@ -252,12 +252,12 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Validate actionable pending action in the USDN protocol
-     * @dev Check the protocol's documentation for information about how this function should be used
-     * @param usdnProtocol The USDN protocol
-     * @param previousActionsData The data needed to validate actionable pending actions
-     * @param maxValidations The maximum number of pending actions to validate
-     * @param ethAmount The amount of Ether to send with the transaction
+     * @notice Validate actionable pending action in the USDN protocol.
+     * @dev Check the protocol's documentation for information about how this function should be used.
+     * @param usdnProtocol The USDN protocol.
+     * @param previousActionsData The data needed to validate actionable pending actions.
+     * @param maxValidations The maximum number of pending actions to validate.
+     * @param ethAmount The amount of Ether to send with the transaction.
      */
     function usdnValidateActionablePendingActions(
         IUsdnProtocol usdnProtocol,
@@ -270,11 +270,11 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Wrap the usdn shares value into wusdn
-     * @param usdn The USDN token
-     * @param wusdn The WUSDN token
-     * @param value The USDN value in shares
-     * @param receiver The WUSDN receiver
+     * @notice Wrap the usdn shares value into wusdn.
+     * @param usdn The USDN token.
+     * @param wusdn The WUSDN token.
+     * @param value The USDN value in shares.
+     * @param receiver The WUSDN receiver.
      */
     function wrapUSDNShares(IUsdn usdn, IWusdn wusdn, uint256 value, address receiver) external {
         if (value == Constants.CONTRACT_BALANCE) {
@@ -291,10 +291,10 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Unwrap the wusdn value into usdn
-     * @param wusdn The WUSDN token
-     * @param value The WUSDN value
-     * @param receiver The USDN receiver
+     * @notice Unwrap the wusdn value into usdn.
+     * @param wusdn The WUSDN token.
+     * @param value The WUSDN value.
+     * @param receiver The USDN receiver.
      */
     function unwrapUSDN(IWusdn wusdn, uint256 value, address receiver) external {
         if (value == Constants.CONTRACT_BALANCE) {
@@ -307,10 +307,10 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Performs tick liquidations of the USDN protocol
-     * @param usdnProtocol The USDN protocol
-     * @param currentPriceData The current price data
-     * @param ethAmount The amount of Ether to send with the transaction
+     * @notice Performs tick liquidations of the USDN protocol.
+     * @param usdnProtocol The USDN protocol.
+     * @param currentPriceData The current price data.
+     * @param ethAmount The amount of Ether to send with the transaction.
      */
     function usdnLiquidate(IUsdnProtocol usdnProtocol, bytes memory currentPriceData, uint256 ethAmount) external {
         // slither-disable-next-line arbitrary-send-eth
@@ -318,12 +318,12 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Performs rebalancer initiate deposit
-     * @param usdnProtocol The USDN protocol
-     * @param amount The initiateDeposit amount
-     * @param to The address for which the deposit will be initiated
-     * @return success_ Whether the initiate deposit is successful
-     * @return data_ The transaction data
+     * @notice Performs rebalancer initiate deposit.
+     * @param usdnProtocol The USDN protocol.
+     * @param amount The initiateDeposit amount.
+     * @param to The address for which the deposit will be initiated.
+     * @return success_ Whether the initiate deposit is successful.
+     * @return data_ The transaction data.
      */
     function rebalancerInitiateDeposit(IUsdnProtocol usdnProtocol, uint256 amount, address to)
         external
@@ -353,19 +353,19 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Performs a rebalancer initiate close position
-     * @param usdnProtocol The USDN protocol
-     * @param amount The amount to close
-     * @param to The address for which the close will be initiated
-     * @param validator The address that will receive the security deposit
-     * @param userMinPrice The minimum price of the close position
-     * @param deadline The initiate close position deadline
-     * @param currentPriceData The current price data
-     * @param previousActionsData The previous action price data
-     * @param delegationData The delegation data
-     * @param ethAmount The amount of Ether to send with the transaction
-     * @return success_ Whether the initiate deposit is successful
-     * @return data_ The transaction data
+     * @notice Performs a rebalancer initiate close position.
+     * @param usdnProtocol The USDN protocol.
+     * @param amount The amount to close.
+     * @param to The address for which the close will be initiated.
+     * @param validator The address that will receive the security deposit.
+     * @param userMinPrice The minimum price of the close position.
+     * @param deadline The initiate close position deadline.
+     * @param currentPriceData The current price data.
+     * @param previousActionsData The previous action price data.
+     * @param delegationData The delegation data.
+     * @param ethAmount The amount of Ether to send with the transaction.
+     * @return success_ Whether the initiate deposit is successful.
+     * @return data_ The transaction data.
      */
     function rebalancerInitiateClosePosition(
         IUsdnProtocol usdnProtocol,
@@ -402,14 +402,14 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Callback function to be called during initiate functions to transfer tokens to the protocol contract
-     * @dev The implementation must ensure that the `msg.sender` is the protocol contract
-     * @param usdnProtocol The USDN protocol contract address
-     * @param lockedBy The router lockedBy address
-     * @param permit2 The permit2 contract
-     * @param token The token to transfer
-     * @param amount The amount to transfer
-     * @param to The address of the recipient
+     * @notice Callback function to be called during initiate functions to transfer tokens to the protocol contract.
+     * @dev The implementation must ensure that the `msg.sender` is the protocol contract.
+     * @param usdnProtocol The USDN protocol contract address.
+     * @param lockedBy The router lockedBy address.
+     * @param permit2 The permit2 contract.
+     * @param token The token to transfer.
+     * @param amount The amount to transfer.
+     * @param to The address of the recipient.
      */
     function transferCallback(
         address usdnProtocol,
@@ -439,12 +439,12 @@ library UsdnProtocolRouterLib {
     }
 
     /**
-     * @notice Callback function to be called during `initiateWithdrawal` to transfer USDN shares to the protocol
-     * @dev The implementation must ensure that the `msg.sender` is the protocol contract
-     * @param usdnProtocol The USDN protocol contract address
-     * @param usdn The USDN contract address
-     * @param lockedBy The router lockedBy address
-     * @param shares The amount of USDN shares to transfer to the `msg.sender`
+     * @notice Callback function to be called during `initiateWithdrawal` to transfer USDN shares to the protocol.
+     * @dev The implementation must ensure that the `msg.sender` is the protocol contract.
+     * @param usdnProtocol The USDN protocol contract address.
+     * @param usdn The USDN contract address.
+     * @param lockedBy The router lockedBy address.
+     * @param shares The amount of USDN shares to transfer to the `msg.sender`.
      */
     function usdnTransferCallback(address usdnProtocol, IUsdn usdn, address lockedBy, uint256 shares) external {
         if (msg.sender != usdnProtocol) {
