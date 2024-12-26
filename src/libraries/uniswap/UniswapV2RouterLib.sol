@@ -12,6 +12,7 @@ import { SafeTransferLib } from "solmate/src/utils/SafeTransferLib.sol";
 
 import { IUniswapV2Router } from "../../interfaces/uniswap/IUniswapV2Router.sol";
 import { IUniswapV2RouterErrors } from "../../interfaces/uniswap/IUniswapV2RouterErrors.sol";
+import { Payment } from "../../utils/Payment.sol";
 
 /// @title Router library for Uniswap v2
 library UniswapV2RouterLib {
@@ -44,7 +45,7 @@ library UniswapV2RouterLib {
         if (
             amountIn != Constants.ALREADY_PAID // amountIn of 0 to signal that the pair already has the tokens
         ) {
-            _pay(permit2, path[0], payer, firstPair, amountIn);
+            Payment._pay(permit2, path[0], payer, firstPair, amountIn);
         }
 
         IERC20 tokenOut = IERC20(path[path.length - 1]);
@@ -85,7 +86,7 @@ library UniswapV2RouterLib {
             revert IUniswapV2RouterErrors.V2TooMuchRequested();
         }
 
-        _pay(permit2, path[0], payer, firstPair, amountIn);
+        Payment._pay(permit2, path[0], payer, firstPair, amountIn);
         _v2Swap(uniswapV2Factory, uniswapV2PairInitCodeHash, path, recipient, firstPair);
     }
 
@@ -138,32 +139,6 @@ library UniswapV2RouterLib {
                 IUniswapV2Pair(pair).swap(data.amount0Out, data.amount1Out, data.nextPair, new bytes(0));
                 pair = data.nextPair;
             }
-        }
-    }
-
-    /**
-     * @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address
-     * @param permit2 The permit2 contract
-     * @param token The token to transfer
-     * @param payer The address to pay for the transfer
-     * @param recipient The recipient of the transfer
-     * @param amount The amount to transfer
-     */
-    function _pay(IAllowanceTransfer permit2, address token, address payer, address recipient, uint256 amount)
-        private
-    {
-        if (payer == address(this)) {
-            if (token == Constants.ETH) {
-                recipient.safeTransferETH(amount);
-            } else {
-                if (amount == Constants.CONTRACT_BALANCE) {
-                    amount = IERC20(token).balanceOf(address(this));
-                }
-
-                IERC20(token).safeTransfer(recipient, amount);
-            }
-        } else {
-            permit2.transferFrom(payer, recipient, amount.toUint160(), token);
         }
     }
 }
