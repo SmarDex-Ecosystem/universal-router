@@ -52,7 +52,7 @@ DEPLOYMENT_LOG=$(cat "broadcast/01_Deploy.s.sol/$chainId/run-latest.json")
 FORK_ENV_DUMP=$(
     cat <<EOF
 $(cat .env.fork)
-UNIVERSAL_ROUTER=$(echo "$DEPLOYMENT_LOG" | jq '.returns.UniversalRouter_.value' | xargs printf "%s\n")
+UNIVERSAL_ROUTER_ADDRESS=$(echo "$DEPLOYMENT_LOG" | jq '.returns.UniversalRouter_.value' | xargs printf "%s\n")
 EOF
 )
 
