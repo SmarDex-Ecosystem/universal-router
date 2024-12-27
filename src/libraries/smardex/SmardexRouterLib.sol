@@ -159,15 +159,15 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Performs the Smardex add liquidity
-     * @dev Use router balance if the payer is the router or use permit2 from msg.sender
-     * @param smardexFactory The Smardex factory contract
-     * @param params The smardex add liquidity params
-     * @param receiver The liquidity receiver address
-     * @param payer The payer address
-     * @param deadline The deadline not to exceed
-     * @return success_ Whether the add liquidity is successful
-     * @return output_ The output which contains amountA, amountB and liquidity values
+     * @notice Adds liquidity in a Smardex pool.
+     * @dev Use the router's balance if the payer is the router or use permit2 if it's msg.sender.
+     * @param smardexFactory The Smardex factory contract.
+     * @param params The smardex add liquidity params.
+     * @param receiver The liquidity receiver address.
+     * @param payer The payer address.
+     * @param deadline The deadline before which the liquidity must be added.
+     * @return success_ Whether the liquidity was successfully added.
+     * @return output_ The output which contains amountA, amountB and the amount of liquidity tokens minted.
      */
     function addLiquidity(
         ISmardexFactory smardexFactory,
