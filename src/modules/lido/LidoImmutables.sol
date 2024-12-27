@@ -9,10 +9,10 @@ contract LidoImmutables is ILidoImmutables {
     /// @inheritdoc ILidoImmutables
     IStETH public immutable STETH;
 
-    /// @dev The address of the wrapped steth.
+    /// @dev The address of the wrapped steth
     IWstETH internal immutable WSTETH;
 
-    /// @param wsteth The address of wrapped steth.
+    /// @param wsteth The address of wrapped steth
     constructor(address wsteth) {
         WSTETH = IWstETH(wsteth);
         STETH = IStETH(WSTETH.stETH());

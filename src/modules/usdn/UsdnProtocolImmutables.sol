@@ -14,25 +14,25 @@ struct UsdnProtocolParameters {
 }
 
 contract UsdnProtocolImmutables {
-    /// @dev The address of the USDN protocol.
+    /// @dev The address of the USDN protocol
     IUsdnProtocol internal immutable USDN_PROTOCOL;
 
-    /// @dev The address of the protocol asset.
+    /// @dev The address of the protocol asset
     IERC20Metadata internal immutable PROTOCOL_ASSET;
 
-    /// @dev The address of the SDEX token.
+    /// @dev The address of the SDEX token
     IERC20Metadata internal immutable SDEX;
 
-    /// @dev The address of the USDN.
+    /// @dev The address of the USDN
     IUsdn internal immutable USDN;
 
-    /// @dev The address of the WUSDN.
+    /// @dev The address of the WUSDN
     IWusdn internal immutable WUSDN;
 
-    /// @dev The permit2 contract.
+    /// @dev The permit2 contract
     IAllowanceTransfer internal immutable USDN_PROTOCOL_PERMIT2;
 
-    /// @param params The immutable parameters for the USDN protocol.
+    /// @param params The immutable parameters for the USDN protocol
     constructor(UsdnProtocolParameters memory params) {
         USDN_PROTOCOL = params.usdnProtocol;
         PROTOCOL_ASSET = params.usdnProtocol.getAsset();

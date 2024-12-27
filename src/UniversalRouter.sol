@@ -19,15 +19,17 @@ import { SmardexImmutables, SmardexParameters } from "./modules/smardex/SmardexI
 
 contract UniversalRouter is IUniversalRouter, Dispatcher {
     /**
-     * @notice Reverts if the transaction deadline has passed.
-     * @param deadline The deadline to check.
+     * @notice Reverts if the transaction deadline has passed
+     * @param deadline The deadline to check
      */
     modifier checkDeadline(uint256 deadline) {
         if (block.timestamp > deadline) revert TransactionDeadlinePassed();
         _;
     }
 
-    /// @param params The immutable parameters of the router.
+    /**
+     * @param params The immutable parameters of the router
+     */
     constructor(RouterParameters memory params)
         UniswapImmutables(
             UniswapParameters(params.v2Factory, params.v3Factory, params.pairInitCodeHash, params.poolInitCodeHash)
@@ -75,14 +77,14 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
     }
 
     /**
-     * @notice Verifies if a command requires success or not.
-     * @param command The command to check.
-     * @return True if the command requires success, false otherwise.
+     * @notice Verifies if a command requires success or not
+     * @param command The command to check
+     * @return True if the command requires success, false otherwise
      */
     function successRequired(bytes1 command) internal pure returns (bool) {
         return command & Commands.FLAG_ALLOW_REVERT == 0;
     }
 
-    /// @notice To receive ETH from WETH.
+    /// @notice To receive ETH from WETH
     receive() external payable { }
 }

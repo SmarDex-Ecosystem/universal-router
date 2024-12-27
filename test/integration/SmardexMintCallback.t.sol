@@ -27,7 +27,7 @@ contract TestForkSmardexMintCallback is UniversalRouterBaseFixture {
     }
 
     /**
-     * @custom:scenario Test the `smardexMintCallback` with invalid pair
+     * @custom:scenario Test the `smardexMintCallback` with invalid amounts
      * @custom:given The initiated universal router
      * @custom:when The function is called
      * @custom:then The transaction should revert with `CallbackInvalidAmount`

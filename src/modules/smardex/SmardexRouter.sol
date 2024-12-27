@@ -9,14 +9,18 @@ import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
 abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
-    /// @dev Transient storage variable used for checking slippage.
+    /// @dev Transient storage variable used for checking slippage
     uint256 private amountInCached = type(uint256).max;
 
-    /// @dev The size in bytes of a single address.
+    /// @dev The size in bytes of a single address
     uint8 private constant ADDR_SIZE = 20;
 
     /// @inheritdoc ISmardexRouter
-    function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
+    function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data)
+        external
+        virtual
+        override
+    {
         uint256 amountIn =
             SmardexRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
         if (amountIn > 0) {
@@ -25,18 +29,18 @@ abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
     }
 
     /// @inheritdoc ISmardexRouter
-    function smardexMintCallback(MintCallbackData calldata data) external {
+    function smardexMintCallback(MintCallbackData calldata data) external virtual override {
         SmardexRouterLib.smardexMintCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, data);
     }
 
     /**
-     * @notice Performs a Smardex exact input swap.
-     * @dev Use router balance if payer is the router or use permit2 from msg.sender.
-     * @param recipient The recipient of the output tokens.
-     * @param amountIn The amount of input tokens for the trade.
-     * @param amountOutMinimum The minimum desired amount of output tokens.
-     * @param path The path of the trade as a bytes string.
-     * @param payer The address that will be paying the input.
+     * @notice Performs a Smardex exact input swap
+     * @dev Use router balance if payer is the router or use permit2 from msg.sender
+     * @param recipient The recipient of the output tokens
+     * @param amountIn The amount of input tokens for the trade
+     * @param amountOutMinimum The minimum desired amount of output tokens
+     * @param path The path of the trade as a bytes string
+     * @param payer The address that will be paying the input
      */
     function _smardexSwapExactInput(
         address recipient,
@@ -53,13 +57,13 @@ abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
     }
 
     /**
-     * @notice Performs a Smardex exact output swap.
-     * @dev Use router balance if payer is the router or use permit2 from msg.sender.
-     * @param recipient The recipient of the output tokens.
-     * @param amountOut The amount of output tokens to receive for the trade.
-     * @param amountInMax The maximum desired amount of input tokens.
-     * @param path The path of the trade as a bytes string.
-     * @param payer The address that will be paying the input.
+     * @notice Performs a Smardex exact output swap
+     * @dev Use router balance if payer is the router or use permit2 from msg.sender
+     * @param recipient The recipient of the output tokens
+     * @param amountOut The amount of output tokens to receive for the trade
+     * @param amountInMax The maximum desired amount of input tokens
+     * @param path The path of the trade as a bytes string
+     * @param payer The address that will be paying the input
      */
     function _smardexSwapExactOutput(
         address recipient,

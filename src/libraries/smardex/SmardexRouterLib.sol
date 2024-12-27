@@ -25,10 +25,10 @@ library SmardexRouterLib {
     uint8 private constant ADDR_SIZE = 20;
 
     /**
-     * @notice Checks that the deadline timestamp wasn't exceeded.
-     * @param deadline The deadline timestamp.
+     * @notice Ensures that the deadline timestamp wasn't exceeded
+     * @param deadline The deadline timestamp
      */
-    modifier checkDeadline(uint256 deadline) {
+    modifier ensure(uint256 deadline) {
         if (deadline < block.timestamp) {
             revert ISmardexRouterErrors.DeadlineExceeded();
         }
@@ -36,15 +36,13 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice The Smardex callback for Smardex swap.
-     * @param smardexFactory The Smardex factory contract.
-     * @param permit2 The permit2 contract.
-     * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to
-     * pair).
-     * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to
-     * pair).
-     * @param data The data path and payer for the swap.
-     * @return amountInCached_ Cached input amount, used to check slippage.
+     * @notice The Smardex callback for Smardex swap
+     * @param smardexFactory The Smardex factory contract
+     * @param permit2 The permit2 contract
+     * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
+     * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to pair)
+     * @param data The data path and payer for the swap
+     * @return amountInCached_ Cached input amount, used to check slippage
      */
     function smardexSwapCallback(
         ISmardexFactory smardexFactory,
@@ -81,10 +79,10 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice The Smardex callback for Smardex mint.
-     * @param smardexFactory The Smardex factory contract.
-     * @param permit2 The permit2 contract.
-     * @param data The mint callback data.
+     * @notice The Smardex callback for Smardex mint
+     * @param smardexFactory The Smardex factory contract
+     * @param permit2 The permit2 contract
+     * @param data The mint callback data
      */
     function smardexMintCallback(
         ISmardexFactory smardexFactory,
@@ -104,13 +102,13 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Performs a Smardex exact input swap.
-     * @dev Use router balance if the payer is the router or use permit2 from msg.sender.
-     * @param smardexFactory The Smardex factory contract.
-     * @param recipient The recipient of the output tokens.
-     * @param amountIn The amount of input tokens for the trade.
-     * @param path The path of the trade as a bytes string.
-     * @param payer The address that will be paying the input.
+     * @notice Performs a Smardex exact input swap
+     * @dev Use router balance if the payer is the router or use permit2 from msg.sender
+     * @param smardexFactory The Smardex factory contract
+     * @param recipient The recipient of the output tokens
+     * @param amountIn The amount of input tokens for the trade
+     * @param path The path of the trade as a bytes string
+     * @param payer The address that will be paying the input
      * @return amountOut_ The amount out
      */
     function smardexSwapExactInput(
@@ -147,14 +145,14 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Performs a Smardex exact output swap.
-     * @dev Use router balance if the payer is the router or use permit2 from msg.sender.
-     * @param smardexFactory The Smardex factory contract.
-     * @param recipient The recipient of the output tokens.
-     * @param amountOut The amount of output tokens to receive for the swap.
-     * @param path The path of the trade as a bytes string.
-     * @param payer The address that will be paying the input.
-     * @return amountIn_ The amount of input tokens to pay.
+     * @notice Performs a Smardex exact output swap
+     * @dev Use router balance if the payer is the router or use permit2 from msg.sender
+     * @param smardexFactory The Smardex factory contract
+     * @param recipient The recipient of the output tokens
+     * @param amountOut The amount of output tokens to receive for the swap
+     * @param path The path of the trade as a bytes string
+     * @param payer The address that will be paying the input
+     * @return amountIn_ The amount of input tokens to pay
      */
     function smardexSwapExactOutput(
         ISmardexFactory smardexFactory,
@@ -172,15 +170,15 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Performs the Smardex add liquidity.
-     * @dev Use router balance if the payer is the router or use permit2 from msg.sender.
-     * @param smardexFactory The Smardex factory contract.
-     * @param params The smardex add liquidity params.
-     * @param receiver The liquidity receiver address.
-     * @param payer The payer address.
-     * @param deadline The deadline not to exceed.
-     * @return success_ Whether the add liquidity is successful.
-     * @return output_ The output which contains amountA, amountB and liquidity values.
+     * @notice Performs the Smardex add liquidity
+     * @dev Use router balance if the payer is the router or use permit2 from msg.sender
+     * @param smardexFactory The Smardex factory contract
+     * @param params The smardex add liquidity params
+     * @param receiver The liquidity receiver address
+     * @param payer The payer address
+     * @param deadline The deadline not to exceed
+     * @return success_ Whether the add liquidity is successful
+     * @return output_ The output which contains amountA, amountB and liquidity values
      */
     function addLiquidity(
         ISmardexFactory smardexFactory,
@@ -188,20 +186,20 @@ library SmardexRouterLib {
         address receiver,
         address payer,
         uint256 deadline
-    ) external checkDeadline(deadline) returns (bool success_, bytes memory output_) {
-        (uint256 amountA, uint256 amountB, address pair) = _computeTokenAmounts(smardexFactory, params, receiver);
+    ) external ensure(deadline) returns (bool success_, bytes memory output_) {
+        (uint256 amountA, uint256 amountB, address pair) = _addLiquidity(smardexFactory, params, receiver);
         (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA, amountB);
         uint256 liquidity = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
         return (true, abi.encode(amountA, amountB, liquidity));
     }
 
     /**
-     * @notice Internal function to swap quantity of token to receive a determined quantity.
-     * @param smardexFactory The Smardex factory contract.
-     * @param amountOut The quantity to receive.
-     * @param to The address that will receive the token.
-     * @param data The SwapCallbackData data of the swap to transmit.
-     * @return amountIn_ The amount of token to pay.
+     * @notice Internal function to swap quantity of token to receive a determined quantity
+     * @param smardexFactory The Smardex factory contract
+     * @param amountOut The quantity to receive
+     * @param to The address that will receive the token
+     * @param data The SwapCallbackData data of the swap to transmit
+     * @return amountIn_ The amount of token to pay
      */
     function _swapExactOut(
         ISmardexFactory smardexFactory,
@@ -228,12 +226,12 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Internal function to swap a determined quantity of token.
-     * @param smardexFactory The Smardex factory contract.
-     * @param amountIn The quantity to swap.
-     * @param to The address that will receive the token.
-     * @param data The SwapCallbackData data of the swap to transmit.
-     * @return amountOut_ The amount of token that _to will receive.
+     * @notice Internal function to swap a determined quantity of token
+     * @param smardexFactory The Smardex factory contract
+     * @param amountIn The quantity to swap
+     * @param to The address that will receive the token
+     * @param data The SwapCallbackData data of the swap to transmit
+     * @return amountOut_ The amount of token that _to will receive
      */
     function _swapExactIn(
         ISmardexFactory smardexFactory,
@@ -255,12 +253,12 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address.
-     * @param permit2 The permit2 contract.
-     * @param token The token to transfer.
-     * @param payer The address to pay for the transfer.
-     * @param recipient The recipient of the transfer.
-     * @param amount The amount to transfer.
+     * @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address
+     * @param permit2 The permit2 contract
+     * @param token The token to transfer
+     * @param payer The address to pay for the transfer
+     * @param recipient The recipient of the transfer
+     * @param amount The amount to transfer
      */
     function _payOrPermit2Transfer(
         IAllowanceTransfer permit2,
@@ -277,15 +275,15 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Computes the amount of tokens to add by adding liquidity.
-     * @param smardexFactory The smardex factory.
-     * @param params Parameters of the liquidity to add.
-     * @param skimReceiver The skim receiver address to use if a skim is performed.
+     * @notice Add liquidity to a smardex pair. Receive liquidity token to materialize shares in the pool
+     * @param smardexFactory The smardex factory
+     * @param params Parameters of the liquidity to add
+     * @param skimReceiver The skim receiver address to use if a skim is performed
      * @return amountA_ The amount of tokenA sent to the pool.
      * @return amountB_ The amount of tokenB sent to the pool.
      * @return pair_ The address of the pool where the liquidity was added.
      */
-    function _computeTokenAmounts(
+    function _addLiquidity(
         ISmardexFactory smardexFactory,
         ISmardexRouter.AddLiquidityParams calldata params,
         address skimReceiver

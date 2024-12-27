@@ -13,12 +13,12 @@ library LidoRouterLib {
     using SafeERC20 for IStETH;
 
     /**
-     * @notice Wrap all of the contract's stETH into wstETH.
-     * @param steth The steth contract.
-     * @param wsteth The wsteth contract.
-     * @param amount The stETH amount.
-     * @param recipient The recipient of the wstETH.
-     * @return Whether the wrapping was successful.
+     * @notice Wrap all of the contract's stETH into wstETH
+     * @param steth The steth contract
+     * @param wsteth The wsteth contract
+     * @param amount The stETH amount
+     * @param recipient The recipient of the wstETH
+     * @return Whether the wrapping was successful
      */
     function wrapSTETH(IStETH steth, IWstETH wsteth, uint256 amount, address recipient) external returns (bool) {
         if (amount == 0) {
@@ -40,12 +40,12 @@ library LidoRouterLib {
     }
 
     /**
-     * @notice Unwraps all of the contract's wstETH into stETH.
-     * @param steth The steth contract.
-     * @param wsteth The wsteth contract.
-     * @param amount The wstETH amount.
-     * @param recipient The recipient of the stETH.
-     * @return Whether the unwrapping was successful.
+     * @notice Unwraps all of the contract's wstETH into stETH
+     * @param steth The steth contract
+     * @param wsteth The wsteth contract
+     * @param amount The wstETH amount
+     * @param recipient The recipient of the stETH
+     * @return Whether the unwrapping was successful
      */
     function unwrapWSTETH(IStETH steth, IWstETH wsteth, uint256 amount, address recipient) external returns (bool) {
         if (amount == 0) {

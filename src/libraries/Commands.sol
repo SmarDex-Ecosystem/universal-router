@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 /**
  * @title Commands Library
- * @notice Command Flags used to decode commands.
+ * @notice Command Flags used to decode commands
  */
 library Commands {
     // masks to extract certain bits of commands

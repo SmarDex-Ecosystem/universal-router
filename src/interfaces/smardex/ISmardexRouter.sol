@@ -1,24 +1,24 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity >=0.8.0;
 
 interface ISmardexRouter {
     /**
-     * @notice Parameters used by the addLiquidity function.
-     * @param tokenA The address of the first token in the pair.
-     * @param tokenB The address of the second token in the pair.
-     * @param amountADesired The amount of tokenA to add as liquidity.
-     * If the B/A price is <= amountBDesired/amountADesired.
-     * @param amountBDesired The amount of tokenB to add as liquidity.
-     * If the A/B price is <= amountADesired/amountBDesired
+     * @notice Parameters used by the addLiquidity function
+     * @param tokenA The address of the first token in the pair
+     * @param tokenB The address of the second token in the pair
+     * @param amountADesired The amount of tokenA to add as liquidity
+     * if the B/A price is <= amountBDesired/amountADesired
+     * @param amountBDesired The amount of tokenB to add as liquidity
+     * if the A/B price is <= amountADesired/amountBDesired
      * @param amountAMin This bounds the extent to which the B/A price can go up before the transaction reverts.
      * Must be <= amountADesired.
      * @param amountBMin This bounds the extent to which the A/B price can go up before the transaction reverts.
      * Must be <= amountBDesired.
-     * @param fictiveReserveB The fictive reserve of tokenB at time of submission.
+     * @param fictiveReserveB The fictive reserve of tokenB at time of submission
      * @param fictiveReserveAMin The minimum fictive reserve of tokenA indicating the extent to which the A/B price can
-     * go down.
+     * go down
      * @param fictiveReserveAMax The maximum fictive reserve of tokenA indicating the extent to which the A/B price can
-     * go up.
+     * go up
      */
     struct AddLiquidityParams {
         address tokenA;
@@ -33,12 +33,12 @@ interface ISmardexRouter {
     }
 
     /**
-     * @notice The callback data for mint.
-     * @param token0 The address of the first token of the pair.
-     * @param token1 The address of the second token of the pair.
-     * @param amount0 The amount of token0 to provide.
-     * @param amount1 The amount of token1 to provide.
-     * @param payer The address of the payer to provide token for the mint.
+     * @notice The callback data for mint
+     * @param token0 The address of the first token of the pair
+     * @param token1 The address of the second token of the pair
+     * @param amount0 The amount of token0 to provide
+     * @param amount1 The amount of token1 to provide
+     * @param payer The address of the payer to provide token for the mint
      */
     struct MintCallbackData {
         address token0;
@@ -49,9 +49,9 @@ interface ISmardexRouter {
     }
 
     /**
-     * @notice The callback data for swap from SmardexRouter.
-     * @param path The path of the swap, array of token addresses tightly packed.
-     * @param payer The address of the payer for the swap.
+     * @notice The callback data for swap from SmardexRouter
+     * @param path The path of the swap, array of token addresses tightly packed
+     * @param payer The address of the payer for the swap
      */
     struct SwapCallbackData {
         bytes path;
@@ -59,18 +59,16 @@ interface ISmardexRouter {
     }
 
     /**
-     * @notice The callback to implement when calling `SmardexPair.mint`.
-     * @param data The callback data.
+     * @notice The callback to implement when calling SmardexPair.mint
+     * @param data The callback data
      */
     function smardexMintCallback(MintCallbackData calldata data) external;
 
     /**
-     * @notice The callback data for swap.
-     * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to
-     * pair).
-     * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to
-     * pair).
-     * @param data The data for the router path and payer for the swap.
+     * @notice The callback data for swap
+     * @param amount0Delta The amount of token0 for the swap (negative is incoming, positive is required to pay to pair)
+     * @param amount1Delta The amount of token1 for the swap (negative is incoming, positive is required to pay to pair)
+     * @param data The data for the router path and payer for the swap
      */
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external;
 }
