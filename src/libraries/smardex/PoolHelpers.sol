@@ -39,7 +39,7 @@ library PoolHelpers {
     }
 
     /**
-     * @notice Given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
+     * @notice Calculates the estimated amount of token B received for the given amount of token A.
      * @param amountA amount of asset A
      * @param reserveA reserve of asset A
      * @param reserveB reserve of asset B
@@ -57,8 +57,7 @@ library PoolHelpers {
     }
 
     /**
-     * @notice Sorts tokens of a pair tokenA/tokenB into the form token0/token1
-     * and returns respectively amount0 and amount1
+     * @notice Sorts the given amounts of tokens by token address in ascending order.
      * @param tokenA The tokenA address
      * @param tokenB The tokenB address
      * @param amountA The amount of tokenA

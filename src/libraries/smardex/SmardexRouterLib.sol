@@ -160,7 +160,8 @@ library SmardexRouterLib {
 
     /**
      * @notice Adds liquidity in a Smardex pool.
-     * @dev Use the router's balance if the payer is the router or use permit2 if it's msg.sender.
+     * @dev During the mint of the liquidity tokens, {smardexSwapCallback} will be called which will call for a transfer
+     * of the tokens to the pair. Use the router's balance if the payer is the router or use permit2 if it's msg.sender.
      * @param smardexFactory The Smardex factory contract.
      * @param params The smardex add liquidity params.
      * @param receiver The liquidity receiver address.
