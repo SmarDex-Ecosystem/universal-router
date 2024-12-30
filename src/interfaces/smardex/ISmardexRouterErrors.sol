@@ -2,36 +2,36 @@
 pragma solidity >=0.8.0;
 
 interface ISmardexRouterErrors {
-    /// @notice Indicates that the amountOut is lower than the minAmountOut
+    /// @notice The amount of token received is lower than the limit.
     error TooLittleReceived();
 
-    /// @notice Indicates that the amountIn is higher than the maxAmountIn
+    /// @notice The amount of tokens to pay is higher than the limit.
     error ExcessiveInputAmount();
 
-    /// @notice Indicates that the recipient is invalid
+    /// @notice The recipient is invalid.
     error InvalidRecipient();
 
-    /// @notice Indicates that msg.sender is not the pair
+    /// @notice `msg.sender` is not the expected token pair.
     error InvalidPair();
 
-    /// @notice Indicates that the callback amount is invalid
+    /// @notice Token amounts given to the callback are invalid.
     error CallbackInvalidAmount();
 
-    /// @notice Indicates that the price is too high
+    /// @notice The price is too high for the swap.
     error PriceTooHigh();
 
-    /// @notice Indicates that the price is too low
+    /// @notice The price is too low for the swap.
     error PriceTooLow();
 
-    /// @notice Indicates that the amount of asset B is insufficient
+    /// @notice The amount of asset B is below the minimum.
     error InsufficientAmountB();
 
-    /// @notice Indicates that the amount of asset A desired is insufficient
+    /// @notice The amount of asset A to pay is above the desired amount.
     error InsufficientAmountADesired();
 
-    /// @notice Indicates that the amount of asset A is insufficient
+    /// @notice The amount of asset A is below the minimum.
     error InsufficientAmountA();
 
-    /// @notice Indicates that the deadline was exceeded
+    /// @notice The deadline for the action was exceeded.
     error DeadlineExceeded();
 }
