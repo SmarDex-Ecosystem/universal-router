@@ -68,10 +68,10 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice The Smardex callback for Smardex mint
-     * @param smardexFactory The Smardex factory contract
-     * @param permit2 The permit2 contract
-     * @param data The mint callback data
+     * @notice The callback called during a mint of LP token on Smardex.
+     * @param smardexFactory The Smardex factory contract.
+     * @param permit2 The permit2 contract.
+     * @param data The data required to execute the callback.
      */
     function smardexMintCallback(
         ISmardexFactory smardexFactory,

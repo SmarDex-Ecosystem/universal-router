@@ -60,7 +60,7 @@ interface ISmardexRouter {
 
     /**
      * @notice The callback function called by {SmardexPair.mint}.
-     * @param data The callback data
+     * @param data The callback data.
      */
     function smardexMintCallback(MintCallbackData calldata data) external;
 
