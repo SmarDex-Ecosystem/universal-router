@@ -4,19 +4,19 @@ pragma solidity ^0.8.20;
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
 
 library PoolHelpers {
-    /// @notice Indicates that the amount of asset is insufficient
+    /// @notice The given amount of asset is insufficient.
     error InsufficientAmount();
-    /// @notice Indicates that the amount of liquidity is insufficient
+    /// @notice The amount of liquidity in the pair is insufficient.
     error InsufficientLiquidity();
 
     /**
-     * @notice Get the real and fictive reserves for a pair
-     * @param pair The pair contract
-     * @param tokenA The tokenA address
-     * @return reserveA_ The reserve of tokenA in the pair tokenA/TokenB
-     * @return reserveB_ The reserve of tokenB in the pair tokenA/TokenB
-     * @return fictiveReserveA_ The fictive reserve of tokenA in the pair tokenA/TokenB
-     * @return fictiveReserveB_ The fictive reserve of tokenB in the pair tokenA/TokenB
+     * @notice Gets the real and fictive reserves for a pair.
+     * @param pair The pair to get the reserves of.
+     * @param tokenA The address of `tokenA`.
+     * @return reserveA_ The reserve of `tokenA`.
+     * @return reserveB_ The reserve of `tokenB`.
+     * @return fictiveReserveA_ The fictive reserve of `tokenA`.
+     * @return fictiveReserveB_ The fictive reserve of `tokenB`.
      */
     function getAllReserves(ISmardexPair pair, address tokenA)
         internal
@@ -39,11 +39,11 @@ library PoolHelpers {
     }
 
     /**
-     * @notice Calculates the estimated amount of token B received for the given amount of token A.
-     * @param amountA amount of asset A
-     * @param reserveA reserve of asset A
-     * @param reserveB reserve of asset B
-     * @return amountB_ equivalent amount of asset B
+     * @notice Calculates the estimated amount of `tokenB` received for the given amount of `tokenA`.
+     * @param amountA The amount of `tokenA` to exchange.
+     * @param reserveA The reserve of `tokenA`.
+     * @param reserveB The reserve of `tokenB`.
+     * @return amountB_ The estimated amount of `tokenB` to be received.
      */
     function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) internal pure returns (uint256 amountB_) {
         if (amountA == 0) {
@@ -58,12 +58,12 @@ library PoolHelpers {
 
     /**
      * @notice Sorts the given amounts of tokens by token address in ascending order.
-     * @param tokenA The tokenA address
-     * @param tokenB The tokenB address
-     * @param amountA The amount of tokenA
-     * @param amountB The amount of tokenB
-     * @return amount0_ The amount of token0
-     * @return amount1_ The amount of token1
+     * @param tokenA The `tokenA` address.
+     * @param tokenB The `tokenB` address
+     * @param amountA The amount of `tokenA`
+     * @param amountB The amount of `tokenB`
+     * @return amount0_ The amount of `token0`
+     * @return amount1_ The amount of `token1`
      */
     function sortAmounts(address tokenA, address tokenB, uint256 amountA, uint256 amountB)
         internal
