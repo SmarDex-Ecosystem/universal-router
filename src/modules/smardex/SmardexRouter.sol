@@ -16,11 +16,7 @@ abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
     uint8 private constant ADDR_SIZE = 20;
 
     /// @inheritdoc ISmardexRouter
-    function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data)
-        external
-        virtual
-        override
-    {
+    function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         uint256 amountIn =
             SmardexRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
         if (amountIn > 0) {
@@ -29,7 +25,7 @@ abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
     }
 
     /// @inheritdoc ISmardexRouter
-    function smardexMintCallback(MintCallbackData calldata data) external virtual override {
+    function smardexMintCallback(MintCallbackData calldata data) external {
         SmardexRouterLib.smardexMintCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, data);
     }
 
