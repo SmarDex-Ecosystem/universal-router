@@ -210,10 +210,10 @@ library SmardexRouterLib {
             revert ISmardexRouterErrors.DeadlineExceeded();
         }
         if (params.tokenA == params.tokenB) {
-            revert ISmardexRouterErrors.InvalidAddress();
+            revert ISmardexRouterErrors.InvalidTokenAddress();
         }
         if (params.tokenA == address(0) || params.tokenB == address(0)) {
-            revert ISmardexRouterErrors.InvalidAddress();
+            revert ISmardexRouterErrors.InvalidTokenAddress();
         }
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(params.tokenA, params.tokenB));
