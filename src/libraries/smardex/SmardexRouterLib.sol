@@ -190,13 +190,13 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Removes liquidity from a pair
-     * @param smardexFactory The Smardex factory contract
-     * @param permit2 The permit2 contract
-     * @param params The smardex remove liquidity params
-     * @param payer The payer address
-     * @param receiver The receiver of tokenA and tokenB
-     * @param deadline The timestamp deadline
+     * @notice Removes liquidity from a Smardex pool.
+     * @param smardexFactory The Smardex factory contract.
+     * @param permit2 The permit2 contract.
+     * @param params The parameters for removing liquidity.
+     * @param payer The payer address.
+     * @param receiver The recipient of the tokens.
+     * @param deadline The deadline before which the liquidity must be removed.
      */
     function removeLiquidity(
         ISmardexFactory smardexFactory,
