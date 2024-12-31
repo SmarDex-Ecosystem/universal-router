@@ -54,11 +54,10 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
      * @custom:then The `WSTETH` and `WETH` balances of the user should be increased
      */
     function test_executeSmardexRemoveLiquidityRouterBalance() public {
-        _addLiquidity(WSTETH, WETH, BASE_AMOUNT, BASE_AMOUNT);
+        _addWstethWethLiquidity();
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
         _removeParams.liquidity = pair.balanceOf(address(this));
-
         pair.transfer(address(router), _removeParams.liquidity);
 
         uint256 wstethBalanceBefore = IERC20(WSTETH).balanceOf(address(this));
@@ -82,19 +81,16 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
 
     /**
      * @custom:scenario Remove liquidity using permit2
-     * @custom:given A created liquidity pair with token already minted
-     * @custom:and The permit2 contract is allowed to spend the liquidity token by the user
+     * @custom:given A created liquidity pair
+     * @custom:and The permit2 contract is allowed to spend the LP tokens
      * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called
-     * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should be executed
-     * @custom:and The `WSTETH` balance of the user should be increased
-     * @custom:and The `WETH` balance of the user should be increased
+     * @custom:then The `WSTETH` and `WETH` balances of the user should be increased
      */
     function test_executeSmardexRemoveLiquidityRouterPermit2() public {
-        _addLiquidity(WSTETH, WETH, BASE_AMOUNT, BASE_AMOUNT);
+        _addWstethWethLiquidity();
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
         _removeParams.liquidity = pair.balanceOf(address(this));
-
         pair.approve(address(permit2), type(uint256).max);
         permit2.approve(address(pair), address(router), type(uint160).max, type(uint48).max);
 
@@ -118,16 +114,16 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
     }
 
     /**
-     * @custom:scenario Remove liquidity identical addresses
-     * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called with identical addresses
+     * @custom:scenario Remove liquidity of two identical addresses
+     * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called with two identical addresses
      * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should revert with {InvalidAddress}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityIdenticalAddresses() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_REMOVE_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
 
-        _removeParams.tokenA = address(0);
-        _removeParams.tokenB = address(0);
+        _removeParams.tokenA = WETH;
+        _removeParams.tokenB = WETH;
 
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
 
@@ -136,10 +132,8 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
     }
 
     /**
-     * @custom:scenario Remove liquidity tokenA or tokenB address equal the zero address
-     * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called with a tokenA equal zero address
-     * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should revert with {InvalidAddress}
-     * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called with a tokenB equal zero address
+     * @custom:scenario Remove liquidity with one of the addresses equal to zero
+     * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called with a zero address
      * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should revert with {InvalidAddress}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityZeroAddress() public {
@@ -159,21 +153,18 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
     }
 
     /**
-     * @custom:scenario Remove liquidity nonexistent pair
+     * @custom:scenario Try to remove liquidity from a non-existent pair
      * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called
      * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should revert with {InvalidPair}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityNoPair() public {
-        address one = address(1);
-        address two = address(2);
-
-        assertEq(smardexFactory.getPair(one, two), address(0), "Should be nonexistent pair");
+        assertEq(smardexFactory.getPair(address(1), address(2)), address(0), "No pair should exist");
 
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_REMOVE_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
 
-        _removeParams.tokenA = one;
-        _removeParams.tokenB = two;
+        _removeParams.tokenA = address(1);
+        _removeParams.tokenB = address(2);
 
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
 
@@ -182,12 +173,12 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
     }
 
     /**
-     * @custom:scenario Remove liquidity insufficient amount A
+     * @custom:scenario Remove liquidity exceeds slippage tolerance
      * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called
      * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should revert with {InsufficientAmountA}
      */
     function test_RevertWhen_executeSmardexRemoveLiquidityInsufficientAmountA() public {
-        _addLiquidity(WSTETH, WETH, BASE_AMOUNT, BASE_AMOUNT);
+        _addWstethWethLiquidity();
 
         ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
         _removeParams.liquidity = pair.balanceOf(address(this));
@@ -202,40 +193,24 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
 
         vm.expectRevert(ISmardexRouterErrors.InsufficientAmountA.selector);
         router.execute(commands, inputs);
-    }
 
-    /**
-     * @custom:scenario Remove liquidity insufficient amount B
-     * @custom:when The `SMARDEX_REMOVE_LIQUIDITY` command is called
-     * @custom:then The `SMARDEX_REMOVE_LIQUIDITY` command should revert with {InsufficientAmountB}
-     */
-    function test_RevertWhen_executeSmardexRemoveLiquidityInsufficientAmountB() public {
-        _addLiquidity(WSTETH, WETH, BASE_AMOUNT, BASE_AMOUNT);
-
-        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
-        _removeParams.liquidity = pair.balanceOf(address(this));
+        _removeParams.amountAMin = 0;
         _removeParams.amountBMin = type(uint256).max;
-
-        pair.transfer(address(router), _removeParams.liquidity);
-
-        bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_REMOVE_LIQUIDITY));
-        bytes[] memory inputs = new bytes[](1);
-
         inputs[0] = abi.encode(_removeParams, Constants.MSG_SENDER, false, type(uint256).max);
 
         vm.expectRevert(ISmardexRouterErrors.InsufficientAmountB.selector);
         router.execute(commands, inputs);
     }
 
-    function _addLiquidity(address tokenA, address tokenB, uint256 amountA, uint256 amountB) internal {
+    function _addWstethWethLiquidity() internal {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
 
         ISmardexRouter.AddLiquidityParams memory addLiquidityParams = ISmardexRouter.AddLiquidityParams({
-            tokenA: tokenA,
-            tokenB: tokenB,
-            amountADesired: amountA,
-            amountBDesired: amountB,
+            tokenA: WSTETH,
+            tokenB: WETH,
+            amountADesired: BASE_AMOUNT,
+            amountBDesired: BASE_AMOUNT,
             amountAMin: 0,
             amountBMin: 0,
             fictiveReserveB: 0,
@@ -243,8 +218,8 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
             fictiveReserveAMax: 0
         });
 
-        deal(tokenA, address(router), amountA);
-        deal(tokenB, address(router), amountB);
+        deal(WSTETH, address(router), BASE_AMOUNT);
+        deal(WETH, address(router), BASE_AMOUNT);
 
         inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, false, type(uint256).max);
         router.execute(commands, inputs);
