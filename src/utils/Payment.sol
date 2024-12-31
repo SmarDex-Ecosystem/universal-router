@@ -16,6 +16,7 @@ library Payment {
 
     /**
      * @notice Transfers the given amount of `token` to `recipient` from `payer`.
+     * @dev Uses Permit2 if `payer` is not `address(this)`, otherwise, uses safe transfers.
      * @param permit2 The permit2 contract
      * @param token The token to transfer
      * @param payer The address to pay for the transfer
