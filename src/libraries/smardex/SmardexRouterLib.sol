@@ -222,7 +222,7 @@ library SmardexRouterLib {
             revert ISmardexRouterErrors.InvalidPair();
         }
 
-        _payOrPermit2Transfer(permit2, address(pair), payer, address(pair), params.liquidity);
+        Payment.pay(permit2, address(pair), payer, address(pair), params.liquidity);
 
         (uint256 amount0, uint256 amount1) = pair.burn(receiver);
         (uint256 amountA, uint256 amountB) = params.tokenA < params.tokenB ? (amount0, amount1) : (amount1, amount0);
@@ -297,34 +297,12 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address
-     * @param permit2 The permit2 contract
-     * @param token The token to transfer
-     * @param payer The address to pay for the transfer
-     * @param recipient The recipient of the transfer
-     * @param amount The amount to transfer
-     */
-    function _payOrPermit2Transfer(
-        IAllowanceTransfer permit2,
-        address token,
-        address payer,
-        address recipient,
-        uint256 amount
-    ) private {
-        if (payer == address(this)) {
-            IERC20(token).safeTransfer(recipient, amount);
-        } else {
-            permit2.transferFrom(payer, recipient, amount.toUint160(), token);
-        }
-    }
-
-    /**
      * @notice Gets the pair depending on the pair.
      * @dev Creates the pair if it doesn't exists.
      * @param smardexFactory The smardex factory.
      * @param tokenA The address of the first token of the pair.
      * @param tokenB The address of the second token of the pair.
-     * @param skimReceiver The receipient of the possibly skimmed tokens.
+     * @param skimReceiver The recipient of the possibly skimmed tokens.
      * @return pair_ The address of the pool where the liquidity was added.
      */
     function _getTokenPair(ISmardexFactory smardexFactory, address tokenA, address tokenB, address skimReceiver)
