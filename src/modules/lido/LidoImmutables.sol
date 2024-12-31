@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.26;
 
-import { IWstETH } from "../../interfaces/IWstETH.sol";
-import { IStETH } from "../../interfaces/IStETH.sol";
-import { ILidoImmutables } from "../../interfaces/ILidoImmutables.sol";
+import { IWstETH } from "../../interfaces/lido/IWstETH.sol";
+import { IStETH } from "../../interfaces/lido/IStETH.sol";
+import { ILidoImmutables } from "../../interfaces/lido/ILidoImmutables.sol";
 
 contract LidoImmutables is ILidoImmutables {
     /// @inheritdoc ILidoImmutables

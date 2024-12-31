@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import { IStETH } from "../interfaces/IStETH.sol";
+import { IStETH } from "./IStETH.sol";
 
 interface ILidoImmutables {
     /**

@@ -11,6 +11,7 @@ import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
 import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
+import { Payment } from "../../utils/Payment.sol";
 import { Path } from "./Path.sol";
 import { PoolHelpers } from "./PoolHelpers.sol";
 
@@ -55,7 +56,7 @@ library SmardexRouterLib {
             amount0Delta > 0 ? (tokenIn < tokenOut, uint256(amount0Delta)) : (tokenOut < tokenIn, uint256(amount1Delta));
 
         if (isExactInput) {
-            _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
+            Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         } else if (decodedData.path.hasMultiplePools()) {
             decodedData.path = decodedData.path.skipToken();
             _swapExactOut(smardexFactory, amountToPay, msg.sender, decodedData);
@@ -63,7 +64,7 @@ library SmardexRouterLib {
             amountInCached_ = amountToPay;
             // swap in/out because exact output swaps are reversed
             tokenIn = tokenOut;
-            _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
+            Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         }
     }
 
@@ -86,8 +87,8 @@ library SmardexRouterLib {
             revert ISmardexRouterErrors.InvalidPair();
         }
 
-        _payOrPermit2Transfer(permit2, data.token0, data.payer, msg.sender, data.amount0);
-        _payOrPermit2Transfer(permit2, data.token1, data.payer, msg.sender, data.amount1);
+        Payment.pay(permit2, data.token0, data.payer, msg.sender, data.amount0);
+        Payment.pay(permit2, data.token1, data.payer, msg.sender, data.amount1);
     }
 
     /**
@@ -245,28 +246,6 @@ library SmardexRouterLib {
             to, _zeroForOne, amountIn.toInt256(), abi.encode(data)
         );
         amountOut_ = (_zeroForOne ? -amount1 : -amount0).toUint256();
-    }
-
-    /**
-     * @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address
-     * @param permit2 The permit2 contract
-     * @param token The token to transfer
-     * @param payer The address to pay for the transfer
-     * @param recipient The recipient of the transfer
-     * @param amount The amount to transfer
-     */
-    function _payOrPermit2Transfer(
-        IAllowanceTransfer permit2,
-        address token,
-        address payer,
-        address recipient,
-        uint256 amount
-    ) private {
-        if (payer == address(this)) {
-            IERC20(token).safeTransfer(recipient, amount);
-        } else {
-            permit2.transferFrom(payer, recipient, amount.toUint160(), token);
-        }
     }
 
     /**
