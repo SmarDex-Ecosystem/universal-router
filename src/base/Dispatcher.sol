@@ -16,7 +16,7 @@ import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
 import { SmardexRouterLib } from "../libraries/smardex/SmardexRouterLib.sol";
 import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
-import { V2SwapRouter } from "../modules/uniswap/v2/V2SwapRouter.sol";
+import { UniswapV2RouterLib } from "../libraries/uniswap/UniswapV2RouterLib.sol";
 import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
 import { SmardexRouter } from "../modules/smardex/SmardexRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
@@ -30,7 +30,6 @@ import { LockAndMap } from "../modules/usdn/LockAndMap.sol";
 abstract contract Dispatcher is
     Payments,
     Sweep,
-    V2SwapRouter,
     V3SwapRouter,
     SmardexRouter,
     LockAndMap,
@@ -167,7 +166,16 @@ abstract contract Dispatcher is
                             }
                             address[] calldata path = inputs.toAddressArray(3);
                             address payer = payerIsUser ? lockedBy : address(this);
-                            v2SwapExactInput(map(recipient), amountIn, amountOutMin, path, payer);
+                            UniswapV2RouterLib.v2SwapExactInput(
+                                UNISWAP_V2_FACTORY,
+                                UNISWAP_V2_PAIR_INIT_CODE_HASH,
+                                PERMIT2,
+                                map(recipient),
+                                amountIn,
+                                amountOutMin,
+                                path,
+                                payer
+                            );
                         } else if (command == Commands.V2_SWAP_EXACT_OUT) {
                             // equivalent: abi.decode(inputs, (address, uint256, uint256, bytes, bool))
                             address recipient;
@@ -183,7 +191,16 @@ abstract contract Dispatcher is
                             }
                             address[] calldata path = inputs.toAddressArray(3);
                             address payer = payerIsUser ? lockedBy : address(this);
-                            v2SwapExactOutput(map(recipient), amountOut, amountInMax, path, payer);
+                            UniswapV2RouterLib.v2SwapExactOutput(
+                                UNISWAP_V2_FACTORY,
+                                UNISWAP_V2_PAIR_INIT_CODE_HASH,
+                                PERMIT2,
+                                map(recipient),
+                                amountOut,
+                                amountInMax,
+                                path,
+                                payer
+                            );
                         } else if (command == Commands.PERMIT2_PERMIT) {
                             // equivalent: abi.decode(inputs, (IAllowanceTransfer.PermitSingle, bytes))
                             IAllowanceTransfer.PermitSingle calldata permitSingle;

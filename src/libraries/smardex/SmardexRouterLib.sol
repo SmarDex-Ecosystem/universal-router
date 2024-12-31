@@ -13,6 +13,7 @@ import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
 import { Path } from "./Path.sol";
 import { PoolHelpers } from "./PoolHelpers.sol";
+import { Payment } from "../../utils/Payment.sol";
 
 /// @title Router library for Smardex
 library SmardexRouterLib {
@@ -66,7 +67,7 @@ library SmardexRouterLib {
             amount0Delta > 0 ? (tokenIn < tokenOut, uint256(amount0Delta)) : (tokenOut < tokenIn, uint256(amount1Delta));
 
         if (isExactInput) {
-            _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
+            Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         } else if (decodedData.path.hasMultiplePools()) {
             decodedData.path = decodedData.path.skipToken();
             _swapExactOut(smardexFactory, amountToPay, msg.sender, decodedData);
@@ -74,7 +75,7 @@ library SmardexRouterLib {
             amountInCached_ = amountToPay;
             // swap in/out because exact output swaps are reversed
             tokenIn = tokenOut;
-            _payOrPermit2Transfer(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
+            Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         }
     }
 

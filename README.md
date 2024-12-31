@@ -118,7 +118,7 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x35-│  -------                      │
    │ 0x37 │                               │
-   ├──────┼───────────────────────────────┤   
+   ├──────┼───────────────────────────────┤
    │ 0x38 │  SMARDEX_SWAP_EXACT_IN        │
    ├──────┼───────────────────────────────┤
    │ 0x39 │  SMARDEX_SWAP_EXACT_OUT       │
@@ -267,7 +267,7 @@ You also need an archive rpc in the`.env` file (infura, alchemy, ...).
 
 The CI checks that there was no unintended regression in gas usage. To do so, it relies on the `.gas-snapshot` file
 which records gas usage for all tests. When tests have changed, a new snapshot should be generated with the
-`npm run snapshot` command and commited to the repo.
+`npm run snapshot` command and committed to the repo.
 
 ### Deployment scripts
 
