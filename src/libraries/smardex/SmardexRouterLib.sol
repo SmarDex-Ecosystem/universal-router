@@ -26,17 +26,6 @@ library SmardexRouterLib {
     uint8 private constant ADDR_SIZE = 20;
 
     /**
-     * @notice Ensures that the deadline timestamp wasn't exceeded
-     * @param deadline The deadline timestamp
-     */
-    modifier ensure(uint256 deadline) {
-        if (deadline < block.timestamp) {
-            revert ISmardexRouterErrors.DeadlineExceeded();
-        }
-        _;
-    }
-
-    /**
      * @notice The Smardex callback for Smardex swap
      * @param smardexFactory The Smardex factory contract
      * @param permit2 The permit2 contract
@@ -80,10 +69,10 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice The Smardex callback for Smardex mint
-     * @param smardexFactory The Smardex factory contract
-     * @param permit2 The permit2 contract
-     * @param data The mint callback data
+     * @notice The callback called during a mint of LP token on Smardex.
+     * @param smardexFactory The Smardex factory contract.
+     * @param permit2 The permit2 contract.
+     * @param data The data required to execute the callback.
      */
     function smardexMintCallback(
         ISmardexFactory smardexFactory,
@@ -98,8 +87,8 @@ library SmardexRouterLib {
             revert ISmardexRouterErrors.InvalidPair();
         }
 
-        _payOrPermit2Transfer(permit2, data.token0, data.payer, msg.sender, data.amount0);
-        _payOrPermit2Transfer(permit2, data.token1, data.payer, msg.sender, data.amount1);
+        Payment.pay(permit2, data.token0, data.payer, msg.sender, data.amount0);
+        Payment.pay(permit2, data.token1, data.payer, msg.sender, data.amount1);
     }
 
     /**
@@ -171,15 +160,16 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Performs the Smardex add liquidity
-     * @dev Use router balance if the payer is the router or use permit2 from msg.sender
-     * @param smardexFactory The Smardex factory contract
-     * @param params The smardex add liquidity params
-     * @param receiver The liquidity receiver address
-     * @param payer The payer address
-     * @param deadline The deadline not to exceed
-     * @return success_ Whether the add liquidity is successful
-     * @return output_ The output which contains amountA, amountB and liquidity values
+     * @notice Adds liquidity in a Smardex pool.
+     * @dev During the mint of the liquidity tokens, {smardexSwapCallback} will be called which will call for a transfer
+     * of the tokens to the pair. Use the router's balance if the payer is the router or use permit2 if it's msg.sender.
+     * @param smardexFactory The Smardex factory contract.
+     * @param params The smardex add liquidity params.
+     * @param receiver The liquidity receiver address.
+     * @param payer The payer address.
+     * @param deadline The deadline before which the liquidity must be added.
+     * @return success_ Whether the liquidity was successfully added.
+     * @return output_ The output which contains amountA, amountB and the amount of liquidity tokens minted.
      */
     function addLiquidity(
         ISmardexFactory smardexFactory,
@@ -187,8 +177,13 @@ library SmardexRouterLib {
         address receiver,
         address payer,
         uint256 deadline
-    ) external ensure(deadline) returns (bool success_, bytes memory output_) {
-        (uint256 amountA, uint256 amountB, address pair) = _addLiquidity(smardexFactory, params, receiver);
+    ) external returns (bool success_, bytes memory output_) {
+        if (block.timestamp > deadline) {
+            revert ISmardexRouterErrors.DeadlineExceeded();
+        }
+
+        address pair = _getTokenPair(smardexFactory, params.tokenA, params.tokenB, receiver);
+        (uint256 amountA, uint256 amountB) = _computesLiquidityToAdd(params, pair);
         (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA, amountB);
         uint256 liquidity = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
         return (true, abi.encode(amountA, amountB, liquidity));
@@ -210,7 +205,10 @@ library SmardexRouterLib {
         address receiver,
         address payer,
         uint256 deadline
-    ) external ensure(deadline) returns (bool success_, bytes memory output_) {
+    ) external returns (bool success_, bytes memory output_) {
+        if (block.timestamp > deadline) {
+            revert ISmardexRouterErrors.DeadlineExceeded();
+        }
         if (params.tokenA == params.tokenB) {
             revert ISmardexRouterErrors.InvalidAddress();
         }
@@ -321,30 +319,43 @@ library SmardexRouterLib {
     }
 
     /**
-     * @notice Add liquidity to a smardex pair. Receive liquidity token to materialize shares in the pool
-     * @param smardexFactory The smardex factory
-     * @param params Parameters of the liquidity to add
-     * @param skimReceiver The skim receiver address to use if a skim is performed
-     * @return amountA_ The amount of tokenA sent to the pool.
-     * @return amountB_ The amount of tokenB sent to the pool.
+     * @notice Gets the pair depending on the pair.
+     * @dev Creates the pair if it doesn't exists.
+     * @param smardexFactory The smardex factory.
+     * @param tokenA The address of the first token of the pair.
+     * @param tokenB The address of the second token of the pair.
+     * @param skimReceiver The receipient of the possibly skimmed tokens.
      * @return pair_ The address of the pool where the liquidity was added.
      */
-    function _addLiquidity(
-        ISmardexFactory smardexFactory,
-        ISmardexRouter.AddLiquidityParams calldata params,
-        address skimReceiver
-    ) internal returns (uint256 amountA_, uint256 amountB_, address pair_) {
-        pair_ = smardexFactory.getPair(params.tokenA, params.tokenB);
-
+    function _getTokenPair(ISmardexFactory smardexFactory, address tokenA, address tokenB, address skimReceiver)
+        private
+        returns (address pair_)
+    {
+        pair_ = smardexFactory.getPair(tokenA, tokenB);
+        // If the pair does not exist, create it
         if (pair_ == address(0)) {
-            pair_ = smardexFactory.createPair(params.tokenA, params.tokenB);
+            pair_ = smardexFactory.createPair(tokenA, tokenB);
         }
+
         if (ISmardexPair(pair_).totalSupply() == 0) {
             ISmardexPair(pair_).skim(skimReceiver); // in case some tokens are already on the pair
         }
+    }
 
+    /**
+     * @notice Computes the amount of tokens to add as liquidity based on the given parameters.
+     * @param params Parameters of the liquidity to add.
+     * @param pair The token pair to add liquidity to.
+     * @return amountA_ The amount of tokenA to send to the pool.
+     * @return amountB_ The amount of tokenB to send to the pool.
+     */
+    function _computesLiquidityToAdd(ISmardexRouter.AddLiquidityParams calldata params, address pair)
+        internal
+        view
+        returns (uint256 amountA_, uint256 amountB_)
+    {
         (uint256 reserveA, uint256 reserveB, uint256 reserveAFic, uint256 reserveBFic) =
-            PoolHelpers.getAllReserves(ISmardexPair(pair_), params.tokenA);
+            PoolHelpers.getAllReserves(ISmardexPair(pair), params.tokenA);
 
         if (reserveA == 0 && reserveB == 0) {
             (amountA_, amountB_) = (params.amountADesired, params.amountBDesired);

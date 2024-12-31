@@ -14,8 +14,8 @@ import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRoute
 import { ISmardexPair } from "../../src/interfaces/smardex/ISmardexPair.sol";
 
 /**
- * @custom:feature Test router commands for smardex add liquidity
- * @custom:background A initiated universal router
+ * @custom:feature The `SMARDEX_ADD_LIQUIDITY` command of the Universal Router
+ * @custom:background A deployed universal router
  */
 contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixture {
     uint256 constant BASE_AMOUNT = 1000 ether;
@@ -42,16 +42,32 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
     }
 
     /**
-     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} command using the router balance
-     * @custom:given The router should be funded with some `WSTETH` and `WETH`
-     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY}
-     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should be executed
-     * @custom:and The smardex liquidity pair should be created
-     * @custom:and The smardex liquidity balance of the user should be positive
+     * @custom:scenario Add liquidity with an exceeded deadline
+     * @custom:when The `SMARDEX_ADD_LIQUIDITY` command is called with an exceeded deadline
+     * @custom:then The call should revert with a `DeadlineExceeded` error
+     */
+    function test_RevertWhen_executeSmardexAddLiquidityDeadlineExceeded() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, false, 0);
+        vm.expectRevert(ISmardexRouterErrors.DeadlineExceeded.selector);
+        router.execute(commands, inputs);
+    }
+
+    /**
+     * @custom:scenario Add liquidity to a non-existing pair using the router balance
+     * @custom:given The router is funded with some `WSTETH` and `WETH`
+     * @custom:and The `WSTETH`/`WETH` pair does not exist on Smardex
+     * @custom:when The `SMARDEX_ADD_LIQUIDITY` command is called
+     * @custom:then The liquidity pair should be created
+     * @custom:and The LP tokens balance of the user should be greater than 0
      */
     function test_executeSmardexAddLiquidityRouterBalance() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
+
+        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
+        assertEq(address(pair), address(0), "The pair should not exist yet");
 
         IERC20(WSTETH).transfer(address(router), BASE_AMOUNT);
         IERC20(WETH).transfer(address(router), BASE_AMOUNT);
@@ -59,23 +75,26 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
         inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, false, type(uint256).max);
         router.execute(commands, inputs);
 
-        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
+        pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
 
         assertTrue(address(pair) != address(0), "The smardex pair should be created");
         assertGt(pair.balanceOf(address(this)), 0, "The smardex liquidity balance should be positive");
     }
 
     /**
-     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} command using permit2
-     * @custom:given The permit2 contract is allowed to spend `WSTETH` and `WETH` by the user
-     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY}
-     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should be executed
-     * @custom:and The smardex liquidity pair should be created
-     * @custom:and The smardex liquidity balance of the user should be positive
+     * @custom:scenario Add liquidity to a non-existing pair using Permit2
+     * @custom:given The permit2 contract allows the spending of the user's `WSTETH` and `WETH` tokens
+     * @custom:and The `WSTETH`/`WETH` pair does not exist on Smardex
+     * @custom:when The `SMARDEX_ADD_LIQUIDITY` command is executed
+     * @custom:then The liquidity pair should be created
+     * @custom:and The LP tokens balance of the user should be greater than 0
      */
     function test_executeSmardexAddLiquidityPermit2() public {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_ADD_LIQUIDITY));
         bytes[] memory inputs = new bytes[](1);
+
+        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
+        assertEq(address(pair), address(0), "The pair should not exist yet");
 
         IERC20(WSTETH).approve(address(permit2), type(uint256).max);
         IERC20(WETH).approve(address(permit2), type(uint256).max);
@@ -85,18 +104,19 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
         inputs[0] = abi.encode(addLiquidityParams, Constants.MSG_SENDER, true, type(uint256).max);
         router.execute(commands, inputs);
 
-        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
+        pair = ISmardexPair(smardexFactory.getPair(WSTETH, WETH));
 
         assertTrue(address(pair) != address(0), "The smardex pair should be created");
         assertGt(pair.balanceOf(address(this)), 0, "The smardex liquidity balance should be positive");
     }
 
     /**
-     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} with a too high price
-     * @custom:given A created liquidity pair with token already minted
-     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY} to be in the condition:
-     * reserveAFic * params.fictiveReserveB > params.fictiveReserveAMax * reserveB
-     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should revert with {PriceTooHigh}
+     * @custom:scenario Add liquidity with a price impact pushing the price too high
+     * @custom:given An existing liquidity pair with LP tokens already minted
+     * @custom:when The `SMARDEX_ADD_LIQUIDITY` command is executed
+     * @custom:then The reserves in the pair would be in the following state:
+     * `reserveAFic * params.fictiveReserveB > params.fictiveReserveAMax * reserveB`
+     * @custom:and The call should revert with a `PriceTooHigh` error
      */
     function test_RevertWhen_executeSmardexAddLiquidityPriceTooHigh() public {
         test_executeSmardexAddLiquidityRouterBalance();
@@ -111,11 +131,12 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
     }
 
     /**
-     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} with a too low price
-     * @custom:given A created liquidity pair with token already minted
-     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY} to be in the condition:
-     * reserveAFic * params.fictiveReserveB < params.fictiveReserveAMin * reserveBFic
-     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should revert with {PriceTooLow}
+     * @custom:scenario Add liquidity with a price impact pushing the price too low
+     * @custom:given An existing liquidity pair with LP tokens already minted
+     * @custom:when The `SMARDEX_ADD_LIQUIDITY` command is executed
+     * @custom:then The reserves in the pair would be in the following state:
+     * `reserveAFic * params.fictiveReserveB > params.fictiveReserveAMax * reserveB`
+     * @custom:and The call should revert with a `PriceTooLow` error
      */
     function test_RevertWhen_executeSmardexAddLiquidityPriceTooLow() public {
         test_executeSmardexAddLiquidityRouterBalance();
@@ -130,11 +151,10 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
     }
 
     /**
-     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} with insufficient amountB
+     * @custom:scenario Add liquidity with an output amount lower than the requested minimum amount
      * @custom:given A created liquidity pair with token already minted
-     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY} to be in the condition:
-     * amountBOptimal < amountBMin
-     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should revert with {InsufficientAmountB}
+     * @custom:when The SMARDEX_ADD_LIQUIDITY command is executed with `amountBOptimal < amountBMin`
+     * @custom:then The call should revert with an `InsufficientAmountB`
      */
     function test_RevertWhen_executeSmardexAddLiquidityInsufficientAmountB() public {
         test_executeSmardexAddLiquidityRouterBalance();
@@ -154,11 +174,10 @@ contract TestForkUniversalRouterSmardexAddLiquidity is UniversalRouterBaseFixtur
     }
 
     /**
-     * @custom:scenario Test the {SMARDEX_ADD_LIQUIDITY} with insufficient amountA
-     * @custom:given A created liquidity pair with token already minted
-     * @custom:when The {execute} function is called for {SMARDEX_ADD_LIQUIDITY} to be in the condition:
-     * amountAOptimal < amountAMin
-     * @custom:then The {SMARDEX_ADD_LIQUIDITY} command should revert with {InsufficientAmountA}
+     * @custom:scenario Add liquidity with an input amount higher than the requested minimum amount
+     * @custom:given A created liquidity pair with LP tokens already minted
+     * @custom:when The `SMARDEX_ADD_LIQUIDITY` command is executed with `amountAOptimal < amountAMin`
+     * @custom:then The call should revert with `InsufficientAmountA`
      */
     function test_RevertWhen_executeSmardexAddLiquidityInsufficientAmountA() public {
         test_executeSmardexAddLiquidityRouterBalance();
