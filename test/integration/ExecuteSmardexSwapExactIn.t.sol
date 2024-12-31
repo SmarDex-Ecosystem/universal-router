@@ -5,16 +5,16 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { WETH, SDEX } from "usdn-contracts/test/utils/Constants.sol";
 
-import { Commands } from "../../src/libraries/Commands.sol";
-import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
-
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+
+import { Commands } from "../../src/libraries/Commands.sol";
+import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 
 /**
  * @custom:feature Test smardex swap exact in commands
  * @custom:background A initiated universal router
  */
-contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
+contract TestForkExecuteSmardexSwapExactIn is UniversalRouterBaseFixture, ISmardexRouterErrors {
     uint256 constant BASE_AMOUNT = 1 ether;
     address constant WBTC = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
 

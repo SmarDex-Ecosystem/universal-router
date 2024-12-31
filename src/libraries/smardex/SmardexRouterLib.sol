@@ -2,20 +2,21 @@
 pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
+import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
 import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
-import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
-import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
-import { Path } from "./Path.sol";
+import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
+import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
 import { Payment } from "../../utils/Payment.sol";
+import { Path } from "./Path.sol";
+import { PoolHelpers } from "./PoolHelpers.sol";
 
 /// @title Router library for Smardex
-library SmardexSwapRouterLib {
+library SmardexRouterLib {
     using Path for bytes;
     using SafeCast for uint256;
     using SafeCast for int256;
@@ -41,14 +42,14 @@ library SmardexSwapRouterLib {
         bytes calldata data
     ) external returns (uint256 amountInCached_) {
         if (amount0Delta <= 0 && amount1Delta <= 0) {
-            revert ISmardexSwapRouterErrors.CallbackInvalidAmount();
+            revert ISmardexRouterErrors.CallbackInvalidAmount();
         }
 
-        ISmardexSwapRouter.SwapCallbackData memory decodedData = abi.decode(data, (ISmardexSwapRouter.SwapCallbackData));
+        ISmardexRouter.SwapCallbackData memory decodedData = abi.decode(data, (ISmardexRouter.SwapCallbackData));
         (address tokenIn, address tokenOut) = decodedData.path.decodeFirstPool();
 
         if (msg.sender != smardexFactory.getPair(tokenIn, tokenOut)) {
-            revert ISmardexSwapRouterErrors.InvalidPair();
+            revert ISmardexRouterErrors.InvalidPair();
         }
 
         (bool isExactInput, uint256 amountToPay) =
@@ -65,6 +66,29 @@ library SmardexSwapRouterLib {
             tokenIn = tokenOut;
             Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         }
+    }
+
+    /**
+     * @notice The callback called during a mint of LP token on Smardex.
+     * @param smardexFactory The Smardex factory contract.
+     * @param permit2 The permit2 contract.
+     * @param data The data required to execute the callback.
+     */
+    function smardexMintCallback(
+        ISmardexFactory smardexFactory,
+        IAllowanceTransfer permit2,
+        ISmardexRouter.MintCallbackData calldata data
+    ) external {
+        if (data.amount0 == 0 && data.amount1 == 0) {
+            revert ISmardexRouterErrors.CallbackInvalidAmount();
+        }
+
+        if (msg.sender != smardexFactory.getPair(data.token0, data.token1)) {
+            revert ISmardexRouterErrors.InvalidPair();
+        }
+
+        Payment.pay(permit2, data.token0, data.payer, msg.sender, data.amount0);
+        Payment.pay(permit2, data.token1, data.payer, msg.sender, data.amount1);
     }
 
     /**
@@ -97,7 +121,7 @@ library SmardexSwapRouterLib {
                 amountIn,
                 hasMultiplePools ? address(this) : recipient,
                 // only the first pool in the path is necessary
-                ISmardexSwapRouter.SwapCallbackData({ path: path.getFirstPool(), payer: payer })
+                ISmardexRouter.SwapCallbackData({ path: path.getFirstPool(), payer: payer })
             );
 
             if (hasMultiplePools) {
@@ -131,11 +155,38 @@ library SmardexSwapRouterLib {
         bytes memory reversedPath = path.encodeTightlyPackedReversed();
 
         amountIn_ = _swapExactOut(
-            smardexFactory,
-            amountOut,
-            recipient,
-            ISmardexSwapRouter.SwapCallbackData({ path: reversedPath, payer: payer })
+            smardexFactory, amountOut, recipient, ISmardexRouter.SwapCallbackData({ path: reversedPath, payer: payer })
         );
+    }
+
+    /**
+     * @notice Adds liquidity in a Smardex pool.
+     * @dev During the mint of the liquidity tokens, {smardexSwapCallback} will be called which will call for a transfer
+     * of the tokens to the pair. Use the router's balance if the payer is the router or use permit2 if it's msg.sender.
+     * @param smardexFactory The Smardex factory contract.
+     * @param params The smardex add liquidity params.
+     * @param receiver The liquidity receiver address.
+     * @param payer The payer address.
+     * @param deadline The deadline before which the liquidity must be added.
+     * @return success_ Whether the liquidity was successfully added.
+     * @return output_ The output which contains amountA, amountB and the amount of liquidity tokens minted.
+     */
+    function addLiquidity(
+        ISmardexFactory smardexFactory,
+        ISmardexRouter.AddLiquidityParams calldata params,
+        address receiver,
+        address payer,
+        uint256 deadline
+    ) external returns (bool success_, bytes memory output_) {
+        if (block.timestamp > deadline) {
+            revert ISmardexRouterErrors.DeadlineExceeded();
+        }
+
+        address pair = _getTokenPair(smardexFactory, params.tokenA, params.tokenB, receiver);
+        (uint256 amountA, uint256 amountB) = _computesLiquidityToAdd(params, pair);
+        (uint256 amount0, uint256 amount1) = PoolHelpers.sortAmounts(params.tokenA, params.tokenB, amountA, amountB);
+        uint256 liquidity = ISmardexPair(pair).mint(receiver, amount0, amount1, payer);
+        return (true, abi.encode(amountA, amountB, liquidity));
     }
 
     /**
@@ -150,10 +201,10 @@ library SmardexSwapRouterLib {
         ISmardexFactory smardexFactory,
         uint256 amountOut,
         address to,
-        ISmardexSwapRouter.SwapCallbackData memory data
+        ISmardexRouter.SwapCallbackData memory data
     ) private returns (uint256 amountIn_) {
         if (to == address(0)) {
-            revert ISmardexSwapRouterErrors.InvalidRecipient();
+            revert ISmardexRouterErrors.InvalidRecipient();
         }
 
         (address tokenOut, address tokenIn) = data.path.decodeFirstPool();
@@ -182,7 +233,7 @@ library SmardexSwapRouterLib {
         ISmardexFactory smardexFactory,
         uint256 amountIn,
         address to,
-        ISmardexSwapRouter.SwapCallbackData memory data
+        ISmardexRouter.SwapCallbackData memory data
     ) private returns (uint256 amountOut_) {
         // allow swapping to the router address with address 0
         if (to == address(0)) {
@@ -195,5 +246,80 @@ library SmardexSwapRouterLib {
             to, _zeroForOne, amountIn.toInt256(), abi.encode(data)
         );
         amountOut_ = (_zeroForOne ? -amount1 : -amount0).toUint256();
+    }
+
+    /**
+     * @notice Gets the pair depending on the pair.
+     * @dev Creates the pair if it doesn't exists.
+     * @param smardexFactory The smardex factory.
+     * @param tokenA The address of the first token of the pair.
+     * @param tokenB The address of the second token of the pair.
+     * @param skimReceiver The receipient of the possibly skimmed tokens.
+     * @return pair_ The address of the pool where the liquidity was added.
+     */
+    function _getTokenPair(ISmardexFactory smardexFactory, address tokenA, address tokenB, address skimReceiver)
+        private
+        returns (address pair_)
+    {
+        pair_ = smardexFactory.getPair(tokenA, tokenB);
+        // If the pair does not exist, create it
+        if (pair_ == address(0)) {
+            pair_ = smardexFactory.createPair(tokenA, tokenB);
+        }
+
+        if (ISmardexPair(pair_).totalSupply() == 0) {
+            ISmardexPair(pair_).skim(skimReceiver); // in case some tokens are already on the pair
+        }
+    }
+
+    /**
+     * @notice Computes the amount of tokens to add as liquidity based on the given parameters.
+     * @param params Parameters of the liquidity to add.
+     * @param pair The token pair to add liquidity to.
+     * @return amountA_ The amount of tokenA to send to the pool.
+     * @return amountB_ The amount of tokenB to send to the pool.
+     */
+    function _computesLiquidityToAdd(ISmardexRouter.AddLiquidityParams calldata params, address pair)
+        internal
+        view
+        returns (uint256 amountA_, uint256 amountB_)
+    {
+        (uint256 reserveA, uint256 reserveB, uint256 reserveAFic, uint256 reserveBFic) =
+            PoolHelpers.getAllReserves(ISmardexPair(pair), params.tokenA);
+
+        if (reserveA == 0 && reserveB == 0) {
+            (amountA_, amountB_) = (params.amountADesired, params.amountBDesired);
+        } else {
+            uint256 product = reserveAFic * params.fictiveReserveB;
+
+            if (product > params.fictiveReserveAMax * reserveBFic) {
+                revert ISmardexRouterErrors.PriceTooHigh();
+            }
+            if (product < params.fictiveReserveAMin * reserveBFic) {
+                revert ISmardexRouterErrors.PriceTooLow();
+            }
+
+            uint256 amountBOptimal = PoolHelpers.quote(params.amountADesired, reserveA, reserveB);
+
+            if (amountBOptimal <= params.amountBDesired) {
+                if (amountBOptimal < params.amountBMin) {
+                    revert ISmardexRouterErrors.InsufficientAmountB();
+                }
+
+                (amountA_, amountB_) = (params.amountADesired, amountBOptimal);
+            } else {
+                uint256 amountAOptimal = PoolHelpers.quote(params.amountBDesired, reserveB, reserveA);
+
+                // sanity check
+                if (amountAOptimal > params.amountADesired) {
+                    revert ISmardexRouterErrors.InsufficientAmountADesired();
+                }
+                if (amountAOptimal < params.amountAMin) {
+                    revert ISmardexRouterErrors.InsufficientAmountA();
+                }
+
+                (amountA_, amountB_) = (amountAOptimal, params.amountBDesired);
+            }
+        }
     }
 }

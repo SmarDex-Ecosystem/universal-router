@@ -8,13 +8,13 @@ import { WETH, SDEX } from "usdn-contracts/test/utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
-import { ISmardexSwapRouterErrors } from "../../src/interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 
 /**
  * @custom:feature Test smardex swap exact out command
  * @custom:background A initiated universal router
  */
-contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmardexSwapRouterErrors {
+contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmardexRouterErrors {
     uint256 constant BASE_AMOUNT = 1 ether;
     address constant WBTC = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
 

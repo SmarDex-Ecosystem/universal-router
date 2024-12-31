@@ -1,27 +1,32 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.26;
 
-import { ISmardexSwapRouter } from "../../interfaces/smardex/ISmardexSwapRouter.sol";
-import { ISmardexSwapRouterErrors } from "../../interfaces/smardex/ISmardexSwapRouterErrors.sol";
+import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
+import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
 import { Path } from "../../libraries/smardex/Path.sol";
-import { SmardexSwapRouterLib } from "../../libraries/smardex/SmardexSwapRouterLib.sol";
+import { SmardexRouterLib } from "../../libraries/smardex/SmardexRouterLib.sol";
 import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
-abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
+abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
     /// @dev Transient storage variable used for checking slippage
     uint256 private amountInCached = type(uint256).max;
 
     /// @dev The size in bytes of a single address
     uint8 private constant ADDR_SIZE = 20;
 
-    /// @inheritdoc ISmardexSwapRouter
+    /// @inheritdoc ISmardexRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         uint256 amountIn =
-            SmardexSwapRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
+            SmardexRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
         if (amountIn > 0) {
             amountInCached = amountIn;
         }
+    }
+
+    /// @inheritdoc ISmardexRouter
+    function smardexMintCallback(MintCallbackData calldata data) external {
+        SmardexRouterLib.smardexMintCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, data);
     }
 
     /**
@@ -40,11 +45,10 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         bytes calldata path,
         address payer
     ) internal {
-        uint256 amountOut =
-            SmardexSwapRouterLib.smardexSwapExactInput(SMARDEX_FACTORY, recipient, amountIn, path, payer);
+        uint256 amountOut = SmardexRouterLib.smardexSwapExactInput(SMARDEX_FACTORY, recipient, amountIn, path, payer);
 
         if (amountOut < amountOutMinimum) {
-            revert ISmardexSwapRouterErrors.TooLittleReceived();
+            revert ISmardexRouterErrors.TooLittleReceived();
         }
     }
 
@@ -64,8 +68,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         bytes calldata path,
         address payer
     ) internal {
-        uint256 amountIn =
-            SmardexSwapRouterLib.smardexSwapExactOutput(SMARDEX_FACTORY, recipient, amountOut, path, payer);
+        uint256 amountIn = SmardexRouterLib.smardexSwapExactOutput(SMARDEX_FACTORY, recipient, amountOut, path, payer);
 
         // amountIn is the right one for the first hop, otherwise we need the cached amountIn from callback
         if (path.length > 2 * ADDR_SIZE) {
@@ -73,7 +76,7 @@ abstract contract SmardexSwapRouter is ISmardexSwapRouter, SmardexImmutables {
         }
 
         if (amountIn > amountInMax) {
-            revert ISmardexSwapRouterErrors.ExcessiveInputAmount();
+            revert ISmardexRouterErrors.ExcessiveInputAmount();
         }
 
         amountInCached = type(uint256).max;

@@ -11,12 +11,14 @@ import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/I
 
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
+import { ISmardexRouter } from "../interfaces/smardex/ISmardexRouter.sol";
 import { Commands } from "../libraries/Commands.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
+import { SmardexRouterLib } from "../libraries/smardex/SmardexRouterLib.sol";
 import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
 import { UniswapV2RouterLib } from "../libraries/uniswap/UniswapV2RouterLib.sol";
 import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
-import { SmardexSwapRouter } from "../modules/smardex/SmardexSwapRouter.sol";
+import { SmardexRouter } from "../modules/smardex/SmardexRouter.sol";
 import { UsdnProtocolRouter } from "../modules/usdn/UsdnProtocolRouter.sol";
 import { Sweep } from "../modules/Sweep.sol";
 import { LockAndMap } from "../modules/usdn/LockAndMap.sol";
@@ -29,7 +31,7 @@ abstract contract Dispatcher is
     Payments,
     Sweep,
     V3SwapRouter,
-    SmardexSwapRouter,
+    SmardexRouter,
     LockAndMap,
     UsdnProtocolRouter,
     LidoImmutables
@@ -564,6 +566,11 @@ abstract contract Dispatcher is
                 bytes calldata path = inputs.toBytes(3);
                 address payer = payerIsUser ? lockedBy : address(this);
                 _smardexSwapExactOutput(map(recipient), amountOut, amountInMax, path, payer);
+            } else if (command == Commands.SMARDEX_ADD_LIQUIDITY) {
+                (ISmardexRouter.AddLiquidityParams memory params, address to, bool payerIsUser, uint256 deadline) =
+                    abi.decode(inputs, (ISmardexRouter.AddLiquidityParams, address, bool, uint256));
+                address payer = payerIsUser ? lockedBy : address(this);
+                (success_, output_) = SmardexRouterLib.addLiquidity(SMARDEX_FACTORY, params, map(to), payer, deadline);
             } else {
                 revert InvalidCommandType(command);
             }

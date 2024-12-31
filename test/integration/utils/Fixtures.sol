@@ -33,6 +33,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
     AggregatorV3Interface public priceFeed;
     Wusdn internal wusdn;
     uint256 internal maxLeverage;
+    ISmardexFactory smardexFactory;
 
     function _setUp(SetUpParams memory setupParams) public virtual override {
         setupParams.fork = true;
@@ -60,7 +61,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
 
         permit2 = IAllowanceTransfer(params.permit2);
         priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
-
+        smardexFactory = params.smardexFactory;
         maxLeverage = protocol.getMaxLeverage();
     }
 
