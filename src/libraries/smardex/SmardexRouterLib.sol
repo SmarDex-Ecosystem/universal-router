@@ -197,6 +197,8 @@ library SmardexRouterLib {
      * @param payer The payer address.
      * @param receiver The recipient of the tokens.
      * @param deadline The deadline before which the liquidity must be removed.
+     * @return success_ Whether the liquidity was successfully removed.
+     * @return output_ The output which contains the amount of tokenA and tokenB received.
      */
     function removeLiquidity(
         ISmardexFactory smardexFactory,
