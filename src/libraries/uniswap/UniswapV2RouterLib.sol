@@ -45,7 +45,7 @@ library UniswapV2RouterLib {
         if (
             amountIn != Constants.ALREADY_PAID // amountIn of 0 to signal that the pair already has the tokens
         ) {
-            Payment._pay(permit2, path[0], payer, firstPair, amountIn);
+            Payment.pay(permit2, path[0], payer, firstPair, amountIn);
         }
 
         IERC20 tokenOut = IERC20(path[path.length - 1]);
@@ -55,7 +55,7 @@ library UniswapV2RouterLib {
 
         uint256 amountOut = tokenOut.balanceOf(recipient) - balanceBefore;
         if (amountOut < amountOutMinimum) {
-            revert IUniswapV2RouterErrors.V2TooLittleReceived();
+            revert IUniswapV2RouterErrors.UniswapV2TooLittleReceived();
         }
     }
 
@@ -83,10 +83,10 @@ library UniswapV2RouterLib {
         (uint256 amountIn, address firstPair) =
             UniswapV2Library.getAmountInMultihop(uniswapV2Factory, uniswapV2PairInitCodeHash, amountOut, path);
         if (amountIn > amountInMaximum) {
-            revert IUniswapV2RouterErrors.V2TooMuchRequested();
+            revert IUniswapV2RouterErrors.UniswapV2TooMuchRequested();
         }
 
-        Payment._pay(permit2, path[0], payer, firstPair, amountIn);
+        Payment.pay(permit2, path[0], payer, firstPair, amountIn);
         _v2Swap(uniswapV2Factory, uniswapV2PairInitCodeHash, path, recipient, firstPair);
     }
 
@@ -107,7 +107,7 @@ library UniswapV2RouterLib {
     ) internal {
         unchecked {
             if (path.length < 2) {
-                revert IUniswapV2RouterErrors.V2InvalidPath();
+                revert IUniswapV2RouterErrors.UniswapV2InvalidPath();
             }
 
             // cached to save on duplicate operations

@@ -15,14 +15,14 @@ library Payment {
     using SafeTransferLib for address;
 
     /**
-     * @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address
+     * @notice Transfers the given amount of `token` to `recipient` from `payer`.
      * @param permit2 The permit2 contract
      * @param token The token to transfer
      * @param payer The address to pay for the transfer
      * @param recipient The recipient of the transfer
      * @param amount The amount to transfer
      */
-    function _pay(IAllowanceTransfer permit2, address token, address payer, address recipient, uint256 amount)
+    function pay(IAllowanceTransfer permit2, address token, address payer, address recipient, uint256 amount)
         external
     {
         if (payer == address(this)) {

@@ -55,7 +55,7 @@ library SmardexSwapRouterLib {
             amount0Delta > 0 ? (tokenIn < tokenOut, uint256(amount0Delta)) : (tokenOut < tokenIn, uint256(amount1Delta));
 
         if (isExactInput) {
-            Payment._pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
+            Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         } else if (decodedData.path.hasMultiplePools()) {
             decodedData.path = decodedData.path.skipToken();
             _swapExactOut(smardexFactory, amountToPay, msg.sender, decodedData);
@@ -63,7 +63,7 @@ library SmardexSwapRouterLib {
             amountInCached_ = amountToPay;
             // swap in/out because exact output swaps are reversed
             tokenIn = tokenOut;
-            Payment._pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
+            Payment.pay(permit2, tokenIn, decodedData.payer, msg.sender, amountToPay);
         }
     }
 
