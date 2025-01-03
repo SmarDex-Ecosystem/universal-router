@@ -571,6 +571,12 @@ abstract contract Dispatcher is
                     abi.decode(inputs, (ISmardexRouter.AddLiquidityParams, address, bool, uint256));
                 address payer = payerIsUser ? lockedBy : address(this);
                 (success_, output_) = SmardexRouterLib.addLiquidity(SMARDEX_FACTORY, params, map(to), payer, deadline);
+            } else if (command == Commands.SMARDEX_REMOVE_LIQUIDITY) {
+                (ISmardexRouter.RemoveLiquidityParams memory params, address to, bool payerIsUser, uint256 deadline) =
+                    abi.decode(inputs, (ISmardexRouter.RemoveLiquidityParams, address, bool, uint256));
+                address payer = payerIsUser ? lockedBy : address(this);
+                (success_, output_) =
+                    SmardexRouterLib.removeLiquidity(SMARDEX_FACTORY, PERMIT2, params, map(to), payer, deadline);
             } else {
                 revert InvalidCommandType(command);
             }

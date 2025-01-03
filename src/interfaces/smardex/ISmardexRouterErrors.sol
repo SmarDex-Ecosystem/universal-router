@@ -34,4 +34,7 @@ interface ISmardexRouterErrors {
 
     /// @notice The deadline for the action was exceeded.
     error DeadlineExceeded();
+
+    /// @notice The provided token address is invalid.
+    error InvalidTokenAddress();
 }

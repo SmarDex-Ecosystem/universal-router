@@ -11,9 +11,9 @@ import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
 import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
-import { Payment } from "../../utils/Payment.sol";
 import { Path } from "./Path.sol";
 import { PoolHelpers } from "./PoolHelpers.sol";
+import { Payment } from "../../utils/Payment.sol";
 
 /// @title Router library for Smardex
 library SmardexRouterLib {
@@ -190,6 +190,56 @@ library SmardexRouterLib {
     }
 
     /**
+     * @notice Removes liquidity from a Smardex pool.
+     * @param smardexFactory The Smardex factory contract.
+     * @param permit2 The permit2 contract.
+     * @param params The parameters for removing liquidity.
+     * @param payer The payer address.
+     * @param receiver The recipient of the tokens.
+     * @param deadline The deadline before which the liquidity must be removed.
+     * @return success_ Whether the liquidity was successfully removed.
+     * @return output_ The output which contains the amount of tokenA and tokenB received.
+     */
+    function removeLiquidity(
+        ISmardexFactory smardexFactory,
+        IAllowanceTransfer permit2,
+        ISmardexRouter.RemoveLiquidityParams calldata params,
+        address receiver,
+        address payer,
+        uint256 deadline
+    ) external returns (bool success_, bytes memory output_) {
+        if (block.timestamp > deadline) {
+            revert ISmardexRouterErrors.DeadlineExceeded();
+        }
+        if (params.tokenA == params.tokenB) {
+            revert ISmardexRouterErrors.InvalidTokenAddress();
+        }
+        if (params.tokenA == address(0) || params.tokenB == address(0)) {
+            revert ISmardexRouterErrors.InvalidTokenAddress();
+        }
+
+        ISmardexPair pair = ISmardexPair(smardexFactory.getPair(params.tokenA, params.tokenB));
+
+        if (address(pair) == address(0)) {
+            revert ISmardexRouterErrors.InvalidPair();
+        }
+
+        Payment.pay(permit2, address(pair), payer, address(pair), params.liquidity);
+
+        (uint256 amount0, uint256 amount1) = pair.burn(receiver);
+        (uint256 amountA, uint256 amountB) = params.tokenA < params.tokenB ? (amount0, amount1) : (amount1, amount0);
+
+        if (amountA < params.amountAMin) {
+            revert ISmardexRouterErrors.InsufficientAmountA();
+        }
+        if (amountB < params.amountBMin) {
+            revert ISmardexRouterErrors.InsufficientAmountB();
+        }
+
+        return (true, abi.encode(amountA, amountB));
+    }
+
+    /**
      * @notice Internal function to swap quantity of token to receive a determined quantity
      * @param smardexFactory The Smardex factory contract
      * @param amountOut The quantity to receive
@@ -254,7 +304,7 @@ library SmardexRouterLib {
      * @param smardexFactory The smardex factory.
      * @param tokenA The address of the first token of the pair.
      * @param tokenB The address of the second token of the pair.
-     * @param skimReceiver The receipient of the possibly skimmed tokens.
+     * @param skimReceiver The recipient of the possibly skimmed tokens.
      * @return pair_ The address of the pool where the liquidity was added.
      */
     function _getTokenPair(ISmardexFactory smardexFactory, address tokenA, address tokenB, address skimReceiver)
