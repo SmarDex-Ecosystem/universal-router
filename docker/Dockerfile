@@ -1,4 +1,4 @@
-FROM ghcr.io/foundry-rs/foundry:latest AS build
+FROM ghcr.io/foundry-rs/foundry:nightly AS build
 
 WORKDIR /usr/app/
 
@@ -38,7 +38,7 @@ RUN forge build src script
 RUN rm -rf .git
 
 # Start from a clean image
-FROM ghcr.io/foundry-rs/foundry:latest AS fork
+FROM ghcr.io/foundry-rs/foundry:nightly AS fork
 
 # Add bash to foundry image and jq to get the env variables
 RUN apk add bash jq
