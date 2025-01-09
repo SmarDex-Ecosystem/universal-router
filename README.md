@@ -162,9 +162,9 @@ Developer documentation to give a detailed explanation of the inputs for every c
 You can run a series of commands in a single transaction. The commands are executed in the order they are provided in the `commands` parameter. If a command fails, the transaction will revert, unless the command has the `f` flag set to `true`.
 For example, if you want to initiate a deposit in the protocol, you would need to run the following steps: 
 
-- `eth  -> wEth` using `TRANSFER`
+- `eth -> wEth` using `TRANSFER`
 - `wEth -> sdex` using `SMARDEX_SWAP_EXACT_IN`
-- `eth  -> wstEth` using `TRANSFER`
+- `eth -> wstEth` using `TRANSFER`
 - `usdnProtocol.initiateDeposit` using `INITIATE_DEPOSIT`
 - `sweep(wstEth)` using `SWEEP`
 - `sweep(sdex)` using `SWEEP`
@@ -172,7 +172,7 @@ For example, if you want to initiate a deposit in the protocol, you would need t
 
 If you want to initiate the opening of a position in the USDN protocol, you would need to run the following steps: 
 
-- `eth  -> wstEth` using `TRANSFER`
+- `eth -> wstEth` using `TRANSFER`
 - `usdnProtocol.initiateOpenPosition` using `INITIATE_OPEN`
 - `sweep(wstEth)` using `SWEEP`
 - `sweep(eth)` using `SWEEP`
