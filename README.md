@@ -160,8 +160,22 @@ Developer documentation to give a detailed explanation of the inputs for every c
 ### UniversalRouter workflow commands
 
 You can run a series of commands in a single transaction. The commands are executed in the order they are provided in the `commands` parameter. If a command fails, the transaction will revert, unless the command has the `f` flag set to `true`.
-For example, if you want to make a Deposit in the protocol, you would need to run the following steps: `eth -> wEth` with `TRANSFER`, `wEth -> sdex` with `SMARDEX_SWAP_EXACT_OUT`,`eth -> wstEth` with `TRANSFER`, `INITIATE_DEPOSIT` with `INITIATE_DEPOSIT`, `sweep(wstEth)` with `SWEEP`, `sweep(sdex)` with `SWEEP`, `sweep(wEth)` with `SWEEP`.
-If you want to make a OpenPosition in the protocol, you would need to run the following steps: `eth -> wEth`, `INITIATE_OPEN`, `sweep(eth)`, `sweep(wEth)`.
+For example, if you want to initiate a deposit in the protocol, you would need to run the following steps: 
+
+- `eth -> wEth` using `TRANSFER`
+- `wEth -> sdex` using `SMARDEX_SWAP_EXACT_IN`
+- `eth -> wstEth` using `TRANSFER`
+- `usdnProtocol.initiateDeposit` using `INITIATE_DEPOSIT`
+- `sweep(wstEth)` using `SWEEP`
+- `sweep(sdex)` using `SWEEP`
+- `sweep(wEth)` using `SWEEP`
+
+If you want to initiate the opening of a position in the USDN protocol, you would need to run the following steps: 
+
+- `eth -> wstEth` using `TRANSFER`
+- `usdnProtocol.initiateOpenPosition` using `INITIATE_OPEN`
+- `sweep(wstEth)` using `SWEEP`
+- `sweep(eth)` using `SWEEP`
 
 ### Commands
 
@@ -176,14 +190,11 @@ Some commands explained :
 - `INITIATE_DEPOSIT` : Initiate a deposit in the protocol. The user must have already sent wsEth and sdex to the UniversalRouter contract.
 - `INITIATE_WITHDRAWAL` : Initiate a withdrawal in the protocol. The user must have already sent usdn to the UniversalRouter contract.
 - `INITIATE_OPEN` : Initiate an open in the protocol. The user must have already sent wstEth to the UniversalRouter contract.
+- `INITIATE_CLOSE` : Initiate a close position in the protocol using delegation.
 - `VALIDATE_DEPOSIT` : Validate a deposit in the protocol.
 - `VALIDATE_WITHDRAWAL` : Validate a withdrawal in the protocol.
 - `VALIDATE_OPEN` : Validate an open in the protocol.
 - `VALIDATE_CLOSE` : Validate a close in the protocol.
-
-### Command not implemented
-
-- `initiateClosePosition` : This command is used to initiate a close position in the protocol. Protocol verify the msg.sender of the transaction to verify that the user is the owner of the position. So, this command is not implemented in the UniversalRouter contract because user must call the initiateClosePosition function directly on the protocol contract.
 
 ## Installation
 
