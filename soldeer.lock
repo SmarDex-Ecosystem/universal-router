@@ -54,6 +54,13 @@ checksum = "20fd008c7c69b6c737cc0284469d1c76497107bc3e004d8381f6d8781cb27980"
 integrity = "f49457fb6591f0dfd8b59e02e6eb4508a115ef08a86b0803feb0a3939d82d783"
 
 [[dependencies]]
+name = "openzeppelin-contracts"
+version = "4.7.0"
+url = "https://github.com/OpenZeppelin/openzeppelin-contracts/archive/refs/tags/v4.7.0.zip"
+checksum = "7a88a52b70872f3e428e595a03aed77c3323b118338d7256ce57dfc99eeab9e9"
+integrity = "40bc5e663f19cf42c5ab0ddfc049ca44d58a9f1236cef417c370af79fa8ac3a7"
+
+[[dependencies]]
 name = "solmate"
 version = "6.7.0"
 url = "https://soldeer-revisions.s3.amazonaws.com/solmate/6_7_0_22-01-2024_13:21:00_solmate.zip"

@@ -34,6 +34,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
     Wusdn internal wusdn;
     uint256 internal maxLeverage;
     ISmardexFactory smardexFactory;
+    uint256 internal constant INITIAL_SDEX_BALANCE = 100_000_000 ether;
 
     function _setUp(SetUpParams memory setupParams) public virtual override {
         setupParams.fork = true;
@@ -107,11 +108,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
 
     /// @dev Calculate the amount of SDEX to burn
     function _calcSdexToBurn(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
-        uint256 amountAfterFees = uint128(depositAmount - uint256(depositAmount) * protocol.getVaultFeeBps() / 10_000);
-        uint256 usdnSharesToMintEstimated =
-            Utils._calcMintUsdnShares(amountAfterFees, protocol.getBalanceVault(), protocol.getUsdn().totalShares());
-
-        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
-        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
+        uint128 lastPrice = protocol.getLastPrice();
+        uint128 timestamp = protocol.getLastUpdateTimestamp();
+        (, sdexToBurn_) = protocol.previewDeposit(depositAmount, lastPrice, timestamp);
     }
 }

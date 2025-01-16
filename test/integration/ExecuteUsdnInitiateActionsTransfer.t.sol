@@ -25,7 +25,8 @@ contract TestForkUniversalRouterUsdnProtocolInitiateActionsTransfer is Universal
         _setUp(DEFAULT_PARAMS);
 
         deal(address(wstETH), address(this), BASE_AMOUNT * 10);
-        deal(address(sdex), address(this), BASE_AMOUNT * 10);
+        deal(address(sdex), address(this), INITIAL_SDEX_BALANCE);
+        deal(address(sdex), USER_1, INITIAL_SDEX_BALANCE);
         deal(address(this), 1e6 ether);
         _baseUsdnShares = usdn.sharesOf(DEPLOYER) / 100;
         vm.prank(DEPLOYER);
