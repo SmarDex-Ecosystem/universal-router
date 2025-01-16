@@ -107,11 +107,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
 
     /// @dev Calculate the amount of SDEX to burn
     function _calcSdexToBurn(uint256 depositAmount) internal view returns (uint256 sdexToBurn_) {
-        uint256 amountAfterFees = uint128(depositAmount - uint256(depositAmount) * protocol.getVaultFeeBps() / 10_000);
-        uint256 usdnSharesToMintEstimated =
-            Utils._calcMintUsdnShares(amountAfterFees, protocol.getBalanceVault(), protocol.getUsdn().totalShares());
-
-        uint256 usdnToMintEstimated = usdn.convertToTokens(usdnSharesToMintEstimated);
-        sdexToBurn_ = protocol.i_calcSdexToBurn(usdnToMintEstimated, protocol.getSdexBurnOnDepositRatio());
+        uint128 lastPrice = protocol.getLastPrice();
+        uint128 timestamp = protocol.getLastUpdateTimestamp();
+        (, sdexToBurn_) = protocol.previewDeposit(depositAmount, lastPrice, timestamp);
     }
 }
