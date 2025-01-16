@@ -18,7 +18,7 @@ contract TestForkUniversalRouterValidateDeposit is UniversalRouterBaseFixture {
     function setUp() public {
         _setUp(DEFAULT_PARAMS);
         deal(address(wstETH), address(this), 1e6 ether);
-        deal(address(sdex), address(this), 100_000_000 ether);
+        deal(address(sdex), address(this), INITIAL_SDEX_BALANCE);
         wstETH.approve(address(protocol), type(uint256).max);
         sdex.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();

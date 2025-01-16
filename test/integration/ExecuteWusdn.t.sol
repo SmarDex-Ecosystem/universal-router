@@ -21,7 +21,7 @@ contract TestForkExecuteWusdn is UniversalRouterBaseFixture {
         _setUp(DEFAULT_PARAMS);
 
         deal(WETH, address(this), BASE_AMOUNT * 1e3);
-        deal(address(sdex), address(this), 100_000_000 ether);
+        deal(address(sdex), address(this), INITIAL_SDEX_BALANCE);
         deal(address(wstETH), address(this), BASE_AMOUNT * 1e3);
 
         // mint usdn

@@ -22,7 +22,7 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit2 is UniversalRouterBas
         _setUp(DEFAULT_PARAMS);
 
         deal(address(wstETH), sigUser1, BASE_AMOUNT * 10);
-        deal(address(sdex), sigUser1, 100_000_000 ether);
+        deal(address(sdex), sigUser1, INITIAL_SDEX_BALANCE);
         deal(sigUser1, 1e6 ether);
 
         vm.startPrank(sigUser1);

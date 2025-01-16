@@ -24,7 +24,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         // 1. initiateDeposit
         uint256 openPositionAmount = 2 ether;
         deal(address(wstETH), address(this), 1e6 ether);
-        deal(address(sdex), address(this), 100_000_000 ether);
+        deal(address(sdex), address(this), INITIAL_SDEX_BALANCE);
         wstETH.approve(address(protocol), type(uint256).max);
         sdex.approve(address(protocol), type(uint256).max);
         protocol.initiateDeposit{ value: _securityDeposit }(
