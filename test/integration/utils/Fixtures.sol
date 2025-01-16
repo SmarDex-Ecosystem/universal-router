@@ -34,6 +34,7 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
     Wusdn internal wusdn;
     uint256 internal maxLeverage;
     ISmardexFactory smardexFactory;
+    uint256 internal constant INITIAL_SDEX_BALANCE = 100_000_000 ether;
 
     function _setUp(SetUpParams memory setupParams) public virtual override {
         setupParams.fork = true;
