@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.1](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.3.0...v0.3.1) (2025-01-16)
+
+
+### Features
+
+* **deployment:** deploy v0.3.0 for usdn v0.24.0 ([#82](https://github.com/SmarDex-Ecosystem/universal-router/issues/82)) ([7211931](https://github.com/SmarDex-Ecosystem/universal-router/commit/7211931e47de957f006e844a3f450dff1131aa7f))
+* smardex add liquidity ([#84](https://github.com/SmarDex-Ecosystem/universal-router/issues/84)) ([f0c2908](https://github.com/SmarDex-Ecosystem/universal-router/commit/f0c29087c2375458a4d4682582c33eb2c091ad53))
+* smardex remove liquidity ([#86](https://github.com/SmarDex-Ecosystem/universal-router/issues/86)) ([3942fc3](https://github.com/SmarDex-Ecosystem/universal-router/commit/3942fc37b86f563d931872a0eacb0959e0420ff1))
+
 ## [0.3.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.2.0...v0.3.0) (2024-11-27)
 
 
