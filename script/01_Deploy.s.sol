@@ -27,6 +27,8 @@ contract Deploy is Script {
     address constant V3_FACTORY_SEPOLIA = 0x0227628f3F023bb0B980b67D528571c95c6DaC1c;
     address constant SMARDEX_FACTORY_MAINNET = 0xB878DC600550367e14220d4916Ff678fB284214F;
     address constant SMARDEX_FACTORY_SEPOLIA = address(0); // not supported on sepolia
+    address constant WUSDN_ADDRESS = 0x99999999999999Cc837C997B882957daFdCb1Af9;
+    address constant USDN_PROTOCOL_ADDRESS = 0x656cB8C6d154Aad29d8771384089be5B5141f01a;
     bytes32 constant PAIR_INIT_HASH_MAINNET = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
     bytes32 constant PAIR_INIT_HASH_SEPOLIA = 0; // not supported on sepolia
     bytes32 constant POOL_INIT_HASH = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
@@ -95,18 +97,20 @@ contract Deploy is Script {
             vm.setEnv("UNISWAP_V3_FACTORY", vm.toString(V3_FACTORY_SEPOLIA));
             vm.setEnv("UNISWAP_PAIR_INIT_HASH", vm.toString(PAIR_INIT_HASH_SEPOLIA));
             vm.setEnv("SMARDEX_FACTORY", vm.toString(SMARDEX_FACTORY_SEPOLIA));
+
+            wusdnTokenAddress_ = vm.envOr("WUSDN_ADDRESS", address(0));
+            if (wusdnTokenAddress_ == address(0)) {
+                wusdnTokenAddress_ = vm.parseAddress(vm.prompt("Please enter the WUSDN token address"));
+            }
+
+            usdnProtocolAddress_ = vm.envOr("USDN_PROTOCOL_ADDRESS", address(0));
+            if (usdnProtocolAddress_ == address(0)) {
+                usdnProtocolAddress_ = vm.parseAddress(vm.prompt("Please enter the USDN protocol address"));
+            }
         } else {
             wstEthAddress_ = WSTETH_MAINNET;
-        }
-
-        wusdnTokenAddress_ = vm.envOr("WUSDN_ADDRESS", address(0));
-        if (wusdnTokenAddress_ == address(0)) {
-            wusdnTokenAddress_ = vm.parseAddress(vm.prompt("Please enter the WUSDN token address"));
-        }
-
-        usdnProtocolAddress_ = vm.envOr("USDN_PROTOCOL_ADDRESS", address(0));
-        if (usdnProtocolAddress_ == address(0)) {
-            usdnProtocolAddress_ = vm.parseAddress(vm.prompt("Please enter the USDN protocol address"));
+            wusdnTokenAddress_ = WUSDN_ADDRESS;
+            usdnProtocolAddress_ = USDN_PROTOCOL_ADDRESS;
         }
 
         string memory etherscanApiKey = vm.envOr("ETHERSCAN_API_KEY", string("XXXXXXXXXXXXXXXXX"));
