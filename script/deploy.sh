@@ -59,9 +59,9 @@ while true; do
 done
 
 if [ $ledger = true ]; then
-    forge script -l -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast --slow
+    forge script -l -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast --batch-size 5
 else
-    forge script --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast --slow
+    forge script --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy --broadcast --batch-size 5
 fi
 
 popd >/dev/null
