@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.3.1...v1.0.0) (2025-01-21)
+
+
+### Features
+
+* deployment script ([#98](https://github.com/SmarDex-Ecosystem/universal-router/issues/98)) ([85317fe](https://github.com/SmarDex-Ecosystem/universal-router/commit/85317fe86d068286e8ee8a90e4ac0ee8a936cbbb))
+* **deployment:** tenderly v0.3.1 ([#95](https://github.com/SmarDex-Ecosystem/universal-router/issues/95)) ([675aa4e](https://github.com/SmarDex-Ecosystem/universal-router/commit/675aa4e6334f95a04263fe636d47b2d9658a684e))
+
+
+### Bug Fixes
+
+* **script:** batch 5 tx when deploying ([#99](https://github.com/SmarDex-Ecosystem/universal-router/issues/99)) ([390bd90](https://github.com/SmarDex-Ecosystem/universal-router/commit/390bd9019b141517e03460953dde3ea5ad5c1c14))
+
 ## [0.3.1](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.3.0...v0.3.1) (2025-01-16)
 
 
