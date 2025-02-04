@@ -346,7 +346,6 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_CLOSE) {
                         (IUsdnProtocolRouterTypes.InitiateClosePositionData memory data) =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateClosePositionData));
-                        // slither-disable-next-line arbitrary-send-eth
                         (success_, output_) = address(USDN_PROTOCOL).call{ value: data.ethAmount }(
                             abi.encodeWithSelector(
                                 USDN_PROTOCOL.initiateClosePosition.selector,
