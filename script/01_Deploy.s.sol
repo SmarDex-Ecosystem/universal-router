@@ -3,8 +3,8 @@ pragma solidity 0.8.26;
 
 import { Script } from "forge-std/Script.sol";
 
-import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
-import { IWusdn } from "usdn-contracts/src/interfaces/Usdn/IWusdn.sol";
+import { IUsdnProtocol } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
+import { IWusdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IWusdn.sol";
 
 import { UniversalRouter } from "../src/UniversalRouter.sol";
 import { RouterParameters } from "../src/base/RouterImmutables.sol";
