@@ -11,6 +11,7 @@ contract PoolHelpersTest is Test {
      * @custom:scenario Tests the {quote} function with an insufficient amount
      * @custom:when The {quote} function is called
      * @custom:then The call revert with {InsufficientAmount}
+     * forge-config: default.allow_internal_expect_revert = true
      */
     function test_RevertWhen_quoteInsufficientAmount() public {
         vm.expectRevert(PoolHelpers.InsufficientAmount.selector);
@@ -21,6 +22,7 @@ contract PoolHelpersTest is Test {
      * @custom:scenario Tests the {quote} function with an insufficient liquidity
      * @custom:when The {quote} function is called
      * @custom:then The call revert with {InsufficientLiquidity}
+     * forge-config: default.allow_internal_expect_revert = true
      */
     function test_RevertWhen_quoteInsufficientLiquidity() public {
         vm.expectRevert(PoolHelpers.InsufficientLiquidity.selector);

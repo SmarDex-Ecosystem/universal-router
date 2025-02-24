@@ -160,7 +160,7 @@ Developer documentation to give a detailed explanation of the inputs for every c
 ### UniversalRouter workflow commands
 
 You can run a series of commands in a single transaction. The commands are executed in the order they are provided in the `commands` parameter. If a command fails, the transaction will revert, unless the command has the `f` flag set to `true`.
-For example, if you want to initiate a deposit in the protocol, you would need to run the following steps: 
+For example, if you want to initiate a deposit in the protocol, you would need to run the following steps:
 
 - `eth -> wEth` using `TRANSFER`
 - `wEth -> sdex` using `SMARDEX_SWAP_EXACT_IN`
@@ -170,7 +170,7 @@ For example, if you want to initiate a deposit in the protocol, you would need t
 - `sweep(sdex)` using `SWEEP`
 - `sweep(wEth)` using `SWEEP`
 
-If you want to initiate the opening of a position in the USDN protocol, you would need to run the following steps: 
+If you want to initiate the opening of a position in the USDN protocol, you would need to run the following steps:
 
 - `eth -> wstEth` using `TRANSFER`
 - `usdnProtocol.initiateOpenPosition` using `INITIATE_OPEN`
@@ -258,7 +258,6 @@ The environment provides the following tools:
 - load `.env` file as environment variables
 - foundry
 - solc v0.8.26
-- slither
 - Node 20 + TypeScript
 - just
 - TruffleHog
@@ -335,7 +334,3 @@ The pre-commit configuration for Husky runs `forge fmt --check` to check the cod
 
 In order to setup the git pre-commit hook, you need to first install foundry, just and TruffleHog, then run
 `npm install`.
-
-### Slither
-
-Slither is integrated into a GitHub workflow and runs on every push to the main branch.

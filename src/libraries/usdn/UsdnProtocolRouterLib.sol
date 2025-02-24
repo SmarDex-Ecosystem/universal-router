@@ -59,7 +59,6 @@ library UsdnProtocolRouterLib {
         if (data.amount == Constants.CONTRACT_BALANCE) {
             data.amount = protocolAsset.balanceOf(address(this));
         }
-        // slither-disable-next-line arbitrary-send-eth
         success_ = usdnProtocol.initiateDeposit{ value: data.ethAmount }(
             // cast is made here to allow the {CONTRACT_BALANCE} value
             data.amount.toUint128(),
@@ -89,7 +88,6 @@ library UsdnProtocolRouterLib {
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) external returns (bool success_) {
-        // slither-disable-next-line arbitrary-send-eth
         success_ =
             usdnProtocol.validateDeposit{ value: ethAmount }(payable(validator), depositPriceData, previousActionsData);
     }
@@ -128,7 +126,6 @@ library UsdnProtocolRouterLib {
         if (sharesAmount == Constants.CONTRACT_BALANCE) {
             sharesAmount = usdn.sharesOf(address(this));
         }
-        // slither-disable-next-line arbitrary-send-eth
         success_ = usdnProtocol.initiateWithdrawal{ value: ethAmount }(
             sharesAmount.toUint152(),
             amountOutMin,
@@ -158,7 +155,6 @@ library UsdnProtocolRouterLib {
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) external returns (bool success_) {
-        // slither-disable-next-line arbitrary-send-eth
         success_ = usdnProtocol.validateWithdrawal{ value: ethAmount }(
             payable(validator), withdrawalPriceData, previousActionsData
         );
@@ -189,7 +185,6 @@ library UsdnProtocolRouterLib {
         }
         protocolAsset.forceApprove(address(usdnProtocol), data.amount);
         // we send the full ETH balance, and the protocol will refund any excess
-        // slither-disable-next-line arbitrary-send-eth
         (success_, posId_) = usdnProtocol.initiateOpenPosition{ value: data.ethAmount }(
             data.amount.toUint128(),
             data.desiredLiqPrice.toUint128(),
@@ -220,7 +215,6 @@ library UsdnProtocolRouterLib {
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) external returns (bool success_) {
-        // slither-disable-next-line arbitrary-send-eth
         (IUsdnProtocolTypes.LongActionOutcome outcome_,) = usdnProtocol.validateOpenPosition{ value: ethAmount }(
             payable(validator), openPositionPriceData, previousActionsData
         );
@@ -244,7 +238,6 @@ library UsdnProtocolRouterLib {
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) external returns (bool success_) {
-        // slither-disable-next-line arbitrary-send-eth
         IUsdnProtocolTypes.LongActionOutcome outcome_ = usdnProtocol.validateClosePosition{ value: ethAmount }(
             payable(validator), closePriceData, previousActionsData
         );
@@ -265,7 +258,6 @@ library UsdnProtocolRouterLib {
         uint256 maxValidations,
         uint256 ethAmount
     ) external {
-        // slither-disable-next-line arbitrary-send-eth
         usdnProtocol.validateActionablePendingActions{ value: ethAmount }(previousActionsData, maxValidations);
     }
 
@@ -313,7 +305,6 @@ library UsdnProtocolRouterLib {
      * @param ethAmount The amount of Ether to send with the transaction
      */
     function usdnLiquidate(IUsdnProtocol usdnProtocol, bytes memory currentPriceData, uint256 ethAmount) external {
-        // slither-disable-next-line arbitrary-send-eth
         usdnProtocol.liquidate{ value: ethAmount }(currentPriceData);
     }
 
@@ -385,7 +376,6 @@ library UsdnProtocolRouterLib {
             return (false, "");
         }
 
-        // slither-disable-next-line arbitrary-send-eth
         (success_, data_) = rebalancerAddress.call{ value: ethAmount }(
             abi.encodeWithSelector(
                 IRebalancer.initiateClosePosition.selector,
@@ -428,7 +418,6 @@ library UsdnProtocolRouterLib {
         if (payment == IPaymentLibTypes.PaymentType.Transfer) {
             token.safeTransfer(to, amount);
         } else if (payment == IPaymentLibTypes.PaymentType.TransferFrom) {
-            // slither-disable-next-line arbitrary-send-erc20
             token.safeTransferFrom(lockedBy, to, amount);
         } else if (payment == IPaymentLibTypes.PaymentType.Permit2) {
             permit2.transferFrom(lockedBy, to, amount.toUint160(), address(token));
