@@ -3,8 +3,8 @@ pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { IERC20Errors } from "@openzeppelin/contracts/interfaces/draft-IERC6093.sol";
-import { DEPLOYER, WETH, SDEX, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
-import { IUsdnErrors } from "usdn-contracts/src/interfaces/Usdn/IUsdnErrors.sol";
+import { DEPLOYER, WETH, SDEX, WSTETH } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
+import { IUsdnErrors } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IUsdnErrors.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 

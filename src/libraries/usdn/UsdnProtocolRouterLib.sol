@@ -5,11 +5,11 @@ import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/I
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { IUsdn } from "usdn-contracts/src/interfaces/Usdn/IUsdn.sol";
-import { IWusdn } from "usdn-contracts/src/interfaces/Usdn/IWusdn.sol";
-import { IUsdnProtocol } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
-import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { IRebalancer } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancer.sol";
+import { IUsdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IUsdn.sol";
+import { IWusdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IWusdn.sol";
+import { IUsdnProtocol } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocol.sol";
+import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IRebalancer } from "@smardex-usdn-contracts-1/src/interfaces/Rebalancer/IRebalancer.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
 import { IUsdnProtocolRouterTypes } from "../../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
