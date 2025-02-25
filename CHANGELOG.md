@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v1.0.0...v1.1.0) (2025-02-25)
+
+
+### Features
+
+* mainnet deployment ([#100](https://github.com/SmarDex-Ecosystem/universal-router/issues/100)) ([2b9465b](https://github.com/SmarDex-Ecosystem/universal-router/commit/2b9465ba87c23654c2eacce2088f5794ea08a006))
+
 ## [1.0.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.3.1...v1.0.0) (2025-01-21)
 
 
