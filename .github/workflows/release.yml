@@ -72,12 +72,12 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         run: npx jsr publish
 
-      - name: Configure AWS credentials
-        uses: backend-ra2-tech/composite-workflows/aws-login@main
-        with:
-          aws-role-to-assume: github-workflow-oidc-codeartifacts-deploy
+      - name: Publish to soldeer.xyz
         if: ${{ steps.release.outputs.release_created }}
-
-      - name: Publish to CodeArtifact
-        run: npm publish
-        if: ${{ steps.release.outputs.release_created }}
+        env:
+          SOLDEER_EMAIL: ${{ secrets.SOLDEER_EMAIL }}
+          SOLDEER_PASSWORD: ${{ secrets.SOLDEER_PASSWORD }}
+        run: |
+          forge soldeer login --email "$SOLDEER_EMAIL" --password "$SOLDEER_PASSWORD"
+          VERSION=$(npm pkg get version --workspaces=false | tr -d \")
+          forge soldeer push @smardex-universal-router~$VERSION
