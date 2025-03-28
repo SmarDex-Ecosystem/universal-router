@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.26;
 
-import { WETH, SDEX } from "usdn-contracts/test/utils/Constants.sol";
+import { WETH, SDEX } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 

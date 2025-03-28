@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { PYTH_ETH_USD, USER_1, USER_2 } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";

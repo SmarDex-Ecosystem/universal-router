@@ -2,8 +2,8 @@
 pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
-import { PYTH_ETH_USD, USER_1 } from "usdn-contracts/test/utils/Constants.sol";
+import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { PYTH_ETH_USD, USER_1 } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
 import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";

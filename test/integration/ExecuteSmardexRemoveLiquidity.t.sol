@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { WETH, WSTETH } from "usdn-contracts/test/utils/Constants.sol";
+import { WETH, WSTETH } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 

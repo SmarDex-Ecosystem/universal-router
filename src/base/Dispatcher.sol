@@ -7,7 +7,7 @@ import { Payments } from "@uniswap/universal-router/contracts/modules/Payments.s
 import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3/BytesLib.sol";
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
-import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
@@ -346,7 +346,6 @@ abstract contract Dispatcher is
                     } else if (command == Commands.INITIATE_CLOSE) {
                         (IUsdnProtocolRouterTypes.InitiateClosePositionData memory data) =
                             abi.decode(inputs, (IUsdnProtocolRouterTypes.InitiateClosePositionData));
-                        // slither-disable-next-line arbitrary-send-eth
                         (success_, output_) = address(USDN_PROTOCOL).call{ value: data.ethAmount }(
                             abi.encodeWithSelector(
                                 USDN_PROTOCOL.initiateClosePosition.selector,

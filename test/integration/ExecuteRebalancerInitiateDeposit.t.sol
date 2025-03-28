@@ -2,8 +2,8 @@
 pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { IRebalancerTypes } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancerTypes.sol";
-import { IRebalancer } from "usdn-contracts/src/interfaces/Rebalancer/IRebalancer.sol";
+import { IRebalancerTypes } from "@smardex-usdn-contracts-1/src/interfaces/Rebalancer/IRebalancerTypes.sol";
+import { IRebalancer } from "@smardex-usdn-contracts-1/src/interfaces/Rebalancer/IRebalancer.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";

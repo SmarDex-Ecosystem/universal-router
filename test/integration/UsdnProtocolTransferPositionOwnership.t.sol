@@ -2,8 +2,8 @@
 pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { DelegationSignatureUtils } from "usdn-contracts/test/utils/DelegationSignatureUtils.sol";
-import { IUsdnProtocolTypes } from "usdn-contracts/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { DelegationSignatureUtils } from "@smardex-usdn-contracts-1/test/utils/DelegationSignatureUtils.sol";
+import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 
 import { USER_1, USER_2, PYTH_ETH_USD } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
