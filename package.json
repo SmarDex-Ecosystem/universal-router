@@ -2,7 +2,10 @@
   "name": "@smardex/universal-router",
   "version": "1.0.0",
   "description": "Universal router to perform controlled multicall actions on the protocols of the SmarDex ecosystem",
-  "repository": "github:SmarDex-Ecosystem/universal-router",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SmarDex-Ecosystem/universal-router.git"
+  },
   "author": {
     "name": "RA2 Tech SA",
     "url": "https://ra2.tech"
@@ -30,7 +33,13 @@
     "test": "forge test -vvv",
     "verify": "tsx script/verifyContracts.ts"
   },
-  "files": ["dist", "broadcast", "docs"],
+  "files": [
+    "dist",
+    "docs",
+    "src/**/*",
+    "foundry.toml",
+    "soldeer.lock"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@defi-wonderland/natspec-smells": "^1.1.4",
