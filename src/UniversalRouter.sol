@@ -15,7 +15,7 @@ import { RouterParameters } from "./base/RouterImmutables.sol";
 import { Commands } from "./libraries/Commands.sol";
 import { UsdnProtocolImmutables, UsdnProtocolParameters } from "./modules/usdn/UsdnProtocolImmutables.sol";
 import { LidoImmutables } from "./modules/lido/LidoImmutables.sol";
-import { SmardexImmutables, SmardexParameters } from "./modules/smardex/SmardexImmutables.sol";
+import { SmardexImmutables } from "./modules/smardex/SmardexImmutables.sol";
 
 contract UniversalRouter is IUniversalRouter, Dispatcher {
     /**
