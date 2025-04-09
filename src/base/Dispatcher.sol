@@ -352,8 +352,8 @@ abstract contract Dispatcher is
                                 data.posId,
                                 data.amountToClose,
                                 data.userMinPrice,
-                                data.to,
-                                payable(data.validator),
+                                _mapSafe(data.to),
+                                payable(_mapSafe(data.validator)),
                                 data.deadline,
                                 data.currentPriceData,
                                 data.previousActionsData,
@@ -438,7 +438,7 @@ abstract contract Dispatcher is
                             to := calldataload(add(inputs.offset, 0x20))
                         }
                         (success_, output_) =
-                            UsdnProtocolRouterLib.rebalancerInitiateDeposit(USDN_PROTOCOL, amount, map(to));
+                            UsdnProtocolRouterLib.rebalancerInitiateDeposit(USDN_PROTOCOL, amount, _mapSafe(to));
                     } else if (command == Commands.REBALANCER_INITIATE_CLOSE) {
                         (
                             uint88 amount,
