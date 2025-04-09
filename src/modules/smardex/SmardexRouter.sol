@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.26;
 
+import { PaymentsImmutables } from "@uniswap/universal-router/contracts/modules/PaymentsImmutables.sol";
+
 import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
 import { Path } from "../../libraries/smardex/Path.sol";
@@ -8,7 +10,7 @@ import { SmardexRouterLib } from "../../libraries/smardex/SmardexRouterLib.sol";
 import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
-abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
+abstract contract SmardexRouter is PaymentsImmutables, ISmardexRouter, SmardexImmutables {
     /// @dev Transient storage variable used for checking slippage
     uint256 private amountInCached = type(uint256).max;
 
@@ -18,7 +20,7 @@ abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
     /// @inheritdoc ISmardexRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         uint256 amountIn =
-            SmardexRouterLib.smardexSwapCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, amount0Delta, amount1Delta, data);
+            SmardexRouterLib.smardexSwapCallback(SMARDEX_FACTORY, PERMIT2, amount0Delta, amount1Delta, data);
         if (amountIn > 0) {
             amountInCached = amountIn;
         }
@@ -26,7 +28,7 @@ abstract contract SmardexRouter is ISmardexRouter, SmardexImmutables {
 
     /// @inheritdoc ISmardexRouter
     function smardexMintCallback(MintCallbackData calldata data) external {
-        SmardexRouterLib.smardexMintCallback(SMARDEX_FACTORY, SMARDEX_PERMIT2, data);
+        SmardexRouterLib.smardexMintCallback(SMARDEX_FACTORY, PERMIT2, data);
     }
 
     /**
