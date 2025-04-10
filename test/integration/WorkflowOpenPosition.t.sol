@@ -18,7 +18,6 @@ import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol
  */
 contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRouterErrors {
     uint256 constant OPEN_POSITION_AMOUNT = 3 ether;
-    uint256 constant DESIRED_LIQUIDATION = 2500 ether;
     uint256 internal _securityOpenPosition;
 
     function setUp() external {
@@ -44,7 +43,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRou
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
                 IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
-                DESIRED_LIQUIDATION,
+                DEFAULT_PARAMS.initialLiqPrice,
                 type(uint128).max,
                 maxLeverage,
                 USER_1,

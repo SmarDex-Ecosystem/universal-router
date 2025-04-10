@@ -15,7 +15,6 @@ import { Commands } from "../../src/libraries/Commands.sol";
  */
 contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixture {
     uint128 constant OPEN_POSITION_AMOUNT = 2 ether;
-    uint128 constant DESIRED_LIQUIDATION = 2500 ether;
     uint256 internal _securityDeposit;
 
     function setUp() public {
@@ -25,7 +24,7 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         _securityDeposit = protocol.getSecurityDepositValue();
         (, IUsdnProtocolTypes.PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             OPEN_POSITION_AMOUNT,
-            DESIRED_LIQUIDATION,
+            DEFAULT_PARAMS.initialLiqPrice,
             type(uint128).max,
             maxLeverage,
             address(this),

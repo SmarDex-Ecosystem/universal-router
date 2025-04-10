@@ -39,10 +39,9 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
             uint128(withdrawAmount), 0, USER_2, USER_2, type(uint256).max, "", EMPTY_PREVIOUS_DATA
         );
         // 3. initiateOpenPosition
-        uint256 desiredLiquidation = 2500 ether;
         protocol.initiateOpenPosition{ value: _securityDeposit }(
             uint128(openPositionAmount),
-            uint128(desiredLiquidation),
+            DEFAULT_PARAMS.initialLiqPrice,
             type(uint128).max,
             maxLeverage,
             address(this),
@@ -54,7 +53,7 @@ contract TestForkUniversalRouterValidatePendingActions is UniversalRouterBaseFix
         // 4. initiateClosePosition
         (, IUsdnProtocolTypes.PositionId memory posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             uint128(openPositionAmount),
-            uint128(desiredLiquidation),
+            DEFAULT_PARAMS.initialLiqPrice,
             type(uint128).max,
             maxLeverage,
             address(this),
