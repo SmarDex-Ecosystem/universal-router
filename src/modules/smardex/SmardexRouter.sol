@@ -4,18 +4,26 @@ pragma solidity 0.8.26;
 import { PaymentsImmutables } from "@uniswap/universal-router/contracts/modules/PaymentsImmutables.sol";
 
 import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
+import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
 import { Path } from "../../libraries/smardex/Path.sol";
 import { SmardexRouterLib } from "../../libraries/smardex/SmardexRouterLib.sol";
-import { SmardexImmutables } from "./SmardexImmutables.sol";
 
 /// @title Router for Smardex
-abstract contract SmardexRouter is PaymentsImmutables, ISmardexRouter, SmardexImmutables {
+abstract contract SmardexRouter is PaymentsImmutables, ISmardexRouter {
     /// @dev Transient storage variable used for checking slippage
     uint256 private amountInCached = type(uint256).max;
 
     /// @dev The size in bytes of a single address
     uint8 private constant ADDR_SIZE = 20;
+
+    /// @dev The Smardex factory
+    ISmardexFactory internal immutable SMARDEX_FACTORY;
+
+    /// @param smardexFactory The Smardex factory
+    constructor(ISmardexFactory smardexFactory) {
+        SMARDEX_FACTORY = smardexFactory;
+    }
 
     /// @inheritdoc ISmardexRouter
     function smardexSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
