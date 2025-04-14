@@ -425,7 +425,7 @@ abstract contract Dispatcher is
                             abi.encodeWithSelector(
                                 USDN_PROTOCOL.transferPositionOwnership.selector,
                                 posId,
-                                map(newOwner),
+                                _mapSafe(newOwner),
                                 delegationSignature
                             )
                         );
