@@ -8,6 +8,7 @@ import { IRebalancer } from "@smardex-usdn-contracts-1/src/interfaces/Rebalancer
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
+import { LockAndMap } from "../../src/modules/usdn/LockAndMap.sol";
 
 /**
  * @custom:feature Test router commands rebalancer initiateDeposit
@@ -72,6 +73,20 @@ contract TestForkUniversalRouterRebalancerInitiateDeposit is UniversalRouterBase
         inputs[0] = abi.encode(Constants.CONTRACT_BALANCE, Constants.MSG_SENDER);
 
         vm.expectRevert(abi.encodeWithSelector(IUniversalRouter.ExecutionFailed.selector, 0, ""));
+        router.execute(commands, inputs);
+    }
+
+    /**
+     * @custom:scenario Tests the rebalancer initiate deposit though the router with an invalid `to`
+     * @custom:when The user executes the rebalancer initiate deposit though the router
+     * @custom:then The transaction must revert with `LockAndMapInvalidRecipient`
+     */
+    function test_RevertWhen_executeRebalancerInitiateDepositInvalidRecipient() external {
+        bytes memory commands = abi.encodePacked(uint8(Commands.REBALANCER_INITIATE_DEPOSIT));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(0, address(router));
+
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
         router.execute(commands, inputs);
     }
 }

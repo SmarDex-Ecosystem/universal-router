@@ -9,6 +9,7 @@ import { USER_1, USER_2, PYTH_ETH_USD } from "./utils/Constants.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
+import { LockAndMap } from "../../src/modules/usdn/LockAndMap.sol";
 
 /**
  * @custom:feature The usdn {transferPositionOwnership} function through the router
@@ -112,6 +113,21 @@ contract TestForkUniversalRouterTransferPositionOwnership is UniversalRouterBase
 
         (_pos,) = protocol.getLongPosition(_posId);
         assertEq(_pos.user, USER_1, "position owner should still be the `USER_1`");
+    }
+
+    /**
+     * @custom:scenario Tests a transfer position ownership through the router with the router as the new position owner
+     * @custom:when The user transfer the position ownership through the router
+     * @custom:then The transaction revert with `LockAndMapInvalidRecipient`
+     */
+    function test_RevertWhen_ForkTransferPositionOwnershipInvalidRecipient() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.TRANSFER_POSITION_OWNERSHIP));
+        bytes[] memory inputs = new bytes[](1);
+
+        inputs[0] = abi.encode(IUsdnProtocolTypes.PositionId(0, 0, 0), address(router), "");
+
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
+        router.execute(commands, inputs);
     }
 
     receive() external payable { }

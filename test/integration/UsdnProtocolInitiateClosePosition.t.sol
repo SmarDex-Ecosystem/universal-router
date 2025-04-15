@@ -10,6 +10,7 @@ import { SigUtils } from "./utils/SigUtils.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { LockAndMap } from "../../src/modules/usdn/LockAndMap.sol";
 
 /**
  * @custom:feature Initiating a close position through the router
@@ -160,5 +161,61 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
         assertEq(action.validator, USER_1, "pending action validator");
         assertEq(action.tickVersion, 0, "pending action tick version");
         assertEq(action.securityDepositValue, _securityDeposit, "pending action security deposit value");
+    }
+
+    /**
+     * @custom:scenario Initiating a close position through the router with the router as `to`
+     * @custom:when The user initiates a close position through the router
+     * @custom:then The transaction must revert with `LockAndMapInvalidRecipient`
+     */
+    function test_RevertWhen_ForkInitiateCloseInvalidRecipientTo() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE));
+        bytes[] memory inputs = new bytes[](1);
+
+        inputs[0] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateClosePositionData(
+                IUsdnProtocolTypes.PositionId(0, 0, 0),
+                0,
+                0,
+                address(router),
+                address(this),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                "",
+                0
+            )
+        );
+
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
+        router.execute{ value: _securityDeposit }(commands, inputs);
+    }
+
+    /**
+     * @custom:scenario Initiating a close position through the router with the router as `validator`
+     * @custom:when The user initiates a close position through the router
+     * @custom:then The transaction must revert with `LockAndMapInvalidRecipient`
+     */
+    function test_RevertWhen_ForkInitiateCloseInvalidRecipientValidator() public {
+        bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE));
+        bytes[] memory inputs = new bytes[](1);
+
+        inputs[0] = abi.encode(
+            IUsdnProtocolRouterTypes.InitiateClosePositionData(
+                IUsdnProtocolTypes.PositionId(0, 0, 0),
+                0,
+                0,
+                address(this),
+                address(router),
+                type(uint256).max,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                "",
+                0
+            )
+        );
+
+        vm.expectRevert(LockAndMap.LockAndMapInvalidRecipient.selector);
+        router.execute{ value: _securityDeposit }(commands, inputs);
     }
 }
