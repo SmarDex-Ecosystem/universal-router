@@ -5,18 +5,23 @@ import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/I
 import { ERC165, IERC165 } from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import { IPaymentCallback } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IPaymentCallback.sol";
 import { IUsdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IUsdn.sol";
+import { PaymentsImmutables } from "@uniswap/universal-router/contracts/modules/PaymentsImmutables.sol";
 
 import { UsdnProtocolImmutables } from "./UsdnProtocolImmutables.sol";
 import { UsdnProtocolRouterLib } from "../../libraries/usdn/UsdnProtocolRouterLib.sol";
 import { LockAndMap } from "./LockAndMap.sol";
 
 /// @title Router for UsdnProtocol
-abstract contract UsdnProtocolRouter is UsdnProtocolImmutables, IPaymentCallback, ERC165, LockAndMap {
+abstract contract UsdnProtocolRouter is
+    UsdnProtocolImmutables,
+    PaymentsImmutables,
+    IPaymentCallback,
+    ERC165,
+    LockAndMap
+{
     /// @inheritdoc IPaymentCallback
     function transferCallback(IERC20Metadata token, uint256 amount, address to) external {
-        UsdnProtocolRouterLib.transferCallback(
-            address(USDN_PROTOCOL), lockedBy, USDN_PROTOCOL_PERMIT2, token, amount, to
-        );
+        UsdnProtocolRouterLib.transferCallback(address(USDN_PROTOCOL), lockedBy, PERMIT2, token, amount, to);
     }
 
     /// @inheritdoc IPaymentCallback
