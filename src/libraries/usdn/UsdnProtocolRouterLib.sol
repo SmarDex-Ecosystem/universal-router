@@ -183,7 +183,7 @@ library UsdnProtocolRouterLib {
         if (data.amount == Constants.CONTRACT_BALANCE) {
             data.amount = protocolAsset.balanceOf(address(this));
         }
-        protocolAsset.forceApprove(address(usdnProtocol), data.amount);
+
         // we send the full ETH balance, and the protocol will refund any excess
         (success_, posId_) = usdnProtocol.initiateOpenPosition{ value: data.ethAmount }(
             data.amount.toUint128(),
