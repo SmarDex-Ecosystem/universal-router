@@ -15,7 +15,7 @@ import { RouterParameters } from "./base/RouterImmutables.sol";
 import { Commands } from "./libraries/Commands.sol";
 import { UsdnProtocolImmutables, UsdnProtocolParameters } from "./modules/usdn/UsdnProtocolImmutables.sol";
 import { LidoImmutables } from "./modules/lido/LidoImmutables.sol";
-import { SmardexImmutables, SmardexParameters } from "./modules/smardex/SmardexImmutables.sol";
+import { SmardexRouter } from "./modules/smardex/SmardexRouter.sol";
 
 contract UniversalRouter is IUniversalRouter, Dispatcher {
     /**
@@ -35,9 +35,9 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
             UniswapParameters(params.v2Factory, params.v3Factory, params.pairInitCodeHash, params.poolInitCodeHash)
         )
         PaymentsImmutables(PaymentsParameters(params.permit2, params.weth9, address(0), address(0)))
-        UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn, params.permit2))
+        UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn))
         LidoImmutables(params.wstEth)
-        SmardexImmutables(SmardexParameters(params.smardexFactory, params.weth9, params.permit2))
+        SmardexRouter(params.smardexFactory)
     { }
 
     /// @inheritdoc IUniversalRouter
