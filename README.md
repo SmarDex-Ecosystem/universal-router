@@ -265,6 +265,23 @@ The environment provides the following tools:
 - Rust toolchain
 - USDN `test_utils` dependencies
 
+
+## Setting Up the .env File
+
+### Create the .env File:
+Open your terminal and navigate to your project directory. Run the following command:
+
+```console
+cp .env.example .env
+```
+
+### Edit the `.env` File:
+Open the newly created `.env` file in your preferred text editor and fill in the required values for each environment variable as specified in the `.env.example` file.
+
+### Save and Exit:
+Save your changes and close the editor.
+
+
 ## Usage
 
 ### Tests
