@@ -305,8 +305,10 @@ Common arguments to `forge script` are described in
 [the documentation](https://book.getfoundry.sh/reference/forge/forge-script#forge-script).
 
 Notably, the `--rpc-url` argument allows to choose which RPC will receive the transactions. The available shorthand
-names are defined in [`foundry.toml`](https://github.com/SmarDex-Ecosystem/universal-router/blob/master/foundry.toml),
-(e.g. `mainnet`, `sepolia`) and use URLs defined as environment variables (see `.env.example`).
+names are defined in [`foundry.toml`](https://github.com/SmarDex-Ecosystem/universal-router/blob/master/foundry.toml), (e.g. `mainnet`, `sepolia`) and use URLs defined as environment variables (see `.env.example`).
+
+Note: Ensure to set the `DEPLOYER_ADDRESS` properly before deployment.
+
 
 ## Foundry Documentation
 
