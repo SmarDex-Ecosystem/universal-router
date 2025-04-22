@@ -11,8 +11,11 @@ import { UsdnProtocolBaseIntegrationFixture } from
 import { UsdnProtocolUtilsLibrary as Utils } from
     "@smardex-usdn-contracts-1/src/UsdnProtocol/libraries/UsdnProtocolUtilsLibrary.sol";
 import { PermitSignature } from "permit2/test/utils/PermitSignature.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { UniversalRouterHandler } from "./Handler.sol";
+import { MockToken } from "./MockToken.sol";
+
 import { RouterParameters } from "../../../src/base/RouterImmutables.sol";
 import { ISmardexFactory } from "../../../src/interfaces/smardex/ISmardexFactory.sol";
 
@@ -36,6 +39,10 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
     uint256 internal maxLeverage;
     ISmardexFactory smardexFactory;
     uint256 internal constant INITIAL_SDEX_BALANCE = 100_000_000 ether;
+
+    IERC20 internal token0;
+    IERC20 internal token1;
+    IERC20 internal token2;
 
     function _setUp(SetUpParams memory setupParams) public virtual override {
         setupParams.fork = true;
@@ -65,6 +72,10 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
         priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
         smardexFactory = params.smardexFactory;
         maxLeverage = protocol.getMaxLeverage();
+
+        token0 = new MockToken();
+        token1 = new MockToken();
+        token2 = new MockToken();
     }
 
     /**

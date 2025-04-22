@@ -17,7 +17,6 @@ contract TestForkUniversalRouterValidateOpenPosition is UniversalRouterBaseFixtu
     using SafeCast for uint256;
 
     uint256 constant OPEN_POSITION_AMOUNT = 2 ether;
-    uint256 constant DESIRED_LIQUIDATION = 2500 ether;
     IUsdnProtocolTypes.PositionId internal _posId;
     uint256 _securityDeposit;
 
@@ -28,7 +27,7 @@ contract TestForkUniversalRouterValidateOpenPosition is UniversalRouterBaseFixtu
         _securityDeposit = protocol.getSecurityDepositValue();
         (, _posId) = protocol.initiateOpenPosition{ value: _securityDeposit }(
             OPEN_POSITION_AMOUNT.toUint128(),
-            DESIRED_LIQUIDATION.toUint128(),
+            DEFAULT_PARAMS.initialLiqPrice,
             type(uint128).max,
             maxLeverage,
             USER_2,
