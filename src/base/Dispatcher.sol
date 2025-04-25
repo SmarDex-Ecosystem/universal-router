@@ -8,6 +8,7 @@ import { BytesLib } from "@uniswap/universal-router/contracts/modules/uniswap/v3
 import { V3SwapRouter } from "@uniswap/universal-router/contracts/modules/uniswap/v3/V3SwapRouter.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+import { IWusdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IWusdn.sol";
 
 import { IUsdnProtocolRouterTypes } from "../interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../interfaces/usdn/IPaymentLibTypes.sol";
@@ -43,6 +44,12 @@ abstract contract Dispatcher is
      * @param commandType The command type
      */
     error InvalidCommandType(uint256 commandType);
+
+    /**
+     * @notice Indicates that the wusdn isn't instantiated
+     * That's must be the case for a shortDn router
+     */
+    error NoWusdn();
 
     /**
      * @notice Decodes and executes the given command with the given inputs
@@ -482,6 +489,10 @@ abstract contract Dispatcher is
                 }
             } else {
                 if (command == Commands.WRAP_USDN) {
+                    IWusdn wusdn = WUSDN;
+                    if (address(wusdn) == address(0)) {
+                        revert NoWusdn();
+                    }
                     // equivalent: abi.decode(inputs, (uint256, address))
                     uint256 usdnSharesAmount;
                     address recipient;
@@ -489,8 +500,12 @@ abstract contract Dispatcher is
                         usdnSharesAmount := calldataload(inputs.offset)
                         recipient := calldataload(add(inputs.offset, 0x20))
                     }
-                    UsdnProtocolRouterLib.wrapUSDNShares(USDN, WUSDN, usdnSharesAmount, map(recipient));
+                    UsdnProtocolRouterLib.wrapUSDNShares(USDN, wusdn, usdnSharesAmount, map(recipient));
                 } else if (command == Commands.UNWRAP_WUSDN) {
+                    IWusdn wusdn = WUSDN;
+                    if (address(wusdn) == address(0)) {
+                        revert NoWusdn();
+                    }
                     // equivalent: abi.decode(inputs, (uint256, address))
                     uint256 wusdnAmount;
                     address recipient;
@@ -498,7 +513,7 @@ abstract contract Dispatcher is
                         wusdnAmount := calldataload(inputs.offset)
                         recipient := calldataload(add(inputs.offset, 0x20))
                     }
-                    UsdnProtocolRouterLib.unwrapUSDN(WUSDN, wusdnAmount, map(recipient));
+                    UsdnProtocolRouterLib.unwrapUSDN(wusdn, wusdnAmount, map(recipient));
                 } else if (command == Commands.WRAP_STETH) {
                     // equivalent: abi.decode(inputs, (uint256, address))
                     uint256 stethAmount;

@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.26;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
-import { WETH, SDEX } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
 import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
+import { ISmardexRouter } from "../../src/interfaces/smardex/ISmardexRouter.sol";
 
 /**
  * @custom:feature Test smardex swap exact out command
@@ -16,113 +15,147 @@ import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRoute
  */
 contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmardexRouterErrors {
     uint256 constant BASE_AMOUNT = 1 ether;
-    address constant WBTC = 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599;
+
+    ISmardexRouter.AddLiquidityParams internal liqParams;
 
     function setUp() external {
         _setUp(DEFAULT_PARAMS);
 
-        deal(WETH, address(this), BASE_AMOUNT * 1e3);
-        deal(SDEX, address(this), BASE_AMOUNT * 1e3);
-        deal(WBTC, address(this), BASE_AMOUNT * 1e3);
+        deal(address(token0), address(this), BASE_AMOUNT * 2);
+        deal(address(token1), address(this), BASE_AMOUNT * 2);
+        deal(address(token2), address(this), BASE_AMOUNT * 2);
+
+        deal(address(token0), address(router), BASE_AMOUNT * 1e2 * 2);
+        deal(address(token1), address(router), BASE_AMOUNT * 1e2 * 2);
+        deal(address(token2), address(router), BASE_AMOUNT * 1e2 * 2);
+
+        liqParams.amountADesired = BASE_AMOUNT * 1e2;
+        liqParams.amountBDesired = BASE_AMOUNT * 1e2;
+
+        bytes memory commands = abi.encodePacked(
+            uint8(Commands.SMARDEX_ADD_LIQUIDITY),
+            uint8(Commands.SMARDEX_ADD_LIQUIDITY),
+            uint8(Commands.SMARDEX_ADD_LIQUIDITY)
+        );
+        bytes[] memory inputs = new bytes[](3);
+
+        liqParams.tokenA = address(token0);
+        liqParams.tokenB = address(token1);
+        inputs[0] = abi.encode(liqParams, address(this), false, type(uint256).max);
+
+        liqParams.tokenA = address(token1);
+        liqParams.tokenB = address(token2);
+        inputs[1] = abi.encode(liqParams, address(this), false, type(uint256).max);
+
+        liqParams.tokenA = address(token0);
+        liqParams.tokenB = address(token2);
+        inputs[2] = abi.encode(liqParams, address(this), false, type(uint256).max);
+
+        router.execute(commands, inputs);
     }
 
     /**
      * @custom:scenario Test the `SMARDEX_SWAP_EXACT_OUT` command using the router balance
      * @custom:given The initiated universal router
-     * @custom:and The router should be funded with some weth
+     * @custom:and The router should be funded with some `token0`
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_OUT` command
      * @custom:then The `SMARDEX_SWAP_EXACT_OUT` command should be executed
-     * @custom:and The sdex user balance should be increased
+     * @custom:and The `token1` user balance should be increased
      */
     function test_ForkExecuteSmardexSwapExactOutBalance() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT));
 
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, BASE_AMOUNT, abi.encodePacked(WETH, SDEX), false);
+        inputs[0] =
+            abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, type(uint256).max, abi.encodePacked(token0, token1), false);
 
-        IERC20(WETH).transfer(address(router), BASE_AMOUNT);
-        uint256 balanceSdexBefore = sdex.balanceOf(address(this));
+        token0.transfer(address(router), BASE_AMOUNT * 2);
+        uint256 balanceToken1Before = token1.balanceOf(address(this));
 
         router.execute(commands, inputs);
 
-        assertGt(sdex.balanceOf(address(this)), balanceSdexBefore, "wrong sdex balance");
+        assertGt(token1.balanceOf(address(this)), balanceToken1Before, "wrong token1 balance");
     }
 
     /**
      * @custom:scenario Test the `SMARDEX_SWAP_EXACT_OUT` command using the router balance by multi hops
      * @custom:given The initiated universal router
-     * @custom:and The router should be funded with some wbtc
+     * @custom:and The router should be funded with some `token0`
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_OUT` command
      * @custom:then The `SMARDEX_SWAP_EXACT_OUT` command should be executed
-     * @custom:and The weth sdex balance should be increased
+     * @custom:and The user `token2` balance should be increased
      */
     function test_ForkExecuteSmardexSwapExactOutBalanceMulti() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT));
 
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] =
-            abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, BASE_AMOUNT, abi.encodePacked(WBTC, WETH, SDEX), false);
+        inputs[0] = abi.encode(
+            Constants.MSG_SENDER, BASE_AMOUNT, type(uint256).max, abi.encodePacked(token0, token1, token2), false
+        );
 
-        IERC20(WBTC).transfer(address(router), BASE_AMOUNT);
-        uint256 balanceSdexBefore = sdex.balanceOf(address(this));
+        token0.transfer(address(router), BASE_AMOUNT * 2);
+        uint256 balanceToken2Before = token2.balanceOf(address(this));
 
         router.execute(commands, inputs);
 
-        assertGt(sdex.balanceOf(address(this)), balanceSdexBefore, "wrong sdex balance");
+        assertGt(token2.balanceOf(address(this)), balanceToken2Before, "wrong token2 balance");
     }
 
     /**
      * @custom:scenario Test the `SMARDEX_SWAP_EXACT_OUT` command using permit2
      * @custom:given The initiated universal router
-     * @custom:and The user should be funded with some weth
+     * @custom:and The user should be funded with some `token0`
      * @custom:and The permit2 contract should be approved
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_OUT` command
      * @custom:then The `SMARDEX_SWAP_EXACT_OUT` command should be executed
-     * @custom:and The sdex user balance should be increased
+     * @custom:and The user `token1` balance should be increased
      */
     function test_ForkExecuteSmardexSwapExactOutPermit2() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT));
 
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, BASE_AMOUNT, abi.encodePacked(WETH, SDEX), true);
+        inputs[0] =
+            abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, type(uint256).max, abi.encodePacked(token0, token1), true);
 
-        IERC20(WETH).approve(address(permit2), type(uint256).max);
-        permit2.approve(WETH, address(router), type(uint160).max, type(uint48).max);
-        uint256 balanceSdexBefore = sdex.balanceOf(address(this));
+        token0.approve(address(permit2), type(uint256).max);
+        permit2.approve(address(token0), address(router), type(uint160).max, type(uint48).max);
+        uint256 balanceToken1Before = token1.balanceOf(address(this));
 
         router.execute(commands, inputs);
 
-        assertGt(sdex.balanceOf(address(this)), balanceSdexBefore, "wrong sdex balance");
+        assertGt(token1.balanceOf(address(this)), balanceToken1Before, "wrong token1 balance");
     }
 
     /**
      * @custom:scenario Test the `SMARDEX_SWAP_EXACT_OUT` command using permit2 by multi hops
      * @custom:given The initiated universal router
-     * @custom:and The user should be funded with some wbtc
+     * @custom:and The user should be funded with some `token0`
      * @custom:and The permit2 contract should be approved
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_OUT` command
      * @custom:then The `SMARDEX_SWAP_EXACT_OUT` command should be executed
-     * @custom:and The sdex user balance should be increased
+     * @custom:and The user `token2` balance should be increased
      */
     function test_ForkExecuteSmardexSwapExactOutPermit2Multi() external {
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT));
 
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, BASE_AMOUNT, abi.encodePacked(WBTC, WETH, SDEX), true);
+        inputs[0] = abi.encode(
+            Constants.MSG_SENDER, BASE_AMOUNT, type(uint256).max, abi.encodePacked(token0, token1, token2), true
+        );
 
-        IERC20(WBTC).approve(address(permit2), type(uint256).max);
-        permit2.approve(WBTC, address(router), type(uint160).max, type(uint48).max);
-        uint256 balanceSdexBefore = IERC20(SDEX).balanceOf(address(this));
+        token0.approve(address(permit2), type(uint256).max);
+        permit2.approve(address(token0), address(router), type(uint160).max, type(uint48).max);
+        uint256 balanceToken2Before = token2.balanceOf(address(this));
 
         router.execute(commands, inputs);
 
-        assertGt(sdex.balanceOf(address(this)), balanceSdexBefore, "wrong sdex balance");
+        assertGt(token2.balanceOf(address(this)), balanceToken2Before, "wrong token2 balance");
     }
 
     /**
      * @custom:scenario Test the `SMARDEX_SWAP_EXACT_OUT` command with too much token sent
      * @custom:given The initiated universal router
-     * @custom:and The router should be funded with some weth
+     * @custom:and The router should be funded with some `token0`
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_OUT` command
      * @custom:then The command should revert with `excessiveInputAmount`
      */
@@ -130,9 +163,9 @@ contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmar
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT));
 
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, 1, abi.encodePacked(WETH, SDEX), false);
+        inputs[0] = abi.encode(Constants.MSG_SENDER, BASE_AMOUNT, 1, abi.encodePacked(token0, token1), false);
 
-        IERC20(WETH).transfer(address(router), BASE_AMOUNT);
+        token0.transfer(address(router), BASE_AMOUNT * 2);
 
         vm.expectRevert(ExcessiveInputAmount.selector);
         router.execute(commands, inputs);
@@ -141,7 +174,7 @@ contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmar
     /**
      * @custom:scenario Test the `SMARDEX_SWAP_EXACT_OUT` command with an invalid recipient
      * @custom:given The initiated universal router
-     * @custom:and The router should be funded with some weth
+     * @custom:and The router should be funded with some `token0`
      * @custom:when The `execute` function is called for `SMARDEX_SWAP_EXACT_OUT` command
      * @custom:then The command should revert with `invalidRecipient`
      */
@@ -149,9 +182,9 @@ contract TestForkExecuteSmardexSwapExactOut is UniversalRouterBaseFixture, ISmar
         bytes memory commands = abi.encodePacked(uint8(Commands.SMARDEX_SWAP_EXACT_OUT));
 
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(address(0), BASE_AMOUNT, BASE_AMOUNT, abi.encodePacked(WETH, SDEX), false);
+        inputs[0] = abi.encode(address(0), BASE_AMOUNT, BASE_AMOUNT, abi.encodePacked(token0, token1), false);
 
-        IERC20(WETH).transfer(address(router), BASE_AMOUNT);
+        token0.transfer(address(router), BASE_AMOUNT);
 
         vm.expectRevert(InvalidRecipient.selector);
         router.execute(commands, inputs);

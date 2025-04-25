@@ -5,24 +5,25 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { USER_1 } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
 
-import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+import { UniversalRouterUsdnShortProtocolBaseFixture } from "./utils/Fixtures.sol";
 
-import { Commands } from "../../src/libraries/Commands.sol";
-import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
-import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
-import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
+import { Commands } from "../../../src/libraries/Commands.sol";
+import { ISmardexRouterErrors } from "../../../src/interfaces/smardex/ISmardexRouterErrors.sol";
+import { IUsdnProtocolRouterTypes } from "../../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { IPaymentLibTypes } from "../../../src/interfaces/usdn/IPaymentLibTypes.sol";
 
 /**
  * @custom:feature Entire workflow of open position through the router
  * @custom:background An initiated universal router
  */
-contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRouterErrors {
+contract TestForkWorkflowUsdnShortOpenPosition is UniversalRouterUsdnShortProtocolBaseFixture, ISmardexRouterErrors {
     uint256 constant OPEN_POSITION_AMOUNT = 3 ether;
     uint256 internal _securityOpenPosition;
 
     function setUp() external {
-        _setUp(DEFAULT_PARAMS);
+        _setUp();
         _securityOpenPosition = protocol.getSecurityDepositValue();
+        asset.approve(address(router), type(uint256).max);
     }
 
     /**
@@ -32,18 +33,18 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRou
      * @custom:then The open position is initiated successfully
      * @custom:and All tokens are returned to the user
      */
-    function test_ForkWorkflowOpenPosition() external {
+    function test_ForkUsdnShortWorkflowOpenPosition() external {
         bytes memory commands = abi.encodePacked(
-            uint8(Commands.TRANSFER), uint8(Commands.INITIATE_OPEN), uint8(Commands.SWEEP), uint8(Commands.SWEEP)
+            uint8(Commands.TRANSFER_FROM), uint8(Commands.INITIATE_OPEN), uint8(Commands.SWEEP), uint8(Commands.SWEEP)
         );
 
         bytes[] memory inputs = new bytes[](4);
-        inputs[0] = abi.encode(Constants.ETH, wstETH, OPEN_POSITION_AMOUNT * 2);
+        inputs[0] = abi.encode(address(asset), address(router), minLongPosition);
         inputs[1] = abi.encode(
             IUsdnProtocolRouterTypes.InitiateOpenPositionData(
                 IPaymentLibTypes.PaymentType.Transfer,
                 Constants.CONTRACT_BALANCE,
-                DEFAULT_PARAMS.initialLiqPrice,
+                initialPrice / 2,
                 type(uint128).max,
                 maxLeverage,
                 USER_1,
@@ -55,11 +56,11 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRou
             )
         );
         inputs[2] = abi.encode(Constants.ETH, address(this), 0, 0);
-        inputs[3] = abi.encode(wstETH, address(this), 0, 0);
+        inputs[3] = abi.encode(address(asset), address(this), 0, 0);
 
-        router.execute{ value: _securityOpenPosition + OPEN_POSITION_AMOUNT * 2 }(commands, inputs);
+        router.execute{ value: _securityOpenPosition }(commands, inputs);
 
-        LongPendingAction memory action = protocol.i_toLongPendingAction(protocol.getUserPendingAction(USER_1));
+        LongPendingAction memory action = toLongPendingAction(protocol.getUserPendingAction(USER_1));
 
         assertTrue(action.action == ProtocolAction.ValidateOpenPosition, "The action type is wrong");
         assertEq(action.to, USER_1, "pending action to");
@@ -67,7 +68,7 @@ contract TestForkWorkflowOpenPosition is UniversalRouterBaseFixture, ISmardexRou
         assertEq(action.tickVersion, 0, "pending action tick version");
         assertEq(action.securityDepositValue, _securityOpenPosition, "pending action security deposit value");
         assertEq(address(router).balance, 0, "ETH balance");
-        assertEq(IERC20(wstETH).balanceOf(address(router)), 0, "wstETH balance");
+        assertEq(IERC20(asset).balanceOf(address(router)), 0, "asset balance");
     }
 
     receive() external payable { }

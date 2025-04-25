@@ -14,10 +14,9 @@ integrity = "55881f6114aa36158566ef52b486d9d96b217c3e47d0e24bbd4994a8cfb5ee7c"
 
 [[dependencies]]
 name = "@smardex-usdn-contracts"
-version = "1.0.1"
-url = "https://github.com/SmarDex-Ecosystem/usdn-contracts/archive/refs/tags/v1.0.1.zip"
-checksum = "c568d4cd6b5aad3404bf509096dbcff88c886cd70aabf574bb98e5271618790b"
-integrity = "7819026836e8c6e3330526bab912d6171d7661d4f1d4836987be6f72bd4f3462"
+version = "main"
+git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git"
+rev = "e50671be3a86b6f6b4459a0c43ab969cb67c3eb0"
 
 [[dependencies]]
 name = "@uniswap-permit2"

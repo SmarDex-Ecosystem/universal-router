@@ -29,6 +29,6 @@ contract UsdnProtocolImmutables {
         USDN_PROTOCOL = params.usdnProtocol;
         PROTOCOL_ASSET = params.usdnProtocol.getAsset();
         WUSDN = params.wusdn;
-        USDN = params.wusdn.USDN();
+        USDN = params.usdnProtocol.getUsdn();
     }
 }
