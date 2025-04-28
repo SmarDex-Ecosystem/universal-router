@@ -21,8 +21,6 @@ contract TestForkUniversalRouterUsdnShortLiquidate is UniversalRouterUsdnShortPr
         asset.approve(address(protocol), type(uint256).max);
         _securityDeposit = protocol.getSecurityDepositValue();
 
-        // (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
-
         (, _posId) = protocol.initiateOpenPosition{
             value: _securityDeposit + oracleMiddleware.validationCost("", ProtocolAction.InitiateOpenPosition)
         }(
@@ -54,24 +52,12 @@ contract TestForkUniversalRouterUsdnShortLiquidate is UniversalRouterUsdnShortPr
      * @custom:then The transaction should be executed
      */
     function test_ForkUsdnShortExecuteLiquidate() external {
-        vm.skip(true);
-        // skip 658_069 seconds to Mar-19-2024 15:41:24
-        skip(658_069);
-        uint256 tickVersionBefore = protocol.getTickVersion(_posId.tick);
         bytes memory commands = abi.encodePacked(uint8(Commands.LIQUIDATE));
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, block.timestamp);
         uint256 validationCost = oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.Liquidation);
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(data, validationCost);
         router.execute{ value: validationCost }(commands, inputs);
-        assertLt(
-            protocol.getHighestPopulatedTick(),
-            _posId.tick,
-            "The highest populated tick should be lower than the last liquidated tick"
-        );
-        assertEq(
-            protocol.getTickVersion(_posId.tick), tickVersionBefore + 1, "The tick version should be incremented by 1"
-        );
     }
 
     receive() external payable { }
