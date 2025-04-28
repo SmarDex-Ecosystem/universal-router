@@ -44,7 +44,7 @@ abstract contract Dispatcher is
      */
     error InvalidCommandType(uint256 commandType);
 
-    /// @notice Indicates that the wusdn isn't instantiated
+    /// @notice Indicates that the USDN token does not have a wrapped version
     error NoWusdn();
 
     /**
