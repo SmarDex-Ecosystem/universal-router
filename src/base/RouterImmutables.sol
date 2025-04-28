@@ -16,7 +16,7 @@ import { ISmardexFactory } from "../interfaces/smardex/ISmardexFactory.sol";
  * @param poolInitCodeHash The v3 pool hash
  * @param usdnProtocol The USDN protocol address
  * @param wstEth The WstETH address
- * @param wusdn The wrapped usdn address
+ * @param wusdn The wrapped usdn address. It must be the zero address when the router is for the USDN short protocol
  * @param smardexFactory The smardex factory
  */
 struct RouterParameters {

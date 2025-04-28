@@ -47,7 +47,7 @@ abstract contract Dispatcher is
 
     /**
      * @notice Indicates that the wusdn isn't instantiated
-     * That's must be the case for a shortDn router
+     * That's must be the case for a USDN short protocol router
      */
     error NoWusdn();
 
