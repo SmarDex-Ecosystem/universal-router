@@ -24,11 +24,11 @@ contract Deploy is Script {
 
     function run(address wusdnTokenAddress, address usdnProtocolAddress)
         external
-        returns (UniversalRouter UniversalRouter_)
+        returns (UniversalRouter universalRouter_)
     {
         vm.startBroadcast();
 
-        UniversalRouter_ = new UniversalRouter(
+        universalRouter_ = new UniversalRouter(
             RouterParameters({
                 permit2: vm.envOr("PERMIT2", PERMIT2),
                 weth9: vm.envOr("WETH", WETH),
