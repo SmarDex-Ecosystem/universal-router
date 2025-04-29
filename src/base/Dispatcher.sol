@@ -44,6 +44,9 @@ abstract contract Dispatcher is
      */
     error InvalidCommandType(uint256 commandType);
 
+    /// @notice Indicates that the USDN token does not have a wrapped version
+    error NoWusdn();
+
     /**
      * @notice Decodes and executes the given command with the given inputs
      * @dev 2 masks are used to enable use of a nested-if statement in execution for efficiency reasons
@@ -482,6 +485,9 @@ abstract contract Dispatcher is
                 }
             } else {
                 if (command == Commands.WRAP_USDN) {
+                    if (address(WUSDN) == address(0)) {
+                        revert NoWusdn();
+                    }
                     // equivalent: abi.decode(inputs, (uint256, address))
                     uint256 usdnSharesAmount;
                     address recipient;
@@ -491,6 +497,9 @@ abstract contract Dispatcher is
                     }
                     UsdnProtocolRouterLib.wrapUSDNShares(USDN, WUSDN, usdnSharesAmount, map(recipient));
                 } else if (command == Commands.UNWRAP_WUSDN) {
+                    if (address(WUSDN) == address(0)) {
+                        revert NoWusdn();
+                    }
                     // equivalent: abi.decode(inputs, (uint256, address))
                     uint256 wusdnAmount;
                     address recipient;

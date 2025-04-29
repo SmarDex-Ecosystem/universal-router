@@ -16,7 +16,8 @@ import { ISmardexFactory } from "../interfaces/smardex/ISmardexFactory.sol";
  * @param poolInitCodeHash The v3 pool hash
  * @param usdnProtocol The USDN protocol address
  * @param wstEth The WstETH address
- * @param wusdn The wrapped usdn address
+ * @param wusdn The wrapped USDN address. If the address is set to the zero address,
+ * the wrap and unwrap commands are disabled
  * @param smardexFactory The smardex factory
  */
 struct RouterParameters {

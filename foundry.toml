@@ -17,7 +17,7 @@ invariant = { fail_on_revert = true }
 remappings = [
     "@chainlink/=dependencies/@chainlink-1.2.0/",
     "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.0.2/",
-    "@smardex-usdn-contracts-1/=dependencies/@smardex-usdn-contracts-1.0.1/",
+    "@smardex-usdn-contracts-1/=dependencies/@smardex-usdn-contracts-main/",
     "@uniswap/universal-router/=dependencies/@uniswap-universal-router-1.6.0/",
     "@uniswap/v2-core/=dependencies/@uniswap-v2-core-1.0.1/",
     "@uniswap/v3-core/=dependencies/@uniswap-v3-core-1.0.0/",
@@ -116,6 +116,7 @@ dictionary_weight = 60
 mainnet = "${URL_ETH_MAINNET}"
 sepolia = "${URL_SEPOLIA}"
 anvil = "${URL_ANVIL}"
+tenderly = "${URL_TENDERLY}"
 
 [etherscan]
 mainnet = { key = "${ETHERSCAN_API_KEY}" }
@@ -123,7 +124,7 @@ mainnet = { key = "${ETHERSCAN_API_KEY}" }
 [dependencies]
 "@chainlink" = { version = "1.2.0", url = "https://github.com/smartcontractkit/chainlink/archive/c3dc764bba9e1c57b3f7933bcb804a1740fab695.zip" }
 "@openzeppelin-contracts" = "5.0.2"
-"@smardex-usdn-contracts" = { version = "1.0.1", url = "https://github.com/SmarDex-Ecosystem/usdn-contracts/archive/refs/tags/v1.0.1.zip" }
+"@smardex-usdn-contracts" = { version = "main", git = "git@github.com:SmarDex-Ecosystem/usdn-contracts.git", rev = "e50671be3a86b6f6b4459a0c43ab969cb67c3eb0" }
 "@uniswap-permit2" = { version = "1.0.0", url = "https://github.com/Uniswap/permit2/archive/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219.zip" }
 "@uniswap-universal-router" = "1.6.0"
 "@uniswap-v2-core" = "1.0.1"
