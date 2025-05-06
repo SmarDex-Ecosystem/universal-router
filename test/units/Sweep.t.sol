@@ -5,7 +5,7 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 
 import { UniversalRouterBaseFixture } from "../integration/utils/Fixtures.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
-import { ISweepErrors } from "../../src/interfaces/ISweepErrors.sol";
+import { IUniversalRouterErrors } from "../../src/interfaces/IUniversalRouterErrors.sol";
 
 /**
  * @custom:feature Sweep ETH or token to an address
@@ -134,7 +134,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.ETH, address(0), 0, 0);
 
-        vm.expectRevert(ISweepErrors.SweepInvalidRecipient.selector);
+        vm.expectRevert(IUniversalRouterErrors.SweepInvalidRecipient.selector);
         router.execute(commands, inputs);
     }
 
