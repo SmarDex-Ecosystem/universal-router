@@ -4,8 +4,8 @@ pragma solidity 0.8.26;
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "../integration/utils/Fixtures.sol";
+import { Sweep } from "../../src/modules/Sweep.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
-import { IUniversalRouterErrors } from "../../src/interfaces/IUniversalRouterErrors.sol";
 
 /**
  * @custom:feature Sweep ETH or token to an address
@@ -134,7 +134,7 @@ contract TestForkUniversalRouterSweep is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(Constants.ETH, address(0), 0, 0);
 
-        vm.expectRevert(IUniversalRouterErrors.SweepInvalidRecipient.selector);
+        vm.expectRevert(Sweep.SweepInvalidRecipient.selector);
         router.execute(commands, inputs);
     }
 

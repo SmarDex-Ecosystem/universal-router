@@ -6,9 +6,9 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { WETH } from "./utils/Constants.sol";
 
-import { IUniversalRouterErrors } from "../../src/interfaces/IUniversalRouterErrors.sol";
 import { IStETH } from "../../src/interfaces/lido/IStETH.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
+import { Odos } from "../../src/modules/Odos.sol";
 
 /**
  * @custom:feature Test the `ODOS` command
@@ -61,7 +61,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, 1 ether, data);
 
-        vm.expectRevert(IUniversalRouterErrors.OdosSwapFailed.selector);
+        vm.expectRevert(Odos.OdosSwapFailed.selector);
         router.execute(commands, inputs);
     }
 }

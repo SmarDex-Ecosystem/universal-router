@@ -6,8 +6,6 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 import { SafeTransferLib } from "solmate/src/utils/SafeTransferLib.sol";
 import { ERC20 } from "solmate/src/tokens/ERC20.sol";
 
-import { IUniversalRouterErrors } from "../interfaces/IUniversalRouterErrors.sol";
-
 /**
  * @title Sweep contract
  * @notice Sweeps all of the contract's ERC20 or ETH to an address
@@ -15,6 +13,9 @@ import { IUniversalRouterErrors } from "../interfaces/IUniversalRouterErrors.sol
 abstract contract Sweep {
     using SafeTransferLib for ERC20;
     using SafeTransferLib for address;
+
+    /// @notice Reverts when the recipient is invalid for a sweep operation.
+    error SweepInvalidRecipient();
 
     /**
      * @notice Sweeps all of the contract's ERC20 or ETH to an address
@@ -27,7 +28,7 @@ abstract contract Sweep {
         uint256 balance;
         if (token == Constants.ETH) {
             if (recipient == address(0)) {
-                revert IUniversalRouterErrors.SweepInvalidRecipient();
+                revert SweepInvalidRecipient();
             }
             balance = address(this).balance;
             if (balance < amountOutMin) {
