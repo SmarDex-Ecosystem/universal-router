@@ -31,4 +31,5 @@ struct RouterParameters {
     address wstEth;
     IWusdn wusdn;
     ISmardexFactory smardexFactory;
+    address odosSorRouter;
 }

@@ -16,6 +16,7 @@ import { Commands } from "./libraries/Commands.sol";
 import { UsdnProtocolImmutables, UsdnProtocolParameters } from "./modules/usdn/UsdnProtocolImmutables.sol";
 import { LidoImmutables } from "./modules/lido/LidoImmutables.sol";
 import { SmardexRouter } from "./modules/smardex/SmardexRouter.sol";
+import { Odos } from "./modules/Odos.sol";
 
 contract UniversalRouter is IUniversalRouter, Dispatcher {
     /**
@@ -38,6 +39,7 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
         UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn))
         LidoImmutables(params.wstEth)
         SmardexRouter(params.smardexFactory)
+        Odos(params.odosSorRouter)
     { }
 
     /// @inheritdoc IUniversalRouter

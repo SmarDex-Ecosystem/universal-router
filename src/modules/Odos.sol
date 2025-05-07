@@ -6,7 +6,11 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IUniversalRouterErrors } from "../interfaces/IUniversalRouterErrors.sol";
 
 abstract contract Odos {
-    address constant ODOS_SOR_ROUTER = 0xCf5540fFFCdC3d510B18bFcA6d2b9987b0772559;
+    address immutable ODOS_SOR_ROUTER;
+
+    constructor(address odosSorRouter) {
+        ODOS_SOR_ROUTER = odosSorRouter;
+    }
 
     function swapOdos(address tokenIn, uint256 amountIn, bytes memory data) internal {
         if (IERC20(tokenIn).allowance(address(this), ODOS_SOR_ROUTER) < amountIn) {
