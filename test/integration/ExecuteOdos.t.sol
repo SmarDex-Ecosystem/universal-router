@@ -6,7 +6,6 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { WETH } from "./utils/Constants.sol";
 
-import { IStETH } from "../../src/interfaces/lido/IStETH.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 import { Odos } from "../../src/modules/Odos.sol";
 
@@ -15,15 +14,12 @@ import { Odos } from "../../src/modules/Odos.sol";
  * @custom:background A initiated universal router
  */
 contract TestForkOdos is UniversalRouterBaseFixture {
-    uint256 constant BASE_AMOUNT = 1000 ether;
-    IStETH stETH;
-
     function setUp() external {
         SetUpParams memory params = DEFAULT_PARAMS;
         params.forkBlock = 22_417_713;
         _setUp(params);
 
-        deal(address(wstETH), address(this), BASE_AMOUNT);
+        deal(address(wstETH), address(this), 10 ether);
     }
 
     /**
