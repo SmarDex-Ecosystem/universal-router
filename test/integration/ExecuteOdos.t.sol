@@ -34,6 +34,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
      */
     function test_forkOdosSwap() external {
         wstETH.transfer(address(router), 1 ether);
+        uint256 balanceWethBefore = IERC20(WETH).balanceOf(address(this));
 
         // The data is created via Odos API to swap 1 wstETH to WETH
         bytes memory data =
@@ -45,7 +46,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
         router.execute(commands, inputs);
 
         assertEq(wstETH.balanceOf(address(router)), 0, "wstETH balance should be zero");
-        assertGt(IERC20(WETH).balanceOf(address(this)), 1 ether, "WETH balance should be greater than 1 ether");
+        assertGt(IERC20(WETH).balanceOf(address(this)), balanceWethBefore, "WETH balance should be greater than before");
     }
 
     /**
