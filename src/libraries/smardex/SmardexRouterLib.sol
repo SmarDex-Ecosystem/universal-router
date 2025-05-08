@@ -2,7 +2,6 @@
 pragma solidity ^0.8.20;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
@@ -12,7 +11,6 @@ import { ISmardexFactory } from "../../interfaces/smardex/ISmardexFactory.sol";
 import { ISmardexPair } from "../../interfaces/smardex/ISmardexPair.sol";
 import { ISmardexRouter } from "../../interfaces/smardex/ISmardexRouter.sol";
 import { ISmardexRouterErrors } from "../../interfaces/smardex/ISmardexRouterErrors.sol";
-
 import { Payment } from "../../utils/Payment.sol";
 import { Path } from "./Path.sol";
 import { PoolHelpers } from "./PoolHelpers.sol";

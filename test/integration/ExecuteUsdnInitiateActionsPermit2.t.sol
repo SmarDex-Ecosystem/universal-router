@@ -4,12 +4,12 @@ pragma solidity 0.8.26;
 import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
 
+import { USER_1 } from "./utils/Constants.sol";
+import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+
 import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
 import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
-
-import { USER_1 } from "./utils/Constants.sol";
-import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 /**
  * @custom:feature Test the USDN initiate actions through the router using permit2
