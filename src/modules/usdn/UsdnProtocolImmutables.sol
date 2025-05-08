@@ -6,6 +6,11 @@ import { IUsdnProtocol } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProt
 import { IUsdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IUsdn.sol";
 import { IWusdn } from "@smardex-usdn-contracts-1/src/interfaces/Usdn/IWusdn.sol";
 
+/**
+ * @notice Struct to hold the immutable parameters for the USDN protocol
+ * @param usdnProtocol The address of the USDN protocol
+ * @param wusdn The address of the WUSDN
+ */
 struct UsdnProtocolParameters {
     IUsdnProtocol usdnProtocol;
     IWusdn wusdn;
