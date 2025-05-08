@@ -3,8 +3,11 @@ pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 abstract contract Odos {
+    using SafeERC20 for IERC20;
+
     address immutable ODOS_SOR_ROUTER;
 
     /// @notice Reverts when the swap via Odos fails.
@@ -20,7 +23,7 @@ abstract contract Odos {
         }
 
         if (IERC20(tokenIn).allowance(address(this), ODOS_SOR_ROUTER) < amountIn) {
-            IERC20(tokenIn).approve(ODOS_SOR_ROUTER, type(uint256).max);
+            IERC20(tokenIn).forceApprove(ODOS_SOR_ROUTER, type(uint256).max);
         }
 
         (bool success,) = ODOS_SOR_ROUTER.call(data);
