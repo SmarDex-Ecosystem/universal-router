@@ -8,7 +8,6 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 import { UniswapV2Library } from "@uniswap/universal-router/contracts/modules/uniswap/v2/UniswapV2Library.sol";
 import { IUniswapV2Pair } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import { IAllowanceTransfer } from "permit2/src/interfaces/IAllowanceTransfer.sol";
-
 import { SafeTransferLib } from "solmate/src/utils/SafeTransferLib.sol";
 
 import { IUniswapV2Router } from "../../interfaces/uniswap/IUniswapV2Router.sol";
