@@ -5,8 +5,8 @@ import { WETH, WSTETH } from "@smardex-usdn-contracts-1/test/utils/Constants.sol
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
-import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 import { ISmardexRouter } from "../../src/interfaces/smardex/ISmardexRouter.sol";
+import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 
 /**
  * @custom:feature The `smardexMintCallback` function of the Universal Router

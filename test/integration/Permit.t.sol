@@ -6,8 +6,8 @@ import { IERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { SigUtils } from "./utils/SigUtils.sol";
 
-import { Commands } from "../../src/libraries/Commands.sol";
 import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
+import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
  * @custom:feature Doing a permit approval through the router

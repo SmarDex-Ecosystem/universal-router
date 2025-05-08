@@ -3,9 +3,9 @@ pragma solidity 0.8.26;
 
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
-import { UniversalRouterBaseFixture } from "../integration/utils/Fixtures.sol";
-import { Commands } from "../../src/libraries/Commands.sol";
 import { ISweepErrors } from "../../src/interfaces/ISweepErrors.sol";
+import { Commands } from "../../src/libraries/Commands.sol";
+import { UniversalRouterBaseFixture } from "../integration/utils/Fixtures.sol";
 
 /**
  * @custom:feature Sweep ETH or token to an address

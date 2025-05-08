@@ -3,7 +3,7 @@ pragma solidity 0.8.26;
 
 import { Test } from "forge-std/Test.sol";
 
-import { LockAndMapHandler, LockAndMap } from "./utils/LockAndMapHandler.sol";
+import { LockAndMap, LockAndMapHandler } from "./utils/LockAndMapHandler.sol";
 
 /**
  * @custom:feature Test fuzzing of the {_mapSafe} function
