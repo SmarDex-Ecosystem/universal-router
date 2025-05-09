@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v1.0.0...v1.1.0) (2025-05-09)
+
+
+### Features
+
+* add jsr file in release please config ([#109](https://github.com/SmarDex-Ecosystem/universal-router/issues/109)) ([1760668](https://github.com/SmarDex-Ecosystem/universal-router/commit/17606686f6ec79808fb36b9e19101a238f0e9a92))
+* mainnet deployment ([#100](https://github.com/SmarDex-Ecosystem/universal-router/issues/100)) ([2b9465b](https://github.com/SmarDex-Ecosystem/universal-router/commit/2b9465ba87c23654c2eacce2088f5794ea08a006))
+* package manager setup ([#104](https://github.com/SmarDex-Ecosystem/universal-router/issues/104)) ([4fba3c5](https://github.com/SmarDex-Ecosystem/universal-router/commit/4fba3c5ef4e018b076e342d481b2f8085fffaf3b))
+* sort imports ([#113](https://github.com/SmarDex-Ecosystem/universal-router/issues/113)) ([95fbb11](https://github.com/SmarDex-Ecosystem/universal-router/commit/95fbb11071602926d9116dbe0b867c86113612d9))
+
+
+### Bug Fixes
+
+* missing _mapSafe ([#107](https://github.com/SmarDex-Ecosystem/universal-router/issues/107)) ([f3689be](https://github.com/SmarDex-Ecosystem/universal-router/commit/f3689be89ab6692fc7b80576a4b944021bb89bdd))
+* remove open approval ([#106](https://github.com/SmarDex-Ecosystem/universal-router/issues/106)) ([ea3b634](https://github.com/SmarDex-Ecosystem/universal-router/commit/ea3b6343c49a323d109398cc1f425939d61535f1))
+* router without wusdn ([#110](https://github.com/SmarDex-Ecosystem/universal-router/issues/110)) ([76c9a67](https://github.com/SmarDex-Ecosystem/universal-router/commit/76c9a671c5920e53a2b13f587972003467ad8388))
+
 ## [1.0.0](https://github.com/SmarDex-Ecosystem/universal-router/compare/v0.3.1...v1.0.0) (2025-01-21)
 
 
