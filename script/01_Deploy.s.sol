@@ -19,6 +19,7 @@ contract Deploy is Script {
     address constant SMARDEX_FACTORY = 0xB878DC600550367e14220d4916Ff678fB284214F;
     bytes32 constant PAIR_INIT_HASH = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
     bytes32 constant POOL_INIT_HASH = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
+    address constant ODOS_SOR_ROUTER = 0xCf5540fFFCdC3d510B18bFcA6d2b9987b0772559;
 
     function run(address wusdnTokenAddress, address usdnProtocolAddress)
         external
@@ -37,7 +38,8 @@ contract Deploy is Script {
                 usdnProtocol: IUsdnProtocol(usdnProtocolAddress),
                 wstEth: vm.envOr("WSTETH", WSTETH),
                 wusdn: IWusdn(wusdnTokenAddress),
-                smardexFactory: ISmardexFactory(vm.envOr("SMARDEX_FACTORY", SMARDEX_FACTORY))
+                smardexFactory: ISmardexFactory(vm.envOr("SMARDEX_FACTORY", SMARDEX_FACTORY)),
+                odosSorRouter: vm.envOr("ODOS_SOR_ROUTER", ODOS_SOR_ROUTER)
             })
         );
 

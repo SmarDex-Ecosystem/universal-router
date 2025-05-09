@@ -62,7 +62,8 @@ contract UniversalRouterBaseFixture is UsdnProtocolBaseIntegrationFixture, Permi
             usdnProtocol: IUsdnProtocol(address(protocol)),
             wstEth: WSTETH,
             wusdn: wusdn,
-            smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F)
+            smardexFactory: ISmardexFactory(0xB878DC600550367e14220d4916Ff678fB284214F),
+            odosSorRouter: 0xCf5540fFFCdC3d510B18bFcA6d2b9987b0772559
         });
 
         vm.prank(DEPLOYER);

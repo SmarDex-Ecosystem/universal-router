@@ -33,7 +33,8 @@ contract TestEmptyWusdn is Test {
             usdnProtocol: IUsdnProtocol(address(mockProtocol)),
             wstEth: address(mockWstEth),
             wusdn: IWusdn(address(0)),
-            smardexFactory: ISmardexFactory(address(0))
+            smardexFactory: ISmardexFactory(address(0)),
+            odosSorRouter: address(0)
         });
 
         router = new UniversalRouter(params);
