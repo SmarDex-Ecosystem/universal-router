@@ -5,9 +5,9 @@ import { Constants } from "@uniswap/universal-router/contracts/libraries/Constan
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
-import { Commands } from "../../src/libraries/Commands.sol";
-import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
 import { ISmardexRouter } from "../../src/interfaces/smardex/ISmardexRouter.sol";
+import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
+import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
  * @custom:feature Test smardex swap exact out command

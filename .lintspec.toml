@@ -1,0 +1,13 @@
+[lintspec]
+paths = ["src"]
+exclude = ["src/libraries/Commands.sol"]
+notice_or_dev = true
+
+[enum]
+param = "required"
+
+[struct]
+param = "required"
+
+[variable.public]
+return = "ignored"

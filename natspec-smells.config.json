@@ -1,5 +1,0 @@
-{
-  "include": "src/**/*.sol",
-  "exclude": ["src/libraries/Commands.sol"],
-  "constructorNatspec": true
-}

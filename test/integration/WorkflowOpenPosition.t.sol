@@ -2,15 +2,15 @@
 pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { USER_1 } from "@smardex-usdn-contracts-1/test/utils/Constants.sol";
+import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
 import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
-import { Commands } from "../../src/libraries/Commands.sol";
 import { ISmardexRouterErrors } from "../../src/interfaces/smardex/ISmardexRouterErrors.sol";
-import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
 import { IPaymentLibTypes } from "../../src/interfaces/usdn/IPaymentLibTypes.sol";
+import { IUsdnProtocolRouterTypes } from "../../src/interfaces/usdn/IUsdnProtocolRouterTypes.sol";
+import { Commands } from "../../src/libraries/Commands.sol";
 
 /**
  * @custom:feature Entire workflow of open position through the router

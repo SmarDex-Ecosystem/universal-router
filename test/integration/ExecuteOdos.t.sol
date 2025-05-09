@@ -3,8 +3,8 @@ pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { WETH } from "./utils/Constants.sol";
+import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { IOdosRouterV2 } from "./utils/IOdosRouterV2.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
@@ -75,7 +75,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
         bytes memory data = hex"83bd37f900";
         bytes memory commands = abi.encodePacked(uint8(Commands.ODOS));
         bytes[] memory inputs = new bytes[](1);
-        inputs[0] = abi.encode(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, 1 ether, data);
+        inputs[0] = abi.encode(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, data);
 
         vm.expectRevert(Odos.OdosSwapFailed.selector);
         router.execute(commands, inputs);
