@@ -5,10 +5,11 @@ import { IRebalancer } from "@smardex-usdn-contracts-1/src/interfaces/Rebalancer
 import { IRebalancerTypes } from "@smardex-usdn-contracts-1/src/interfaces/Rebalancer/IRebalancerTypes.sol";
 import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 
+import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
+
 import { IUniversalRouter } from "../../src/interfaces/IUniversalRouter.sol";
 import { Commands } from "../../src/libraries/Commands.sol";
 import { LockAndMap } from "../../src/modules/usdn/LockAndMap.sol";
-import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 
 /**
  * @custom:feature Test router commands rebalancer initiateDeposit
