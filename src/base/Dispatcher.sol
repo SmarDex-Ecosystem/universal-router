@@ -154,11 +154,13 @@ abstract contract Dispatcher is
                             Payments.payPortion(token, map(recipient), bips);
                         } else if (command == Commands.ODOS) {
                             address tokenIn;
+                            uint256 ethAmount;
                             assembly {
                                 tokenIn := calldataload(inputs.offset)
+                                ethAmount := calldataload(add(inputs.offset, 0x20))
                             }
-                            bytes calldata data = inputs.toBytes(1);
-                            swapOdos(tokenIn, data);
+                            bytes calldata data = inputs.toBytes(2);
+                            swapOdos(tokenIn, ethAmount, data);
                         } else {
                             revert InvalidCommandType(command);
                         }

@@ -23,15 +23,22 @@ abstract contract Odos {
      * @param tokenIn The address of the input token.
      * @param data The data to send to the Odos SOR router.
      */
-    function swapOdos(address tokenIn, bytes memory data) internal {
-        // forceApprove is not needed because the allowance is reset to 0 after each swap
-        IERC20(tokenIn).approve(ODOS_SOR_ROUTER, type(uint256).max);
+    function swapOdos(address tokenIn, uint256 ethAmount, bytes memory data) internal {
+        if (ethAmount == 0) {
+            // forceApprove is not needed because the allowance is reset to 0 after each swap
+            IERC20(tokenIn).approve(ODOS_SOR_ROUTER, type(uint256).max);
 
-        (bool success,) = ODOS_SOR_ROUTER.call(data);
-        if (!success) {
-            revert OdosSwapFailed();
+            (bool success,) = ODOS_SOR_ROUTER.call(data);
+            if (!success) {
+                revert OdosSwapFailed();
+            }
+
+            IERC20(tokenIn).approve(ODOS_SOR_ROUTER, 0);
+        } else {
+            (bool success,) = ODOS_SOR_ROUTER.call{ value: ethAmount }(data);
+            if (!success) {
+                revert OdosSwapFailed();
+            }
         }
-
-        IERC20(tokenIn).approve(ODOS_SOR_ROUTER, 0);
     }
 }
