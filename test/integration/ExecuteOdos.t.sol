@@ -28,7 +28,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
     }
 
     /**
-     * @notice Test the token swap via Odos router
+     * @notice Test the token swaps via Odos router
      * @custom:given A data to send to Odos create via their API
      * @custom:when The `execute` function is called for `ODOS` command
      * @custom:then The `ODOS` command should swap the tokens
@@ -64,6 +64,12 @@ contract TestForkOdos is UniversalRouterBaseFixture {
         );
     }
 
+    /**
+     * @notice Test the ETH swaps via Odos router
+     * @custom:given A data to send to Odos create via their API
+     * @custom:when The `execute` function is called for `ODOS` command
+     * @custom:then The `ODOS` command should swap the ether
+     */
     function test_forkOdosSwapEth() external {
         uint256 routerWstethBalanceBefore = wstETH.balanceOf(address(router));
         uint256 thisEthBalanceBefore = address(this).balance;
