@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { IUsdnProtocolTypes } from "@smardex-usdn-contracts-1/src/interfaces/UsdnProtocol/IUsdnProtocolTypes.sol";
+
 import { IPaymentLibTypes } from "../../interfaces/usdn/IPaymentLibTypes.sol";
 
 interface IUsdnProtocolRouterTypes {
