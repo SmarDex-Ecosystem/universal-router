@@ -18,6 +18,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
     uint256 internal constant SWAP_AMOUNT = 1 ether;
     uint32 internal constant SWAP_REFERRAL_CODE = 0;
     address internal constant SWAP_EXECUTOR = 0x76edF8C155A1e0D9B2aD11B04d9671CBC25fEE99;
+    // path to swap wstETH to WETH
     bytes internal constant SWAP_PATH =
         hex"010206006801010102030405ff00000000000000000000000000000000000000c4ce391d82d164c166df9c8336ddf84206b2f8127f39c581f595b53c5cb19bd0b3f8da6c935e2ca0c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2775f661b0bd1739349b9a2a3ef60be277c5d2d290fe906e030a44ef24ca8c7dc7b7c53a6c4f00ce9";
 
@@ -53,7 +54,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         bytes memory swapData =
             abi.encodeWithSelector(IOdosRouterV2.swap.selector, params, SWAP_PATH, SWAP_EXECUTOR, SWAP_REFERRAL_CODE);
-        inputs[0] = abi.encode(address(wstETH), SWAP_AMOUNT, swapData);
+        inputs[0] = abi.encode(address(wstETH), swapData);
 
         router.execute(commands, inputs);
 

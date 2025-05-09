@@ -2,7 +2,6 @@
 pragma solidity 0.8.26;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Constants } from "@uniswap/universal-router/contracts/libraries/Constants.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 abstract contract Odos {
@@ -17,11 +16,9 @@ abstract contract Odos {
         ODOS_SOR_ROUTER = odosSorRouter;
     }
 
-    function swapOdos(address tokenIn, uint256 amountToApprove, bytes memory data) internal {
-        if (amountToApprove == Constants.CONTRACT_BALANCE) {
-            amountToApprove = IERC20(tokenIn).balanceOf(address(this));
-        }
-        IERC20(tokenIn).approve(ODOS_SOR_ROUTER, amountToApprove);
+    function swapOdos(address tokenIn, bytes memory data) internal {
+        // forceApprove is not needed because the allowance is reset to 0 after each swap
+        IERC20(tokenIn).approve(ODOS_SOR_ROUTER, type(uint256).max);
 
         (bool success,) = ODOS_SOR_ROUTER.call(data);
         if (!success) {
