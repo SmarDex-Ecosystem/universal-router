@@ -19,6 +19,7 @@ import { ISmardexFactory } from "../interfaces/smardex/ISmardexFactory.sol";
  * @param wusdn The wrapped USDN address. If the address is set to the zero address,
  * the wrap and unwrap commands are disabled
  * @param smardexFactory The smardex factory
+ * @param odosSorRouter The odos sor router address
  */
 struct RouterParameters {
     address permit2;

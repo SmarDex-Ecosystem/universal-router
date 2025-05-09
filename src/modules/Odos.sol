@@ -7,15 +7,22 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 abstract contract Odos {
     using SafeERC20 for IERC20;
 
+    /// @notice The address of the Odos SOR router.
     address immutable ODOS_SOR_ROUTER;
 
     /// @notice Reverts when the swap via Odos fails.
     error OdosSwapFailed();
 
+    /// @param odosSorRouter The address of the Odos SOR router.
     constructor(address odosSorRouter) {
         ODOS_SOR_ROUTER = odosSorRouter;
     }
 
+    /**
+     * @notice Swaps tokens via the Odos SOR router.
+     * @param tokenIn The address of the input token.
+     * @param data The data to send to the Odos SOR router.
+     */
     function swapOdos(address tokenIn, bytes memory data) internal {
         // forceApprove is not needed because the allowance is reset to 0 after each swap
         IERC20(tokenIn).approve(ODOS_SOR_ROUTER, type(uint256).max);
