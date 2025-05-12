@@ -54,8 +54,10 @@ Each command is a `bytes1` containing the following 8 bits:
    │ 0x05 │  TRANSFER                     │
    ├──────┼───────────────────────────────┤
    │ 0x06 │  PAY_PORTION                  │
+   |──────┼───────────────────────────────|
+   │ 0x07 │  ODOS                         │
    ├──────┼───────────────────────────────┤
-   │ 0x07-│  -------                      │
+   │ 0x08-│  -------                      │
    │ 0x0f │                               │
    ├──────┼───────────────────────────────┤
    │ 0x10 │  V2_SWAP_EXACT_IN             │
@@ -265,22 +267,23 @@ The environment provides the following tools:
 - Rust toolchain
 - USDN `test_utils` dependencies
 
-
 ## Setting Up the .env File
 
-### Create the .env File:
+### Create the .env File
+
 Open your terminal and navigate to your project directory. Run the following command:
 
 ```console
 cp .env.example .env
 ```
 
-### Edit the `.env` File:
+### Edit the `.env` File
+
 Open the newly created `.env` file in your preferred text editor and fill in the required values for each environment variable as specified in the `.env.example` file.
 
-### Save and Exit:
-Save your changes and close the editor.
+### Save and Exit
 
+Save your changes and close the editor.
 
 ## Usage
 
@@ -308,7 +311,6 @@ Notably, the `--rpc-url` argument allows to choose which RPC will receive the tr
 names are defined in [`foundry.toml`](https://github.com/SmarDex-Ecosystem/universal-router/blob/master/foundry.toml), (e.g. `mainnet`, `sepolia`) and use URLs defined as environment variables (see `.env.example`).
 
 Note: Ensure to set the `DEPLOYER_ADDRESS` properly before deployment.
-
 
 ## Foundry Documentation
 

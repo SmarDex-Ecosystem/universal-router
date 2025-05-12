@@ -17,6 +17,7 @@ import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
 import { SmardexRouterLib } from "../libraries/smardex/SmardexRouterLib.sol";
 import { UniswapV2RouterLib } from "../libraries/uniswap/UniswapV2RouterLib.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
+import { Odos } from "../modules/Odos.sol";
 import { Sweep } from "../modules/Sweep.sol";
 import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
 import { SmardexRouter } from "../modules/smardex/SmardexRouter.sol";
@@ -34,7 +35,8 @@ abstract contract Dispatcher is
     SmardexRouter,
     LockAndMap,
     UsdnProtocolRouter,
-    LidoImmutables
+    LidoImmutables,
+    Odos
 {
     using BytesLib for bytes;
 
@@ -150,6 +152,15 @@ abstract contract Dispatcher is
                                 bips := calldataload(add(inputs.offset, 0x40))
                             }
                             Payments.payPortion(token, map(recipient), bips);
+                        } else if (command == Commands.ODOS) {
+                            address tokenIn;
+                            uint256 ethAmount;
+                            assembly {
+                                tokenIn := calldataload(inputs.offset)
+                                ethAmount := calldataload(add(inputs.offset, 0x20))
+                            }
+                            bytes calldata data = inputs.toBytes(2);
+                            swapOdos(tokenIn, ethAmount, data);
                         } else {
                             revert InvalidCommandType(command);
                         }
