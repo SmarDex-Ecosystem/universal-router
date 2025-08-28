@@ -3,11 +3,6 @@ red='\033[0;31m'
 green='\033[0;32m'
 nc='\033[0m'
 
-# Deploy USDN contracts
-pushd dependencies/@smardex-usdn-contracts-* >/dev/null || exit
-
-script/fork/deployFork.sh
-
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 chainId=$(cast chain-id -r "$rpcUrl")
