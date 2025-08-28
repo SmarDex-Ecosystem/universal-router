@@ -9,7 +9,7 @@ deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f
 ADDRESS_ZERO=0x0000000000000000000000000000000000000000
 chainId=$(cast chain-id -r "$rpcUrl")
 export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
-
+echo $USDN_PROTOCOL_SHORTDN_ADDRESS
 
 printf "$green USDN protocol has been deployed !\n"
 sleep 1s
