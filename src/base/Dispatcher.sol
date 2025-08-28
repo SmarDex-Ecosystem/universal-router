@@ -35,7 +35,7 @@ abstract contract Dispatcher is
     SmardexRouter,
     LockAndMap,
     UsdnProtocolRouter,
-    LidoImmutables,
+    // LidoImmutables,
     Odos
 {
     using BytesLib for bytes;
@@ -519,25 +519,27 @@ abstract contract Dispatcher is
                         recipient := calldataload(add(inputs.offset, 0x20))
                     }
                     UsdnProtocolRouterLib.unwrapUSDN(WUSDN, wusdnAmount, map(recipient));
-                } else if (command == Commands.WRAP_STETH) {
-                    // equivalent: abi.decode(inputs, (uint256, address))
-                    uint256 stethAmount;
-                    address recipient;
-                    assembly {
-                        stethAmount := calldataload(inputs.offset)
-                        recipient := calldataload(add(inputs.offset, 0x20))
-                    }
-                    success_ = LidoRouterLib.wrapSTETH(STETH, WSTETH, stethAmount, map(recipient));
-                } else if (command == Commands.UNWRAP_WSTETH) {
-                    // equivalent: abi.decode(inputs, (uint256, address))
-                    uint256 wstethAmount;
-                    address recipient;
-                    assembly {
-                        wstethAmount := calldataload(inputs.offset)
-                        recipient := calldataload(add(inputs.offset, 0x20))
-                    }
-                    success_ = LidoRouterLib.unwrapWSTETH(STETH, WSTETH, wstethAmount, map(recipient));
-                } else if (command == Commands.USDN_TRANSFER_SHARES_FROM) {
+                }
+                // else if (command == Commands.WRAP_STETH) {
+                //     // equivalent: abi.decode(inputs, (uint256, address))
+                //     uint256 stethAmount;
+                //     address recipient;
+                //     assembly {
+                //         stethAmount := calldataload(inputs.offset)
+                //         recipient := calldataload(add(inputs.offset, 0x20))
+                //     }
+                //     success_ = LidoRouterLib.wrapSTETH(STETH, WSTETH, stethAmount, map(recipient));
+                // } else if (command == Commands.UNWRAP_WSTETH) {
+                //     // equivalent: abi.decode(inputs, (uint256, address))
+                //     uint256 wstethAmount;
+                //     address recipient;
+                //     assembly {
+                //         wstethAmount := calldataload(inputs.offset)
+                //         recipient := calldataload(add(inputs.offset, 0x20))
+                //     }
+                //     success_ = LidoRouterLib.unwrapWSTETH(STETH, WSTETH, wstethAmount, map(recipient));
+                // }
+                else if (command == Commands.USDN_TRANSFER_SHARES_FROM) {
                     // equivalent:  abi.decode(inputs, (address, uint256))
                     address recipient;
                     uint256 sharesAmount;

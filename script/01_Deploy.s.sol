@@ -11,15 +11,15 @@ import { RouterParameters } from "../src/base/RouterImmutables.sol";
 import { ISmardexFactory } from "../src/interfaces/smardex/ISmardexFactory.sol";
 
 contract Deploy is Script {
-    address constant WSTETH = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
+    address constant WSTETH = 0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452;
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
-    address constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    address constant V2_FACTORY = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
-    address constant V3_FACTORY = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
-    address constant SMARDEX_FACTORY = 0xB878DC600550367e14220d4916Ff678fB284214F;
+    address constant WETH = 0x4200000000000000000000000000000000000006;
+    address constant V2_FACTORY = 0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6;
+    address constant V3_FACTORY = 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
+    address constant SMARDEX_FACTORY = 0xdd4536dD9636564D891c919416880a3e250f975A;
     bytes32 constant PAIR_INIT_HASH = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
     bytes32 constant POOL_INIT_HASH = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
-    address constant ODOS_SOR_ROUTER = 0xCf5540fFFCdC3d510B18bFcA6d2b9987b0772559;
+    address constant ODOS_SOR_ROUTER = 0x19cEeAd7105607Cd444F5ad10dd51356436095a1;
 
     function run(address wusdnTokenAddress, address usdnProtocolAddress)
         external

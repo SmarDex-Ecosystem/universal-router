@@ -37,7 +37,7 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
         )
         PaymentsImmutables(PaymentsParameters(params.permit2, params.weth9, address(0), address(0)))
         UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn))
-        LidoImmutables(params.wstEth)
+        // LidoImmutables(params.wstEth)
         SmardexRouter(params.smardexFactory)
         Odos(params.odosSorRouter)
     { }
