@@ -20,7 +20,7 @@ sleep 1s
 
 # Deploy Router
 forge script --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy \
-    --broadcast --sig "run(address,address)" "0x" "$USDN_PROTOCOL_SHORTDN_ADDRESS"
+    --broadcast --sig "run(address,address)" 0x0000000000000000000000000000000000000000 "$USDN_PROTOCOL_SHORTDN_ADDRESS"
 
 # Check logs
 DEPLOYMENT_LOG=$(cat "broadcast/01_Deploy.s.sol/$chainId/run-latest.json")
