@@ -12,11 +12,11 @@ export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 printf "$green USDN protocol has been deployed !\n"
 sleep 1s
 
-# Add USDN protocol address to .env.fork of universal-router
-cat ".env.fork" >"../../.env.fork"
+# # Add USDN protocol address to .env.fork of universal-router
+# cat ".env.fork" >"../../.env.fork"
 
-# Enter universal-router folder
-popd >/dev/null || exit
+# # Enter universal-router folder
+# popd >/dev/null || exit
 
 # Deploy Router
 forge script --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy \
