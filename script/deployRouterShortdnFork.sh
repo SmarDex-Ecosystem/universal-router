@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 red='\033[0;31m'
-green='\033[0;32m'
+green='\033[0m'
 nc='\033[0m'
 
+# Check if USDN_PROTOCOL_SHORTDN_ADDRESS argument is provided
+if [ -z "$1" ]; then
+    printf "${red}Error: USDN_PROTOCOL_SHORTDN_ADDRESS argument is required${nc}\n"
+    printf "Usage: $0 <USDN_PROTOCOL_SHORTDN_ADDRESS>\n"
+    exit 1
+fi
+
+USDN_PROTOCOL_SHORTDN_ADDRESS=$1
 
 rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
