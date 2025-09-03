@@ -16,7 +16,6 @@ rpcUrl=http://localhost:8545
 deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 ADDRESS_ZERO=0x0000000000000000000000000000000000000000
 chainId=$(cast chain-id -r "$rpcUrl")
-export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
 # Deploy Router
 forge script --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy \
