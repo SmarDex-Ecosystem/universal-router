@@ -18,12 +18,11 @@ deployerPrivateKey=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f
 chainId=$(cast chain-id -r "$rpcUrl")
 export DEPLOYER_ADDRESS=$(cast wallet address "$deployerPrivateKey")
 
-printf "$green USDN protocol has been deployed !\n"
-sleep 1s
-
 # Deploy Router
 forge script --non-interactive --private-key "$deployerPrivateKey" -f "$rpcUrl" script/01_Deploy.s.sol:Deploy \
     --broadcast --sig "run(address,address)" "$WUSDN_TOKEN_ADDRESS" "$USDN_PROTOCOL_USDN_ADDRESS"
+
+printf "$green USDN Router has been deployed !\n"
 
 # Check logs
 DEPLOYMENT_LOG=$(cat "broadcast/01_Deploy.s.sol/$chainId/run-latest.json")
