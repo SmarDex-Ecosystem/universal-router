@@ -60,8 +60,7 @@ library UsdnProtocolRouterLib {
         if (data.amount == Constants.CONTRACT_BALANCE) {
             data.amount = protocolAsset.balanceOf(address(this));
         }
-        success_ = usdnProtocol.initiateDeposit{ value: data.ethAmount }( // cast is made here to allow the
-        // {CONTRACT_BALANCE} value
+        success_ = usdnProtocol.initiateDeposit{ value: data.ethAmount }(
             data.amount.toUint128(),
             data.sharesOutMin,
             data.to,
