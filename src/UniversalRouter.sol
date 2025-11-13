@@ -40,7 +40,7 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
         UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn))
         LidoImmutables(params.wstEth)
         SmardexRouter(params.smardexFactory)
-        Enso(params.odosSorRouter)
+        Enso(params.ensoV2Router)
     { }
 
     /// @inheritdoc IUniversalRouter

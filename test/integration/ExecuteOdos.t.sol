@@ -50,7 +50,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
             outputReceiver: address(router)
         });
 
-        bytes memory commands = abi.encodePacked(uint8(Commands.ODOS));
+        bytes memory commands = abi.encodePacked(uint8(Commands.ENSO));
         bytes[] memory inputs = new bytes[](1);
         bytes memory swapData =
             abi.encodeWithSelector(IOdosRouterV2.swap.selector, params, SWAP_PATH, SWAP_EXECUTOR, SWAP_REFERRAL_CODE);
@@ -87,7 +87,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
             outputReceiver: address(router)
         });
 
-        bytes memory commands = abi.encodePacked(uint8(Commands.ODOS));
+        bytes memory commands = abi.encodePacked(uint8(Commands.ENSO));
         bytes[] memory inputs = new bytes[](1);
         bytes memory swapData =
             abi.encodeWithSelector(IOdosRouterV2.swap.selector, params, SWAP_PATH, SWAP_EXECUTOR, SWAP_REFERRAL_CODE);
@@ -111,11 +111,11 @@ contract TestForkOdos is UniversalRouterBaseFixture {
     function test_Fork_RevertWhen_SwapFails() external {
         // function selector of the swap function of the Odos router with random data
         bytes memory data = hex"83bd37f900";
-        bytes memory commands = abi.encodePacked(uint8(Commands.ODOS));
+        bytes memory commands = abi.encodePacked(uint8(Commands.ENSO));
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, 0, data);
 
-        vm.expectRevert(Enso.OdosSwapFailed.selector);
+        vm.expectRevert(Enso.EnsoSwapFailed.selector);
         router.execute(commands, inputs);
     }
 }

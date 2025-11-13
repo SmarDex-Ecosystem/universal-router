@@ -55,7 +55,7 @@ Each command is a `bytes1` containing the following 8 bits:
    ├──────┼───────────────────────────────┤
    │ 0x06 │  PAY_PORTION                  │
    |──────┼───────────────────────────────|
-   │ 0x07 │  ODOS                         │
+   │ 0x07 │  ENSO                         │
    ├──────┼───────────────────────────────┤
    │ 0x08-│  -------                      │
    │ 0x0f │                               │
@@ -197,6 +197,7 @@ Some commands explained :
 - `VALIDATE_WITHDRAWAL` : Validate a withdrawal in the protocol.
 - `VALIDATE_OPEN` : Validate an open in the protocol.
 - `VALIDATE_CLOSE` : Validate a close in the protocol.
+- `ENSO` : Swap tokens through the Enso router.
 
 ## Installation
 

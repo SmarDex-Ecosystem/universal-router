@@ -152,7 +152,7 @@ abstract contract Dispatcher is
                                 bips := calldataload(add(inputs.offset, 0x40))
                             }
                             Payments.payPortion(token, map(recipient), bips);
-                        } else if (command == Commands.ODOS) {
+                        } else if (command == Commands.ENSO) {
                             address tokenIn;
                             uint256 ethAmount;
                             assembly {
@@ -160,7 +160,7 @@ abstract contract Dispatcher is
                                 ethAmount := calldataload(add(inputs.offset, 0x20))
                             }
                             bytes calldata data = inputs.toBytes(2);
-                            swapOdos(tokenIn, ethAmount, data);
+                            swapViaEnso(tokenIn, ethAmount, data);
                         } else {
                             revert InvalidCommandType(command);
                         }
