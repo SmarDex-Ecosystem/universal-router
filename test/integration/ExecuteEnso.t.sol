@@ -27,7 +27,7 @@ contract TestForkEnso is UniversalRouterBaseFixture {
 
     /**
      * @notice Test the token swaps via Enso router
-     * @custom:given A data to send to Enso create via their API
+     * @custom:given Some data to send to Enso created via their API
      * @custom:when The `execute` function is called for `ENSO` command
      * @custom:then The `ENSO` command should swap the tokens
      */
