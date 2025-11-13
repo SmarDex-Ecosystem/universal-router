@@ -51,7 +51,9 @@ contract TestForkUniversalRouterLiquidate is UniversalRouterBaseFixture {
 
         protocol.validateOpenPosition{
             value: oracleMiddleware.validationCost(actionData, ProtocolAction.ValidateOpenPosition)
-        }(payable(address(this)), actionData, EMPTY_PREVIOUS_DATA);
+        }(
+            payable(address(this)), actionData, EMPTY_PREVIOUS_DATA
+        );
     }
 
     /**

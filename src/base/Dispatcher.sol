@@ -17,7 +17,7 @@ import { LidoRouterLib } from "../libraries/lido/LidoRouterLib.sol";
 import { SmardexRouterLib } from "../libraries/smardex/SmardexRouterLib.sol";
 import { UniswapV2RouterLib } from "../libraries/uniswap/UniswapV2RouterLib.sol";
 import { UsdnProtocolRouterLib } from "../libraries/usdn/UsdnProtocolRouterLib.sol";
-import { Odos } from "../modules/Odos.sol";
+import { Enso } from "../modules/Enso.sol";
 import { Sweep } from "../modules/Sweep.sol";
 import { LidoImmutables } from "../modules/lido/LidoImmutables.sol";
 import { SmardexRouter } from "../modules/smardex/SmardexRouter.sol";
@@ -36,7 +36,7 @@ abstract contract Dispatcher is
     LockAndMap,
     UsdnProtocolRouter,
     LidoImmutables,
-    Odos
+    Enso
 {
     using BytesLib for bytes;
 
@@ -433,16 +433,20 @@ abstract contract Dispatcher is
                             USDN_PROTOCOL, previousActionsData, maxValidations, ethAmount
                         );
                     } else if (command == Commands.TRANSFER_POSITION_OWNERSHIP) {
-                        (IUsdnProtocolTypes.PositionId memory posId, address newOwner, bytes memory delegationSignature)
-                        = abi.decode(inputs, (IUsdnProtocolTypes.PositionId, address, bytes));
-                        (success_, output_) = address(USDN_PROTOCOL).call(
-                            abi.encodeWithSelector(
-                                USDN_PROTOCOL.transferPositionOwnership.selector,
-                                posId,
-                                _mapSafe(newOwner),
-                                delegationSignature
-                            )
-                        );
+                        (
+                            IUsdnProtocolTypes.PositionId memory posId,
+                            address newOwner,
+                            bytes memory delegationSignature
+                        ) = abi.decode(inputs, (IUsdnProtocolTypes.PositionId, address, bytes));
+                        (success_, output_) = address(USDN_PROTOCOL)
+                            .call(
+                                abi.encodeWithSelector(
+                                    USDN_PROTOCOL.transferPositionOwnership.selector,
+                                    posId,
+                                    _mapSafe(newOwner),
+                                    delegationSignature
+                                )
+                            );
                     } else if (command == Commands.REBALANCER_INITIATE_DEPOSIT) {
                         // equivalent: abi.decode(inputs, (uint256, address))
                         uint256 amount;
@@ -545,9 +549,12 @@ abstract contract Dispatcher is
                         recipient := calldataload(inputs.offset)
                         sharesAmount := calldataload(add(inputs.offset, 0x20))
                     }
-                    (success_, output_) = address(USDN).call(
-                        abi.encodeWithSelector(USDN.transferSharesFrom.selector, lockedBy, map(recipient), sharesAmount)
-                    );
+                    (success_, output_) = address(USDN)
+                        .call(
+                            abi.encodeWithSelector(
+                                USDN.transferSharesFrom.selector, lockedBy, map(recipient), sharesAmount
+                            )
+                        );
                 } else {
                     revert InvalidCommandType(command);
                 }

@@ -8,7 +8,7 @@ import { UniversalRouterBaseFixture } from "./utils/Fixtures.sol";
 import { IOdosRouterV2 } from "./utils/IOdosRouterV2.sol";
 
 import { Commands } from "../../src/libraries/Commands.sol";
-import { Odos } from "../../src/modules/Odos.sol";
+import { Enso } from "../../src/modules/Enso.sol";
 
 /**
  * @custom:feature Test the `ODOS` command
@@ -115,7 +115,7 @@ contract TestForkOdos is UniversalRouterBaseFixture {
         bytes[] memory inputs = new bytes[](1);
         inputs[0] = abi.encode(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, 0, data);
 
-        vm.expectRevert(Odos.OdosSwapFailed.selector);
+        vm.expectRevert(Enso.OdosSwapFailed.selector);
         router.execute(commands, inputs);
     }
 }

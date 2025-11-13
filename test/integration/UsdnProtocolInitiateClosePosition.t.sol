@@ -59,7 +59,9 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
 
         protocol.validateOpenPosition{
             value: oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition)
-        }(payable(user), data, EMPTY_PREVIOUS_DATA);
+        }(
+            payable(user), data, EMPTY_PREVIOUS_DATA
+        );
 
         vm.stopPrank();
 
@@ -128,19 +130,19 @@ contract TestForkUniversalRouterInitiateClose is UniversalRouterBaseFixture, Sig
         bytes memory commands = abi.encodePacked(uint8(Commands.INITIATE_CLOSE));
         bytes[] memory inputs = new bytes[](1);
 
-        IUsdnProtocolRouterTypes.InitiateClosePositionData memory closeData = IUsdnProtocolRouterTypes
-            .InitiateClosePositionData(
-            _posId,
-            _delegation.amountToClose,
-            _delegation.userMinPrice,
-            _delegation.to,
-            USER_1,
-            _delegation.deadline,
-            "",
-            EMPTY_PREVIOUS_DATA,
-            _delegationSignature,
-            _securityDeposit
-        );
+        IUsdnProtocolRouterTypes.InitiateClosePositionData memory closeData =
+            IUsdnProtocolRouterTypes.InitiateClosePositionData(
+                _posId,
+                _delegation.amountToClose,
+                _delegation.userMinPrice,
+                _delegation.to,
+                USER_1,
+                _delegation.deadline,
+                "",
+                EMPTY_PREVIOUS_DATA,
+                _delegationSignature,
+                _securityDeposit
+            );
 
         inputs[0] = abi.encode(closeData);
 
