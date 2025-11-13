@@ -25,8 +25,8 @@ abstract contract Enso {
      */
     function swapViaEnso(address tokenIn, uint256 ethAmount, bytes memory data) internal {
         // if (ethAmount == 0) {
-        //     // forceApprove is not needed because the allowance is reset to 0 after each swap
-        //     IERC20(tokenIn).approve(ENSO_V2_ROUTER, type(uint256).max);
+        // forceApprove is not needed because the allowance is reset to 0 after each swap
+        IERC20(tokenIn).approve(ENSO_V2_ROUTER, type(uint256).max);
 
         (bool success,) = ENSO_V2_ROUTER.call{ value: msg.value }(data);
         if (!success) {
