@@ -60,10 +60,10 @@ contract TestForkEnso is UniversalRouterBaseFixture {
     /**
      * @notice Test the ETH swaps via Enso router
      * @custom:given A data to send to Enso create via their API
-     * @custom:when The `execute` function is called for `ODOS` command
-     * @custom:then The `ODOS` command should swap the ether
+     * @custom:when The `execute` function is called for `ENSO` command
+     * @custom:then The `ENSO` command should swap the ether
      */
-    function test_forkOdosSwapEth() external {
+    function test_forkEnsoSwapEth() external {
         uint256 routerWstethBalanceBefore = wstETH.balanceOf(address(router));
         uint256 thisEthBalanceBefore = address(this).balance;
         // path to swap ETH to wstETH
@@ -93,8 +93,8 @@ contract TestForkEnso is UniversalRouterBaseFixture {
     /**
      * @notice Test the swap via Enso router
      * @custom:given A data with the swap function selector and random data
-     * @custom:when The `execute` function is called for `ODOS` command
-     * @custom:then The `ODOS` command should revert with the error `OdosSwapFailed`
+     * @custom:when The `execute` function is called for `ENSO` command
+     * @custom:then The `ENSO` command should revert with the error `EnsoSwapFailed`
      */
     function test_Fork_RevertWhen_SwapFails() external {
         // function selector of the swap function of the Enso router with random data
