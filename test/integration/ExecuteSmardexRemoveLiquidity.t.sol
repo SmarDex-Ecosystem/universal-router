@@ -20,11 +20,7 @@ contract TestForkUniversalRouterSmardexRemoveLiquidity is UniversalRouterBaseFix
     uint256 constant BASE_AMOUNT = 1000 ether;
 
     ISmardexRouter.RemoveLiquidityParams internal _removeParams = ISmardexRouter.RemoveLiquidityParams({
-        tokenA: WETH,
-        tokenB: WSTETH,
-        liquidity: 0,
-        amountAMin: 0,
-        amountBMin: 0
+        tokenA: WETH, tokenB: WSTETH, liquidity: 0, amountAMin: 0, amountBMin: 0
     });
 
     function setUp() external {

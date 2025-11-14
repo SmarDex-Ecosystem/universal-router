@@ -256,8 +256,9 @@ contract TestForkUniversalRouterUsdnInitiateActionsPermit is UniversalRouterBase
             _getDigest(sigUser1, address(router), usdnTokensToTransfer, 0, type(uint256).max, usdn.DOMAIN_SEPARATOR())
         );
 
-        bytes memory commands =
-            abi.encodePacked(uint8(Commands.PERMIT), uint8(Commands.TRANSFER_FROM), uint8(Commands.INITIATE_WITHDRAWAL));
+        bytes memory commands = abi.encodePacked(
+            uint8(Commands.PERMIT), uint8(Commands.TRANSFER_FROM), uint8(Commands.INITIATE_WITHDRAWAL)
+        );
 
         bytes[] memory inputs = new bytes[](3);
         inputs[0] =

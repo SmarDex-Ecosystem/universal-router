@@ -34,7 +34,7 @@ contract TestEmptyWusdn is Test {
             wstEth: address(mockWstEth),
             wusdn: IWusdn(address(0)),
             smardexFactory: ISmardexFactory(address(0)),
-            odosSorRouter: address(0)
+            ensoV2Router: address(0)
         });
 
         router = new UniversalRouter(params);

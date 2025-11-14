@@ -31,7 +31,8 @@ library UsdnProtocolRouterLib {
     modifier usePayment(IPaymentLibTypes.PaymentType payment, IPaymentLibTypes.PaymentAction action) {
         if (
             payment == IPaymentLibTypes.PaymentType.None
-                || (action == IPaymentLibTypes.PaymentAction.Withdrawal && payment == IPaymentLibTypes.PaymentType.Permit2)
+                || (action == IPaymentLibTypes.PaymentAction.Withdrawal
+                    && payment == IPaymentLibTypes.PaymentType.Permit2)
         ) {
             revert IUsdnProtocolRouterErrors.UsdnProtocolRouterInvalidPayment();
         }
@@ -60,7 +61,6 @@ library UsdnProtocolRouterLib {
             data.amount = protocolAsset.balanceOf(address(this));
         }
         success_ = usdnProtocol.initiateDeposit{ value: data.ethAmount }(
-            // cast is made here to allow the {CONTRACT_BALANCE} value
             data.amount.toUint128(),
             data.sharesOutMin,
             data.to,
@@ -88,8 +88,9 @@ library UsdnProtocolRouterLib {
         IUsdnProtocolTypes.PreviousActionsData memory previousActionsData,
         uint256 ethAmount
     ) external returns (bool success_) {
-        success_ =
-            usdnProtocol.validateDeposit{ value: ethAmount }(payable(validator), depositPriceData, previousActionsData);
+        success_ = usdnProtocol.validateDeposit{ value: ethAmount }(
+            payable(validator), depositPriceData, previousActionsData
+        );
     }
 
     /**

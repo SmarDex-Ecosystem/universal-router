@@ -38,7 +38,9 @@ contract TestForkUniversalRouterValidateClosePosition is UniversalRouterBaseFixt
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
         protocol.validateOpenPosition{
             value: oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition)
-        }(payable(address(this)), data, EMPTY_PREVIOUS_DATA);
+        }(
+            payable(address(this)), data, EMPTY_PREVIOUS_DATA
+        );
         protocol.initiateClosePosition{ value: _securityDeposit }(
             posId,
             OPEN_POSITION_AMOUNT,

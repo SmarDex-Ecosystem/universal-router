@@ -51,7 +51,9 @@ contract TestForkUniversalRouterTransferPositionOwnership is UniversalRouterBase
         (,,,, bytes memory data) = getHermesApiSignature(PYTH_ETH_USD, ts1 + oracleMiddleware.getValidationDelay());
         protocol.validateOpenPosition{
             value: oracleMiddleware.validationCost(data, IUsdnProtocolTypes.ProtocolAction.ValidateOpenPosition)
-        }(payable(this), data, EMPTY_PREVIOUS_DATA);
+        }(
+            payable(this), data, EMPTY_PREVIOUS_DATA
+        );
 
         (_pos,) = protocol.getLongPosition(_posId);
         assertEq(_pos.user, user, "position should be owned by the user");

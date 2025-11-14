@@ -147,9 +147,7 @@ interface IStETH is IERC20Metadata, IERC20Permit {
      * @param _sharesAmount The shares amount
      * @return The amount of transferred tokens
      */
-    function transferSharesFrom(address _sender, address _recipient, uint256 _sharesAmount)
-        external
-        returns (uint256);
+    function transferSharesFrom(address _sender, address _recipient, uint256 _sharesAmount) external returns (uint256);
 
     /**
      * @notice Get whether the contract is paused

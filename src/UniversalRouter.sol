@@ -2,7 +2,8 @@
 pragma solidity 0.8.26;
 
 import {
-    PaymentsImmutables, PaymentsParameters
+    PaymentsImmutables,
+    PaymentsParameters
 } from "@uniswap/universal-router/contracts/modules/PaymentsImmutables.sol";
 import {
     UniswapImmutables,
@@ -13,7 +14,7 @@ import { Dispatcher } from "./base/Dispatcher.sol";
 import { RouterParameters } from "./base/RouterImmutables.sol";
 import { IUniversalRouter } from "./interfaces/IUniversalRouter.sol";
 import { Commands } from "./libraries/Commands.sol";
-import { Odos } from "./modules/Odos.sol";
+import { Enso } from "./modules/Enso.sol";
 import { LidoImmutables } from "./modules/lido/LidoImmutables.sol";
 import { SmardexRouter } from "./modules/smardex/SmardexRouter.sol";
 import { UsdnProtocolImmutables, UsdnProtocolParameters } from "./modules/usdn/UsdnProtocolImmutables.sol";
@@ -32,14 +33,14 @@ contract UniversalRouter is IUniversalRouter, Dispatcher {
      * @param params The immutable parameters of the router
      */
     constructor(RouterParameters memory params)
-        UniswapImmutables(
-            UniswapParameters(params.v2Factory, params.v3Factory, params.pairInitCodeHash, params.poolInitCodeHash)
-        )
+        UniswapImmutables(UniswapParameters(
+                params.v2Factory, params.v3Factory, params.pairInitCodeHash, params.poolInitCodeHash
+            ))
         PaymentsImmutables(PaymentsParameters(params.permit2, params.weth9, address(0), address(0)))
         UsdnProtocolImmutables(UsdnProtocolParameters(params.usdnProtocol, params.wusdn))
         LidoImmutables(params.wstEth)
         SmardexRouter(params.smardexFactory)
-        Odos(params.odosSorRouter)
+        Enso(params.ensoV2Router)
     { }
 
     /// @inheritdoc IUniversalRouter

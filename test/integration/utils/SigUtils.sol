@@ -4,8 +4,9 @@ pragma solidity 0.8.26;
 import { Test } from "forge-std/Test.sol";
 
 import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
-import { UsdnProtocolConstantsLibrary as Constants } from
-    "@smardex-usdn-contracts-1/src/UsdnProtocol/libraries/UsdnProtocolConstantsLibrary.sol";
+import {
+    UsdnProtocolConstantsLibrary as Constants
+} from "@smardex-usdn-contracts-1/src/UsdnProtocol/libraries/UsdnProtocolConstantsLibrary.sol";
 
 contract SigUtils is Test {
     /**

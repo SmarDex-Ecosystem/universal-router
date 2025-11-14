@@ -260,9 +260,8 @@ library SmardexRouterLib {
         (address tokenOut, address tokenIn) = data.path.decodeFirstPool();
         bool zeroForOne = tokenIn < tokenOut;
 
-        (int256 amount0, int256 amount1) = ISmardexPair(smardexFactory.getPair(tokenIn, tokenOut)).swap(
-            to, zeroForOne, -amountOut.toInt256(), abi.encode(data)
-        );
+        (int256 amount0, int256 amount1) = ISmardexPair(smardexFactory.getPair(tokenIn, tokenOut))
+            .swap(to, zeroForOne, -amountOut.toInt256(), abi.encode(data));
 
         if (zeroForOne) {
             amountIn_ = uint256(amount0);
@@ -292,9 +291,8 @@ library SmardexRouterLib {
 
         (address tokenIn, address tokenOut) = data.path.decodeFirstPool();
         bool _zeroForOne = tokenIn < tokenOut;
-        (int256 amount0, int256 amount1) = ISmardexPair(smardexFactory.getPair(tokenIn, tokenOut)).swap(
-            to, _zeroForOne, amountIn.toInt256(), abi.encode(data)
-        );
+        (int256 amount0, int256 amount1) = ISmardexPair(smardexFactory.getPair(tokenIn, tokenOut))
+            .swap(to, _zeroForOne, amountIn.toInt256(), abi.encode(data));
         amountOut_ = (_zeroForOne ? -amount1 : -amount0).toUint256();
     }
 

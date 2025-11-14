@@ -23,9 +23,7 @@ library Payment {
      * @param recipient The recipient of the transfer
      * @param amount The amount to transfer
      */
-    function pay(IAllowanceTransfer permit2, address token, address payer, address recipient, uint256 amount)
-        external
-    {
+    function pay(IAllowanceTransfer permit2, address token, address payer, address recipient, uint256 amount) external {
         if (payer == address(this)) {
             if (token == Constants.ETH) {
                 recipient.safeTransferETH(amount);
