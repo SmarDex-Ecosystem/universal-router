@@ -1,6 +1,6 @@
 {
 	"name": "@smardex/universal-router",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"exports": "./dist/abi/index.ts",
 	"publish": {
 		"include": [
