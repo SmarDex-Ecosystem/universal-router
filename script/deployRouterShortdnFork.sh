@@ -3,10 +3,11 @@ red='\033[0;31m'
 green='\033[0m'
 nc='\033[0m'
 
-# Parse arguments
+# Declare args
 VERIFY_FLAG=""
 USDN_PROTOCOL_SHORTDN_ADDRESS=""
 
+# Parse arguments
 for arg in "$@"; do
     if [ "$arg" == "--verify" ]; then
         VERIFY_FLAG="--verify"
