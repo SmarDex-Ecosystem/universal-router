@@ -8,7 +8,9 @@ VERIFY_FLAG=""
 WUSDN_TOKEN_ADDRESS=""
 USDN_PROTOCOL_USDN_ADDRESS=""
 
-# Parse arguments
+# Parse arguments, --verify is optional and can be in any position
+# the other two args are required in correct order (WUSDN_TOKEN_ADDRESS
+# then USDN_PROTOCOL_USDN_ADDRESS).
 for arg in "$@"; do
     if [ "$arg" == "--verify" ]; then
         VERIFY_FLAG="--verify"

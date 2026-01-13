@@ -7,7 +7,8 @@ nc='\033[0m'
 VERIFY_FLAG=""
 USDN_PROTOCOL_SHORTDN_ADDRESS=""
 
-# Parse arguments
+# Parse arguments, --verify is optional and can be in any position
+# the other arg is required (USDN_PROTOCOL_SHORTDN_ADDRESS).
 for arg in "$@"; do
     if [ "$arg" == "--verify" ]; then
         VERIFY_FLAG="--verify"
