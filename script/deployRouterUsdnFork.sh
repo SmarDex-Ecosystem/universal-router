@@ -2,6 +2,7 @@
 red='\033[0;31m'
 green='\033[0;32m'
 nc='\033[0m'
+sourcifyVerifierUrl=http://localhost:5555
 
 # Declare args
 VERIFY_FLAG=""
@@ -13,7 +14,7 @@ USDN_PROTOCOL_USDN_ADDRESS=""
 # then USDN_PROTOCOL_USDN_ADDRESS).
 for arg in "$@"; do
     if [ "$arg" == "--verify" ]; then
-        VERIFY_FLAG="--verify"
+        VERIFY_FLAG="--verify --verifier sourcify --verifier-url $sourcifyVerifierUrl"
     elif [ -z "$WUSDN_TOKEN_ADDRESS" ]; then
         WUSDN_TOKEN_ADDRESS="$arg"
     elif [ -z "$USDN_PROTOCOL_USDN_ADDRESS" ]; then
